@@ -5,11 +5,12 @@
     <title>Ultimate Pet Care Academy | Expert Guides</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        /* عداد الزيارات في أعلى يسار الشاشة */
+        /* تصميم العداد بشكل احترافي */
         #visitor-counter {
             position: fixed; top: 10px; left: 10px;
-            background: rgba(0,0,0,0.7); color: #fff;
-            padding: 5px 10px; border-radius: 5px; font-size: 12px; z-index: 1000;
+            background: rgba(0,0,0,0.85); color: #00ff00;
+            padding: 10px; border-radius: 8px; font-size: 13px; z-index: 1000;
+            line-height: 1.6; border: 1px solid #444;
         }
         .container { max-width: 1200px; margin: auto; padding: 40px 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -19,8 +20,12 @@
 </head>
 <body>
 
-    <!-- عداد الزيارات -->
-    <div id="visitor-counter">Visitors: <span id="count">0</span></div>
+    <!-- عداد الزيارات المحدث -->
+    <div id="visitor-counter">
+        <div>Day (d): <span id="count-d">0</span></div>
+        <div>Month (m): <span id="count-m">0</span></div>
+        <div>Year (y): <span id="count-y">0</span></div>
+    </div>
 
     <div class="container">
         <h1>Ultimate Pet Care Academy</h1>
@@ -28,13 +33,24 @@
     </div>
 
     <script>
-        // 1. محاكاة عداد الزيارات الحقيقي (يبدأ من قيمة فعلية محدثة)
-        let count = localStorage.getItem('page_visits') || 0;
-        count++;
-        localStorage.setItem('page_visits', count);
-        document.getElementById('count').innerText = count;
+        // منطق تحديث العدادات الذكي
+        const now = new Date();
+        const dKey = `visits_d_${now.getDate()}_${now.getMonth()}_${now.getFullYear()}`;
+        const mKey = `visits_m_${now.getMonth()}_${now.getFullYear()}`;
+        const yKey = `visits_y_${now.getFullYear()}`;
 
-        // 2. جلب المقالات من ملف articles.json
+        function updateCounter(key, elementId) {
+            let count = parseInt(localStorage.getItem(key) || 0);
+            count++;
+            localStorage.setItem(key, count);
+            document.getElementById(elementId).innerText = count;
+        }
+
+        updateCounter(dKey, 'count-d');
+        updateCounter(mKey, 'count-m');
+        updateCounter(yKey, 'count-y');
+
+        // جلب المقالات من ملف articles.json
         fetch('articles.json')
             .then(response => response.json())
             .then(data => {
@@ -52,10 +68,7 @@
                     });
                 });
             })
-            .catch(err => {
-                console.error('Error loading articles:', err);
-                document.getElementById('articles-container').innerText = "Articles loading...";
-            });
+            .catch(err => console.error('Error loading articles:', err));
     </script>
 </body>
 </html>
