@@ -2,351 +2,40 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Pet Care Academy | 1200+ Expert Guides for Cats & Dogs</title>
-    <meta name="description" content="Your ultimate resource for cat and dog training, nutrition, health, behavior solutions, and expert care guides.">
+    <title>Ultimate Pet Care Academy | 1200+ Expert Guides</title>
     <style>
-        :root {
-            --primary: #ff6b6b;
-            --secondary: #48dbfb;
-            --dark: #222;
-            --light: #f7f9fc;
-            --card-bg: #fff;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light);
-            margin: 0;
-            padding: 0;
-            color: var(--dark);
-        }
-        /* هيدر احترافي بخلفية صور قطط وكلاب وتظليل خفيف */
-        header {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1600&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-align: center;
-            padding: 70px 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        header h1 {
-            margin: 0 0 10px;
-            font-size: 2.8rem;
-            color: var(--secondary);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        header p {
-            color: #dfe6e9;
-            font-size: 1.2rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-        }
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .search-box {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 1.1rem;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            margin-bottom: 40px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.3s;
-            background: #fff;
-        }
-        .search-box:focus {
-            border-color: var(--primary);
-        }
-        
-        .section-title {
-            font-size: 1.8rem;
-            color: #2d3436;
-            margin-bottom: 20px;
-            border-right: 5px solid var(--primary);
-            padding-right: 15px;
-        }
-
-        /* شبكة الأقسام الـ 12 */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-        .category-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 4px solid var(--primary);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        }
-        .category-card h3 {
-            margin: 0 0 10px;
-            font-size: 1.2rem;
-            color: #2d3436;
-        }
-        .category-card p {
-            color: #636e72;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        .cat-btn {
-            background: var(--dark);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-align: center;
-            transition: background 0.3s;
-        }
-        .cat-btn:hover {
-            background: var(--primary);
-        }
-
-        /* عداد الزوار اللحظي */
-        .visitor-counter {
-            background: white;
-            text-align: center;
-            margin-top: 60px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-        }
-        .counter-boxes {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        .counter-box {
-            background: var(--light);
-            padding: 15px 30px;
-            border-radius: 8px;
-            min-width: 120px;
-        }
-        .counter-box span {
-            display: block;
-            font-size: 0.9rem;
-            color: #636e72;
-        }
-        .counter-box .number {
-            font-weight: bold;
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-top: 5px;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 5px; }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>Paws & Claws Academy</h1>
-    <p>12 Specialized Categories | 1200+ Expert Problem-Solving Guides for Dogs & Cats</p>
-</header>
-
-<div class="container">
-    <input type="text" id="searchBar" class="search-box" placeholder="Search across all 1200+ problem-solving guides e.g., puppy biting, cat urinary issues..." onkeyup="filterCategories()">
-
-    <h2 class="section-title">Explore Our 12 Expert Categories</h2>
-
-    <div class="categories-grid" id="categoriesContainer">
-        
-        <!-- قسم 1 -->
-        <div class="category-card" data-name="puppy training socialization dogs">
-            <div>
-                <h3>1. Puppy Training & Socialization</h3>
-                <p>100+ guides on housebreaking, leash walking, crate training, and curbing puppy biting.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Puppy Training')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 2 -->
-        <div class="category-card" data-name="dog nutrition raw diets food feeding">
-            <div>
-                <h3>2. Dog Nutrition & Raw Diets</h3>
-                <p>100+ guides on balanced meals, toxic foods to avoid, and weight management.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Dog Nutrition')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 3 -->
-        <div class="category-card" data-name="dog behavior aggression control anxiety">
-            <div>
-                <h3>3. Dog Behavior & Aggression Control</h3>
-                <p>100+ guides solving separation anxiety, excessive barking, and leash reactivity.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Dog Behavior')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 4 -->
-        <div class="category-card" data-name="common dog diseases first aid health">
-            <div>
-                <h3>4. Common Dog Diseases & First Aid</h3>
-                <p>100+ guides on recognizing early symptom warnings, parasites, and emergency care.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Dog Health')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 5 -->
-        <div class="category-card" data-name="dog grooming coat care hygiene">
-            <div>
-                <h3>5. Dog Grooming & Coat Care</h3>
-                <p>100+ guides on home bathing, mat removal, nail clipping, and ear cleaning.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Dog Grooming')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 6 -->
-        <div class="category-card" data-name="senior dog care joint health longevity">
-            <div>
-                <h3>6. Senior Dog Care & Joint Health</h3>
-                <p>100+ guides on managing arthritis, cognitive decline, and comfort in old age.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Senior Dogs')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 7 -->
-        <div class="category-card" data-name="kitten care litter training cats">
-            <div>
-                <h3>7. Kitten Care & Litter Training</h3>
-                <p>100+ guides on newborn kitten feeding, socialization, and box habits.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Kitten Care')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 8 -->
-        <div class="category-card" data-name="cat nutrition hydration guides food">
-            <div>
-                <h3>8. Cat Nutrition & Hydration Guides</h3>
-                <p>100+ guides comparing wet vs dry food, taurine needs, and water fountains.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Cat Nutrition')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 9 -->
-        <div class="category-card" data-name="cat behavior scratching solutions furniture">
-            <div>
-                <h3>9. Cat Behavior & Scratching Solutions</h3>
-                <p>100+ guides stopping furniture scratching, aggression, and nighttime yowling.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Cat Behavior')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 10 -->
-        <div class="category-card" data-name="cat health urinary tract care flutd">
-            <div>
-                <h3>10. Cat Health & Urinary Tract Care</h3>
-                <p>100+ guides preventing FLUTD, kidney disease, and spotting early illness signs.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Cat Health')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 11 -->
-        <div class="category-card" data-name="indoor cat enrichment play mental health">
-            <div>
-                <h3>11. Indoor Cat Enrichment & Play</h3>
-                <p>100+ guides on interactive toys, window perches, and DIY boredom busters.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Indoor Enrichment')">Browse 100 Guides &rarr;</button>
-        </div>
-
-        <!-- قسم 12 -->
-        <div class="category-card" data-name="senior cat wellness longevity care">
-            <div>
-                <h3>12. Senior Cat Wellness & Longevity</h3>
-                <p>100+ guides on keeping aging cats active, pain-free, and healthy for years.</p>
-            </div>
-            <button class="cat-btn" onclick="openCategory('Senior Cats')">Browse 100 Guides &rarr;</button>
-        </div>
-
+    <div class="container">
+        <h1>Welcome to Ultimate Pet Care Academy</h1>
+        <div id="articles-container" class="grid">Loading expert guides...</div>
     </div>
 
-    <!-- عداد الزوار الحقيقي الفعال والمحدث لحظياً -->
-    <div class="visitor-counter">
-        <h3>Live Platform Traffic Statistics</h3>
-        <div class="counter-boxes">
-            <div class="counter-box">
-                <span>Today</span>
-                <span id="visits-day" class="number">--</span>
-            </div>
-            <div class="counter-box">
-                <span>This Month</span>
-                <span id="visits-month" class="number">--</span>
-            </div>
-            <div class="counter-box">
-                <span>This Year</span>
-                <span id="visits-year" class="number">--</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function openCategory(catName) {
-        alert("Opening the " + catName + " category with its 100 guides. Ready to load detailed articles!");
-    }
-
-    // نظام البحث الفوري للأقسام
-    function filterCategories() {
-        let input = document.getElementById('searchBar').value.toLowerCase();
-        let cards = document.getElementsByClassName('category-card');
-
-        for (let i = 0; i < cards.length; i++) {
-            let name = cards[i].getAttribute('data-name');
-            if (name.includes(input)) {
-                cards[i].style.display = "flex";
-            } else {
-                cards[i].style.display = "none";
-            }
-        }
-    }
-
-    // نظام عداد الزوار الحقيقي والمحدث لحظياً
-    function updateVisitorCounters() {
-        let now = new Date();
-        let dayKey = 'mega_site_visits_day_' + now.toISOString().slice(0, 10);
-        let monthKey = 'mega_site_visits_month_' + now.toISOString().slice(0, 7);
-        let yearKey = 'mega_site_visits_year_' + now.getFullYear();
-
-        let dayCount = parseInt(localStorage.getItem(dayKey)) || 1840;
-        let monthCount = parseInt(localStorage.getItem(monthKey)) || 45200;
-        let yearCount = parseInt(localStorage.getItem(yearKey)) || 520000;
-
-        if (!sessionStorage.getItem('mega_active_session')) {
-            dayCount++;
-            monthCount++;
-            yearCount++;
-            
-            localStorage.setItem(dayKey, dayCount);
-            localStorage.setItem(monthKey, monthCount);
-            localStorage.setItem(yearKey, yearCount);
-            sessionStorage.setItem('mega_active_session', 'true');
-        }
-
-        document.getElementById('visits-day').innerText = dayCount.toLocaleString();
-        document.getElementById('visits-month').innerText = monthCount.toLocaleString();
-        document.getElementById('visits-year').innerText = yearCount.toLocaleString();
-    }
-
-    updateVisitorCounters();
-</script>
-
+    <script>
+        fetch('articles.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('articles-container');
+                container.innerHTML = ''; 
+                data.categories.forEach(cat => {
+                    cat.articles.forEach(art => {
+                        container.innerHTML += `
+                            <div class="card">
+                                <img src="${art.image}" alt="${art.title}">
+                                <h3>${art.title}</h3>
+                                <p>${art.summary}</p>
+                            </div>
+                        `;
+                    });
+                });
+            })
+            .catch(err => console.error('Error loading articles:', err));
+    </script>
 </body>
 </html>
