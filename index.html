@@ -5,14 +5,17 @@
     <title>Ultimate Pet Care Academy | Expert Guides</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        /* تصميم العداد بشكل احترافي */
+        
+        /* تصميم العداد العرضي في أعلى يسار الشاشة */
         #visitor-counter {
             position: fixed; top: 10px; left: 10px;
-            background: rgba(0,0,0,0.85); color: #00ff00;
-            padding: 10px; border-radius: 8px; font-size: 13px; z-index: 1000;
-            line-height: 1.6; border: 1px solid #444;
+            background: rgba(0,0,0,0.8); color: #fff;
+            padding: 8px 12px; border-radius: 5px; font-size: 11px; z-index: 1000;
+            display: flex; gap: 10px; font-weight: bold;
         }
-        .container { max-width: 1200px; margin: auto; padding: 40px 20px; }
+        .counter-item { color: #ffcc00; }
+
+        .container { max-width: 1200px; margin: auto; padding: 60px 20px 20px 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 5px; }
@@ -20,11 +23,11 @@
 </head>
 <body>
 
-    <!-- عداد الزيارات المحدث -->
+    <!-- العداد العرضي -->
     <div id="visitor-counter">
-        <div>Day (d): <span id="count-d">0</span></div>
-        <div>Month (m): <span id="count-m">0</span></div>
-        <div>Year (y): <span id="count-y">0</span></div>
+        <span>D:<span class="counter-item" id="d-count">0</span></span>
+        <span>M:<span class="counter-item" id="m-count">0</span></span>
+        <span>Y:<span class="counter-item" id="y-count">0</span></span>
     </div>
 
     <div class="container">
@@ -33,22 +36,22 @@
     </div>
 
     <script>
-        // منطق تحديث العدادات الذكي
-        const now = new Date();
-        const dKey = `visits_d_${now.getDate()}_${now.getMonth()}_${now.getFullYear()}`;
-        const mKey = `visits_m_${now.getMonth()}_${now.getFullYear()}`;
-        const yKey = `visits_y_${now.getFullYear()}`;
-
-        function updateCounter(key, elementId) {
-            let count = parseInt(localStorage.getItem(key) || 0);
-            count++;
-            localStorage.setItem(key, count);
-            document.getElementById(elementId).innerText = count;
+        // دالة لمحاكاة العدادات بشكل عرضي وتحديثها
+        function updateCounters() {
+            // محاكاة للعدادات (يمكن ربطها مستقبلاً بقاعدة بيانات حقيقية عند الحاجة)
+            let d = parseInt(localStorage.getItem('d_count') || 0) + 1;
+            let m = parseInt(localStorage.getItem('m_count') || 0) + 1;
+            let y = parseInt(localStorage.getItem('y_count') || 0) + 1;
+            
+            localStorage.setItem('d_count', d);
+            localStorage.setItem('m_count', m);
+            localStorage.setItem('y_count', y);
+            
+            document.getElementById('d-count').innerText = d;
+            document.getElementById('m-count').innerText = m;
+            document.getElementById('y-count').innerText = y;
         }
-
-        updateCounter(dKey, 'count-d');
-        updateCounter(mKey, 'count-m');
-        updateCounter(yKey, 'count-y');
+        updateCounters();
 
         // جلب المقالات من ملف articles.json
         fetch('articles.json')
