@@ -1,0 +1,16 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "Article Title",
+      "slug": "article-title",
+      "image": "https://...",
+      "summary": "Article summary...",
+      "content": "Article content...",
+      "category": "Dogs",
+      "author": "Virixoo Editorial Team",
+      "datePublished": "2026-08-08",
+      "dateModified": "2026-08-08"
+    }
+  ]
+}
