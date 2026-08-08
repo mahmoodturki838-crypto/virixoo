@@ -5,14 +5,7 @@
     <title>Ultimate Pet Care Academy | Expert Guides</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        #visitor-counter {
-            position: fixed; top: 10px; left: 10px;
-            background: rgba(0,0,0,0.85); color: #fff;
-            padding: 8px 12px; border-radius: 5px; font-size: 12px; z-index: 1000;
-            display: flex; gap: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .counter-item { color: #ffcc00; }
-        .container { max-width: 1200px; margin: auto; padding: 60px 20px 20px 20px; }
+        .container { max-width: 1200px; margin: auto; padding: 40px 20px 20px 20px; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
@@ -21,16 +14,28 @@
         .card h3:hover { color: #007bff; }
         .card p { color: #555; line-height: 1.5; font-size: 14px; }
         
-        .read-more { background: none; border: none; color: #007bff; font-weight: bold; cursor: pointer; padding: 0; margin-top: 10px; text-align: left; font-size: 14px; }
+        /* حاوية الأزرار لضبط المسافات واليمين واليسار */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .read-more { background: none; border: none; color: #007bff; font-weight: bold; cursor: pointer; padding: 0; font-size: 14px; }
         .read-more:hover { text-decoration: underline; }
 
+        /* زر بنترست على اليمين مع فراغ آمن */
         .pinterest-btn {
             display: inline-block; background: #bd081c; color: #fff;
-            padding: 6px 12px; border-radius: 5px; text-decoration: none;
-            font-weight: bold; font-size: 13px; margin-top: 15px; text-align: center;
+            padding: 6px 14px; border-radius: 5px; text-decoration: none;
+            font-weight: bold; font-size: 13px; text-align: center;
         }
         .pinterest-btn:hover { background: #990614; }
 
+        /* صفحة عرض المقال الكاملة */
         #article-view { display: none; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 20px; }
         #article-view img { width: 100%; height: 350px; object-fit: cover; border-radius: 5px; margin-bottom: 20px; }
         #article-view h1 { color: #222; margin-top: 0; }
@@ -46,11 +51,6 @@
 </head>
 <body>
 
-    <!-- العداد الحقيقي المحدث عبر API مستقر -->
-    <div id="visitor-counter">
-        <span>Total Visits: <span class="counter-item" id="live-count">Loading...</span></span>
-    </div>
-
     <div class="container">
         <h1 id="main-title">Ultimate Pet Care Academy</h1>
         
@@ -61,22 +61,11 @@
             <img id="view-img" src="" alt="">
             <h1 id="view-title"></h1>
             <p id="view-text"></p>
-            <a id="view-pin" href="#" target="_blank" class="pinterest-btn" style="margin-top: 20px;">Pin to Pinterest</a>
+            <a id="view-pin" href="#" target="_blank" class="pinterest-btn" style="margin-top: 20px; display: inline-block;">Pin to Pinterest</a>
         </div>
     </div>
 
     <script>
-        // استخدام خدمة counterapi.dev الحقيقية لزيادة وعرض عدد الزيارات تراكمياً من أي جهاز
-        fetch('https://api.counterapi.dev/v1/virixoo/visits/up')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('live-count').innerText = data.count;
-            })
-            .catch(err => {
-                console.error('Counter error:', err);
-                document.getElementById('live-count').innerText = "1";
-            });
-
         let allArticles = [];
 
         fetch('articles.json')
@@ -107,9 +96,8 @@
                             <h3 onclick="openArticle(${art.id})">${art.title}</h3>
                             <p>${art.summary}</p>
                         </div>
-                        <div>
+                        <div class="card-actions">
                             <button class="read-more" onclick="openArticle(${art.id})">Read More &rarr;</button>
-                            <br>
                             <a href="${pinUrl}" target="_blank" class="pinterest-btn">Pin to Pinterest</a>
                         </div>
                     </div>
