@@ -40,6 +40,7 @@ function formatContent(content = "") {
 
       return `<p>${escapeHtml(text).replace(/\n/g, "<br>")}</p>`;
     })
+    .filter(Boolean)
     .join("\n");
 }
 
@@ -53,7 +54,7 @@ function articleCard(article) {
   const slug = article.slug || slugify(article.title);
   const url = `/article/${encodeURIComponent(slug)}/`;
 
-  const title = escapeHtml(article.title);
+  const title = escapeHtml(article.title || "Pet Care Guide");
   const image = escapeHtml(article.image || "");
   const summary = escapeHtml(article.summary || "");
   const category = escapeHtml(article.category || "Pet Care");
@@ -65,50 +66,56 @@ function articleCard(article) {
     `&description=${encodeURIComponent(article.title || "")}`;
 
   return `
-    <article class="card">
+<article class="article-card">
 
-      <a class="card-image-link" href="${url}" aria-label="${title}">
-        <img
-          src="${image}"
-          alt="${title}"
-          loading="lazy"
-          width="800"
-          height="500"
-        >
+  <a class="card-image-link" href="${url}" aria-label="${title}">
+    ${
+      image
+        ? `
+    <img
+      src="${image}"
+      alt="${title}"
+      loading="lazy"
+      width="800"
+      height="500"
+    >
+    `
+        : ""
+    }
+  </a>
+
+  <div class="card-body">
+
+    <div class="category">${category}</div>
+
+    <h2>
+      <a href="${url}">${title}</a>
+    </h2>
+
+    <p>${summary}</p>
+
+    <div class="card-actions">
+
+      <a class="read-more" href="${url}">
+        Read More →
       </a>
 
-      <div class="card-body">
+      <a
+        class="pinterest-btn"
+        href="${pinterestUrl}"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Share ${title} on Pinterest"
+      >
+        📌 Pinterest
+      </a>
 
-        <div class="category">${category}</div>
+    </div>
 
-        <h2>
-          <a href="${url}">${title}</a>
-        </h2>
+  </div>
 
-        <p>${summary}</p>
-
-        <div class="card-actions">
-
-          <a class="read-more" href="${url}">
-            Read More →
-          </a>
-
-          <a
-            class="pinterest-btn"
-            href="${pinterestUrl}"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Share ${title} on Pinterest"
-          >
-            📌 Pinterest
-          </a>
-
-        </div>
-
-      </div>
-
-    </article>
-  `;
+</article>
+`;
 }
 
 function header(title, description) {
@@ -131,13 +138,6 @@ function header(title, description) {
     content="${escapeHtml(description)}"
   >
 
-  <meta name="robots" content="index, follow">
-
-  <link
-    rel="canonical"
-    href="${SITE_URL}"
-  >
-
   <link
     rel="stylesheet"
     href="/css/style.css"
@@ -149,80 +149,43 @@ function header(title, description) {
 
 <header class="site-header">
 
-  <div class="container header-inner">
+  <a href="/" class="logo">
+    Virixoo
+  </a>
 
-    <a href="/" class="logo">
-      Virixoo
-    </a>
-
-    <nav>
-      <a href="/">Home</a>
-      <a href="/dogs/">Dogs</a>
-      <a href="/cats/">Cats</a>
-      <a href="/about/">About</a>
-    </nav>
-
-  </div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/dogs/">Dogs</a>
+    <a href="/cats/">Cats</a>
+    <a href="/about/">About</a>
+  </nav>
 
 </header>
+
+<main class="site-main">
 `;
 }
 
 function footer() {
   return `
+</main>
+
 <footer class="site-footer">
 
-  <div class="container">
-
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/dogs/">Dogs</a>
-      <a href="/cats/">Cats</a>
-      <a href="/about/">About</a>
-      <a href="/privacy-policy/">Privacy Policy</a>
-      <a href="/contact/">Contact</a>
-    </div>
-
-    <p>
-      © ${new Date().getFullYear()} Virixoo. All rights reserved.
-    </p>
-
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/dogs/">Dogs</a>
+    <a href="/cats/">Cats</a>
+    <a href="/about/">About</a>
+    <a href="/privacy-policy/">Privacy Policy</a>
+    <a href="/contact/">Contact</a>
   </div>
 
+  <p>
+    © ${new Date().getFullYear()} Virixoo. All rights reserved.
+  </p>
+
 </footer>
-
-<script>
-(function () {
-
-  async function registerVisit() {
-
-    try {
-
-      await fetch("/api/visit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          page: window.location.pathname
-        })
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Visit tracking failed:",
-        error
-      );
-
-    }
-
-  }
-
-  registerVisit();
-
-})();
-</script>
 
 </body>
 </html>
@@ -231,67 +194,28 @@ function footer() {
 
 function statsBox() {
   return `
-<div class="visitor-stats" id="visitor-stats">
+<section class="stats-box">
 
-  <div class="visitor-stat">
-    <strong id="today-visits">—</strong>
-    <span>Today</span>
+  <div>
+    <strong>Dogs</strong>
+    <span>Expert Care Guides</span>
   </div>
 
-  <div class="visitor-stat">
-    <strong id="month-visits">—</strong>
-    <span>This Month</span>
+  <div>
+    <strong>Cats</strong>
+    <span>Expert Care Guides</span>
   </div>
 
-  <div class="visitor-stat">
-    <strong id="year-visits">—</strong>
-    <span>This Year</span>
+  <div>
+    <strong>Virixoo</strong>
+    <span>Pet Care Resources</span>
   </div>
 
-</div>
-
-<script>
-(async function () {
-
-  try {
-
-    const response = await fetch("/api/stats");
-
-    if (!response.ok) {
-      throw new Error("Statistics unavailable");
-    }
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error("Statistics unavailable");
-    }
-
-    document.getElementById("today-visits").textContent =
-      Number(data.today || 0).toLocaleString();
-
-    document.getElementById("month-visits").textContent =
-      Number(data.thisMonth || 0).toLocaleString();
-
-    document.getElementById("year-visits").textContent =
-      Number(data.thisYear || 0).toLocaleString();
-
-  } catch (error) {
-
-    console.error(
-      "Stats loading failed:",
-      error
-    );
-
-  }
-
-})();
-</script>
+</section>
 `;
 }
 
 function createHomePage(articles) {
-
   const cards = articles
     .map(articleCard)
     .join("\n");
@@ -302,37 +226,33 @@ ${header(
   "Expert dog and cat care guides covering nutrition, training, grooming, behavior, breeds, and everyday pet care."
 )}
 
-<main>
+<section class="hero">
 
-  <section class="hero container">
+  <h1>
+    Expert Dog & Cat Care Guides
+  </h1>
 
-    <h1>
-      Expert Dog & Cat Care Guides
-    </h1>
+  <p>
+    Practical guides for responsible pet owners covering
+    nutrition, training, grooming, behavior, breeds,
+    health, and everyday care.
+  </p>
 
-    <p>
-      Practical guides for responsible pet owners covering
-      nutrition, training, grooming, behavior, breeds,
-      health, and everyday care.
-    </p>
+</section>
 
-    ${statsBox()}
+${statsBox()}
 
-  </section>
+<section>
 
-  <section class="container">
+  <div class="section-heading">
+    <h2>Latest Pet Care Guides</h2>
+  </div>
 
-    <div class="section-heading">
-      <h2>Latest Pet Care Guides</h2>
-    </div>
+  <div class="article-grid">
+    ${cards}
+  </div>
 
-    <div class="article-grid">
-      ${cards}
-    </div>
-
-  </section>
-
-</main>
+</section>
 
 ${footer()}
 `;
@@ -345,7 +265,6 @@ ${footer()}
 }
 
 function createArticlePage(article) {
-
   const slug = article.slug || slugify(article.title);
 
   const articleDir = path.join(
@@ -356,13 +275,15 @@ function createArticlePage(article) {
 
   ensureDir(articleDir);
 
-  const title = article.title || "Pet Care Guide";
+  const title =
+    article.title || "Pet Care Guide";
 
   const description =
     article.summary ||
     "Expert pet care guide from Virixoo.";
 
-  const image = article.image || "";
+  const image =
+    article.image || "";
 
   const pinterestUrl =
     `https://www.pinterest.com/pin/create/button/?` +
@@ -371,104 +292,106 @@ function createArticlePage(article) {
     `&description=${encodeURIComponent(title)}`;
 
   const html = `
-${header(title + " | Virixoo", description)}
+${header(
+  `${title} | Virixoo`,
+  description
+)}
 
-<main class="article-page container">
+<article class="article-page">
 
-  <div class="breadcrumbs">
-    <a href="/">Home</a>
-    <span>›</span>
-    <span>${escapeHtml(article.category || "Pet Care")}</span>
+  <div class="article-category">
+    ${escapeHtml(article.category || "Pet Care")}
   </div>
 
-  <article>
+  <h1>
+    ${escapeHtml(title)}
+  </h1>
 
-    <div class="article-category">
-      ${escapeHtml(article.category || "Pet Care")}
-    </div>
+  <div class="article-meta">
 
-    <h1>
-      ${escapeHtml(title)}
-    </h1>
-
-    <div class="article-meta">
-
-      <span>
-        By ${escapeHtml(article.author || "Virixoo Editorial Team")}
-      </span>
-
-      <span>•</span>
-
-      <span>
-        Published ${escapeHtml(article.datePublished || "")}
-      </span>
-
-      ${
-        article.dateModified
-          ? `
-            <span>•</span>
-            <span>
-              Updated ${escapeHtml(article.dateModified)}
-            </span>
-          `
-          : ""
-      }
-
-    </div>
-
-    <div class="article-actions">
-
-      <a
-        class="pinterest-btn"
-        href="${pinterestUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        📌 Share on Pinterest
-      </a>
-
-    </div>
+    <span>
+      By ${escapeHtml(
+        article.author || "Virixoo Editorial Team"
+      )}
+    </span>
 
     ${
-      image
+      article.datePublished
         ? `
-          <img
-            class="article-hero"
-            src="${escapeHtml(image)}"
-            alt="${escapeHtml(title)}"
-            width="1200"
-            height="700"
-          >
-        `
+    <span>•</span>
+
+    <span>
+      Published ${escapeHtml(article.datePublished)}
+    </span>
+    `
         : ""
     }
 
-    <div class="article-content">
+    ${
+      article.dateModified
+        ? `
+    <span>•</span>
 
-      ${formatContent(article.content)}
+    <span>
+      Updated ${escapeHtml(article.dateModified)}
+    </span>
+    `
+        : ""
+    }
 
-    </div>
+  </div>
 
-    <div class="article-bottom-share">
+  <div class="article-actions">
 
-      <span>
-        Found this guide helpful?
-      </span>
+    <a
+      class="pinterest-btn"
+      href="${pinterestUrl}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      📌 Share on Pinterest
+    </a>
 
-      <a
-        class="pinterest-btn"
-        href="${pinterestUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        📌 Save to Pinterest
-      </a>
+  </div>
 
-    </div>
+  ${
+    image
+      ? `
+  <img
+    class="article-hero"
+    src="${escapeHtml(image)}"
+    alt="${escapeHtml(title)}"
+    width="1200"
+    height="700"
+  >
+  `
+      : ""
+  }
 
-  </article>
+  <div class="article-content">
 
-</main>
+    ${formatContent(article.content)}
+
+  </div>
+
+  <div class="article-bottom-share">
+
+    <span>
+      Found this guide helpful?
+    </span>
+
+    <a
+      class="pinterest-btn"
+      href="${pinterestUrl}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      📌 Save to Pinterest
+    </a>
+
+  </div>
+
+</article>
 
 ${footer()}
 `;
@@ -480,8 +403,11 @@ ${footer()}
   );
 }
 
-function createCategoryPage(articles, category, slug) {
-
+function createCategoryPage(
+  articles,
+  category,
+  slug
+) {
   const filtered = articles.filter(
     (article) =>
       String(article.category || "").toLowerCase() ===
@@ -498,30 +424,24 @@ ${header(
   `Expert ${category.toLowerCase()} care guides for responsible pet owners.`
 )}
 
-<main>
+<section>
 
-  <section class="hero container">
+  <h1>
+    ${escapeHtml(category)} Care Guides
+  </h1>
 
-    <h1>
-      ${escapeHtml(category)} Care Guides
-    </h1>
+  <p>
+    Practical ${escapeHtml(
+      category.toLowerCase()
+    )}
+    care information for responsible pet owners.
+  </p>
 
-    <p>
-      Practical ${escapeHtml(category.toLowerCase())}
-      care information for responsible pet owners.
-    </p>
+  <div class="article-grid">
+    ${cards}
+  </div>
 
-  </section>
-
-  <section class="container">
-
-    <div class="article-grid">
-      ${cards}
-    </div>
-
-  </section>
-
-</main>
+</section>
 
 ${footer()}
 `;
@@ -540,15 +460,18 @@ ${footer()}
   );
 }
 
-function createSimplePage(title, text, slug) {
-
+function createSimplePage(
+  title,
+  text,
+  slug
+) {
   const html = `
 ${header(
   `${title} | Virixoo`,
   text
 )}
 
-<main class="static-page container">
+<section class="simple-page">
 
   <h1>
     ${escapeHtml(title)}
@@ -558,7 +481,7 @@ ${header(
     ${escapeHtml(text)}
   </p>
 
-</main>
+</section>
 
 ${footer()}
 `;
@@ -578,7 +501,6 @@ ${footer()}
 }
 
 function createRobots() {
-
   const robots = `
 User-agent: *
 Allow: /
@@ -594,7 +516,6 @@ Sitemap: ${SITE_URL}/sitemap.xml
 }
 
 function createSitemap(articles) {
-
   const urls = [];
 
   urls.push(`
@@ -615,8 +536,13 @@ function createSitemap(articles) {
   </url>
   `);
 
-  articles.forEach((article) => {
+  urls.push(`
+  <url>
+    <loc>${SITE_URL}/about/</loc>
+  </url>
+  `);
 
+  articles.forEach((article) => {
     urls.push(`
   <url>
     <loc>${escapeHtml(articleUrl(article))}</loc>
@@ -627,7 +553,6 @@ function createSitemap(articles) {
     }
   </url>
     `);
-
   });
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -646,13 +571,14 @@ ${urls.join("\n")}
 }
 
 function copyPublicFiles() {
-
   if (!fs.existsSync(PUBLIC_DIR)) {
     return;
   }
 
-  function copyDirectory(source, destination) {
-
+  function copyDirectory(
+    source,
+    destination
+  ) {
     ensureDir(destination);
 
     const entries = fs.readdirSync(
@@ -661,7 +587,6 @@ function copyPublicFiles() {
     );
 
     for (const entry of entries) {
-
       const sourcePath = path.join(
         source,
         entry.name
@@ -673,23 +598,17 @@ function copyPublicFiles() {
       );
 
       if (entry.isDirectory()) {
-
         copyDirectory(
           sourcePath,
           destinationPath
         );
-
       } else {
-
         fs.copyFileSync(
           sourcePath,
           destinationPath
         );
-
       }
-
     }
-
   }
 
   copyDirectory(
@@ -699,15 +618,14 @@ function copyPublicFiles() {
 }
 
 function build() {
-
-  console.log("Starting Virixoo build...");
+  console.log(
+    "Starting Virixoo build..."
+  );
 
   if (!fs.existsSync(DATA_FILE)) {
-
     throw new Error(
       `articles.json not found: ${DATA_FILE}`
     );
-
   }
 
   const raw = fs.readFileSync(
@@ -718,11 +636,9 @@ function build() {
   const data = JSON.parse(raw);
 
   if (!Array.isArray(data.articles)) {
-
     throw new Error(
       "articles.json must contain an 'articles' array."
     );
-
   }
 
   const articles = data.articles;
@@ -732,7 +648,6 @@ function build() {
   );
 
   if (fs.existsSync(DIST_DIR)) {
-
     fs.rmSync(
       DIST_DIR,
       {
@@ -740,7 +655,6 @@ function build() {
         force: true
       }
     );
-
   }
 
   ensureDir(DIST_DIR);
@@ -749,7 +663,9 @@ function build() {
 
   createHomePage(articles);
 
-  articles.forEach(createArticlePage);
+  articles.forEach(
+    createArticlePage
+  );
 
   createCategoryPage(
     articles,
@@ -785,18 +701,18 @@ function build() {
 
   createSitemap(articles);
 
-  console.log("Virixoo build completed successfully.");
+  console.log(
+    "Virixoo build completed successfully."
+  );
+
   console.log(
     `Generated ${articles.length} article pages.`
   );
 }
 
 try {
-
   build();
-
 } catch (error) {
-
   console.error(
     "BUILD FAILED:"
   );
@@ -804,5 +720,4 @@ try {
   console.error(error);
 
   process.exit(1);
-
 }
