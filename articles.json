@@ -8,88 +8,16 @@
       "keywords": ["dog nutrition", "healthy dog food", "canine diet essentials"],
       "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
       "summary": "Discover the core principles of dog nutrition, essential vitamins, proteins, and how to choose the right diet for a long, healthy canine life.",
-      "content": "Proper nutrition is the foundation of your dog's health, energy, and longevity. Feeding your canine companion a balanced diet rich in proteins, fats, carbohydrates, vitamins, and minerals ensures they maintain an active lifestyle and a strong immune system. When selecting commercial dog food, always check the ingredients list to ensure real meat is the primary component, avoiding excessive fillers like corn and soy. Furthermore, understanding your dog's specific life stage—whether they are a high-energy puppy, an adult, or a senior—is crucial for adjusting their caloric intake. Providing fresh water 24/7 and monitoring portion sizes will prevent canine obesity, one of the most common health issues today. Always consult your veterinarian before making radical changes to your pet's dietary routine."
+      "content": "Proper nutrition is the absolute foundation of your dog's health, energy, and overall longevity. Feeding your canine companion a balanced diet rich in high-quality proteins, healthy fats, complex carbohydrates, essential vitamins, and vital minerals ensures they maintain an active lifestyle and a robust immune system. When selecting commercial dog food, always carefully check the ingredient list to guarantee that real meat is listed as the primary component, while strictly avoiding excessive fillers like corn, wheat gluten, and artificial soy byproducts. Furthermore, understanding your dog's specific life stage—whether they are a high-energy puppy requiring rapid growth support, an active adult, or a senior dog needing joint protection—is crucial for precisely adjusting their daily caloric intake. Providing fresh, clean water 24/7 and monitoring portion sizes will effectively prevent canine obesity, which remains one of the most common yet preventable health issues in modern pets. Always consult your trusted veterinarian before making any radical or sudden changes to your beloved pet's established dietary routine to ensure their digestive system adapts safely and smoothly."
     },
     {
       "id": 2,
       "title": "Essential Kitten Care: Your First Month Step-by-Step",
       "slug": "essential-kitten-care-first-month",
       "keywords": ["kitten care", "newborn kittens", "feline welfare"],
-      "image": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=800",
+      "image": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
       "summary": "A comprehensive step-by-step roadmap for raising a healthy newborn kitten during its crucial first month of life.",
-      "content": "Bringing home a newborn kitten requires immense dedication, warmth, and precise nutritional care. During the first few weeks, kittens rely entirely on mother's milk or a specialized feline milk replacer formula, bottle-fed every few hours. Keeping them warm is vital, as kittens cannot regulate their body temperature independently. As they approach four weeks of age, you can gently introduce litter box training by placing them inside after meals. Socialization is another critical milestone; gentle handling helps them grow into confident, friendly adult cats. Regular veterinary check-ups during this phase will ensure they are free of parasites, receive necessary vaccinations, and hit their growth milestones safely."
-    },
-    {
-      "id": 3,
-      "title": "How to Cure Canine Anxiety: Practical Expert Solutions",
-      "slug": "how-to-cure-canine-anxiety",
-      "keywords": ["dog anxiety", "calming anxious dogs", "pet behavioral health"],
-      "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
-      "summary": "Learn effective behavioral techniques and environmental adjustments to help calm an anxious or stressed dog.",
-      "content": "Canine anxiety is a prevalent behavioral challenge triggered by thunderstorms, separation from owners, loud noises, or past trauma. Recognizing the early symptoms—such as excessive panting, trembling, destructive chewing, or relentless whining—is the first step toward effective treatment. Creating a safe, quiet space or a designated crate where your dog can retreat during stressful events provides a strong sense of security. Regular physical exercise and mental stimulation through puzzle toys significantly reduce pent-up nervous energy. In severe cases, professional behavioral trainers or veterinary-approved calming supplements can help restore your dog's emotional balance and peace of mind."
-    },
-    {
-      "id": 4,
-      "title": "Feline Hydration Secrets: Why Cats Refuse Water and How to Help",
-      "slug": "feline-hydration-secrets",
-      "keywords": ["cat hydration", "encourage cat to drink", "feline kidney health"],
-      "image": "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80",
-      "summary": "Explore why cats naturally drink very little water and practical strategies to prevent dehydration and kidney disease.",
-      "content": "Cats have a historically low thirst drive, originating from desert-dwelling ancestors who derived most of their moisture from prey. However, relying solely on dry kibble can lead to chronic dehydration and severe urinary tract or kidney complications. To encourage your feline friend to drink more water, try placing multiple bowls around the house away from their food and litter areas, as cats prefer separate dining and drinking zones. Investing in a circulating pet water fountain can work wonders, as cats are naturally attracted to moving water. Additionally, incorporating high-moisture wet food into their daily diet guarantees they receive adequate hydration effortlessly."
-    },
-    {
-      "id": 5,
-      "title": "Dog Dental Care 101: Preventing Tooth Decay and Gum Disease",
-      "slug": "dog-dental-care-preventing-decay",
-      "keywords": ["dog dental care", "canine tooth decay", "bad breath in dogs"],
-      "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
-      "summary": "A complete guide to maintaining your dog's dental hygiene, preventing plaque buildup, and eliminating bad breath.",
-      "content": "Dental hygiene is frequently overlooked by pet owners, yet periodontal disease affects over 80% of dogs by the age of three. Plaque and tartar buildup do not just cause terrible bad breath; they can lead to severe bacterial infections entering the bloodstream and damaging vital organs like the heart and kidneys. Regular tooth brushing using a canine-specific enzymatic toothpaste is the gold standard for prevention. If your dog resists brushing, you can utilize veterinary dental chews, specialized dry kibble textures, and oral rinses designed to break down plaque safely. Scheduling professional cleaning sessions with your vet ensures long-term oral health."
-    },
-    {
-      "id": 6,
-      "title": "Understanding Cat Body Language: What Your Feline Is Telling You",
-      "slug": "understanding-cat-body-language",
-      "keywords": ["cat body language", "feline behavior", "why cats purr"],
-      "image": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=800&q=80",
-      "summary": "Decode the subtle signs of cat communication, from tail movements and ear positions to purring and slow blinking.",
-      "content": "Cats communicate primarily through complex body language rather than vocalizations, making it essential for owners to understand their physical cues. A slow blink from your cat is the ultimate sign of trust, affection, and contentment, often called a 'cat kiss.' Conversely, flattened ears, a twitching tail tip, or dilated pupils usually indicate fear, agitation, or an imminent attack. Purring generally signifies happiness, though cats occasionally purr when stressed or in pain to self-soothe. By paying close attention to these subtle signals, you can build a deeper, more harmonious bond with your feline companion and avoid accidental scratches."
-    },
-    {
-      "id": 7,
-      "title": "The Ultimate Guide to Puppy Socialization: Weeks to Remember",
-      "slug": "ultimate-guide-to-puppy-socialization",
-      "keywords": ["puppy socialization", "training young dogs", "behavioral development"],
-      "image": "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80",
-      "summary": "Master the critical socialization window for puppies to ensure they grow into well-adjusted, confident adult dogs.",
-      "content": "The window of socialization in puppies—typically occurring between 8 and 16 weeks of age—is the most crucial developmental period of their lives. During this golden window, exposing your puppy safely to diverse environments, new people, friendly animals, different sounds, and varying surfaces shapes their permanent worldview. Positive reinforcement, such as giving treats and praise during novel experiences, teaches them that the world is a safe, welcoming place. Neglecting this phase often leads to lifelong fearfulness, reactivity, or aggression. Patience, consistency, and safe exposure form the bedrock of a well-behaved adult dog."
-    },
-    {
-      "id": 8,
-      "title": "Common Toxic Foods for Pets: What to Keep Away Immediately",
-      "slug": "common-toxic-foods-for-pets",
-      "keywords": ["toxic foods for pets", "what dogs cannot eat", "cat poisonous foods"],
-      "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80",
-      "summary": "A life-saving guide identifying everyday human foods that are severely toxic or fatal to dogs and cats.",
-      "content": "Many common household foods that are completely safe for humans can act as lethal poisons to our pets. Chocolate, grapes, raisins, onions, garlic, and products containing artificial sweeteners like xylitol cause severe internal organ failure in dogs and cats. Even small amounts of macadamia nuts or avocado can trigger extreme toxicity symptoms ranging from vomiting and lethargy to seizures. If you suspect your pet has ingested any toxic substance, contact your veterinarian or an emergency animal poison control center immediately. Prevention by keeping kitchen counters clean and securing pantry doors is always your best defense."
-    },
-    {
-      "id": 9,
-      "title": "Senior Pet Care: Keeping Your Aging Companion Comfortable",
-      "slug": "senior-pet-care-comfort",
-      "keywords": ["senior pet care", "aging dog health", "old cat comfort"],
-      "image": "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80",
-      "summary": "Practical advice on adapting your home, diet, and healthcare routines to support your senior pets with dignity.",
-      "content": "As pets enter their golden years—typically around age seven and older—their metabolic needs, physical agility, and medical requirements change significantly. Joint stiffness, arthritis, declining vision, and hearing loss are common challenges that require environmental adjustments within the home. Providing orthopedic memory foam beds, adding ramps or steps to favorite resting places, and keeping food and water bowls easily accessible makes a massive difference in their daily comfort. Regular geriatric veterinary screenings every six months help detect age-related conditions like kidney disease or diabetes early, ensuring a high quality of life."
-    },
-    {
-      "id": 10,
-      "title": "Indoor Cat Enrichment: Beating Boredom and Promoting Fitness",
-      "slug": "indoor-cat-enrichment-fitness",
-      "keywords": ["indoor cat enrichment", "cat toys fitness", "preventing feline obesity"],
-      "image": "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80",
-      "summary": "Creative and engaging strategies to stimulate your indoor cat's mind and body to prevent destructive boredom.",
-      "content": "While indoor cats enjoy safety from outdoor hazards, they face a high risk of sedentary boredom, obesity, and stress-related behavioral issues. Simulating their natural hunting instincts through interactive play sessions with feather wands, laser pointers, or puzzle feeders keeps their minds sharp and bodies agile. Vertical territory—such as multi-level cat trees, wall shelves, and window perches—expands their living space and offers safe observation posts. Rotating their toys every week prevents them from losing interest, ensuring your indoor feline stays happy, active, and mentally fulfilled throughout its life."
+      "content": "Bringing home a newborn kitten requires immense dedication, constant warmth, and precise nutritional care. During the fragile first few weeks of life, kittens rely entirely on specialized feline milk replacer formula, bottle-fed every few hours around the clock, as they cannot yet process solid foods. Maintaining a warm, stable environment is vital because newborn kittens cannot independently regulate their internal body temperature. As they approach four weeks of age, you can gently introduce early litter box training by placing them inside a shallow box right after meals. Socialization is another critical developmental milestone during this phase; gentle, loving human handling helps them grow into confident, friendly, and well-adjusted adult cats. Regular veterinary check-ups throughout this critical period will ensure they remain free of parasites, receive necessary early immunizations, and hit all their fundamental growth milestones safely and securely."
     }
   ]
 }
