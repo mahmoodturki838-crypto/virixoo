@@ -1,0 +1,1823 @@
+{
+  "topics": [
+    {
+      "id": "cat-001",
+      "topic": "How to Stop a Kitten From Biting",
+      "category": "Cats",
+      "subcategory": "Kitten Care",
+      "primaryKeyword": "how to stop a kitten from biting",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-002",
+      "topic": "How to Litter Train a Kitten",
+      "category": "Cats",
+      "subcategory": "Kitten Care",
+      "primaryKeyword": "how to litter train a kitten",
+      "searchIntent": "Informational",
+      "status": "published"
+    },
+    {
+      "id": "cat-003",
+      "topic": "How to Help a Kitten Adjust to a New Home",
+      "category": "Cats",
+      "subcategory": "Kitten Care",
+      "primaryKeyword": "help a kitten adjust to a new home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-004",
+      "topic": "How Often Should You Feed a Kitten",
+      "category": "Cats",
+      "subcategory": "Kitten Nutrition",
+      "primaryKeyword": "how often should you feed a kitten",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-005",
+      "topic": "How to Introduce a Kitten to an Older Cat",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "introduce a kitten to an older cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-006",
+      "topic": "How to Make a Cat Feel Safe at Home",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to make a cat feel safe",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-007",
+      "topic": "Why Does My Cat Bite Me Gently",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat bite me gently",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-008",
+      "topic": "Why Does My Cat Knead Blankets",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat knead blankets",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-009",
+      "topic": "Why Do Cats Scratch Furniture",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why do cats scratch furniture",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-010",
+      "topic": "How to Stop a Cat From Scratching Furniture",
+      "category": "Cats",
+      "subcategory": "Cat Training",
+      "primaryKeyword": "how to stop a cat from scratching furniture",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-011",
+      "topic": "How to Train a Cat to Use a Scratching Post",
+      "category": "Cats",
+      "subcategory": "Cat Training",
+      "primaryKeyword": "train a cat to use a scratching post",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-012",
+      "topic": "How to Keep a Cat From Jumping on Kitchen Counters",
+      "category": "Cats",
+      "subcategory": "Cat Training",
+      "primaryKeyword": "keep a cat from jumping on counters",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-013",
+      "topic": "How to Teach a Cat to Come When Called",
+      "category": "Cats",
+      "subcategory": "Cat Training",
+      "primaryKeyword": "teach a cat to come when called",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-014",
+      "topic": "How to Get a Cat Into a Carrier",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to get a cat into a carrier",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-015",
+      "topic": "How to Make a Cat Carrier Less Stressful",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "make a cat carrier less stressful",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-016",
+      "topic": "How to Bathe a Cat Safely",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how to bathe a cat safely",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-017",
+      "topic": "How Often Should You Brush a Cat",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how often should you brush a cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-018",
+      "topic": "How to Reduce Cat Shedding at Home",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how to reduce cat shedding",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-019",
+      "topic": "How to Trim a Cat's Nails",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how to trim a cat's nails",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-020",
+      "topic": "How to Clean a Cat's Ears",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how to clean a cat's ears",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-021",
+      "topic": "How to Brush a Cat's Teeth",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how to brush a cat's teeth",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-022",
+      "topic": "Best Ways to Keep a Cat's Coat Healthy",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "how to keep a cat coat healthy",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-023",
+      "topic": "How to Choose the Right Cat Brush",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "best brush for cats",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-024",
+      "topic": "How to Keep Long Haired Cats From Matting",
+      "category": "Cats",
+      "subcategory": "Cat Grooming",
+      "primaryKeyword": "prevent mats in long haired cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-025",
+      "topic": "How to Create a Healthy Feeding Routine for Cats",
+      "category": "Cats",
+      "subcategory": "Cat Nutrition",
+      "primaryKeyword": "healthy feeding routine for cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-026",
+      "topic": "Wet Food vs Dry Food for Cats",
+      "category": "Cats",
+      "subcategory": "Cat Nutrition",
+      "primaryKeyword": "wet food vs dry food for cats",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-027",
+      "topic": "How Much Water Should a Cat Drink",
+      "category": "Cats",
+      "subcategory": "Cat Nutrition",
+      "primaryKeyword": "how much water should a cat drink",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-028",
+      "topic": "How to Encourage a Cat to Drink More Water",
+      "category": "Cats",
+      "subcategory": "Cat Nutrition",
+      "primaryKeyword": "encourage cat to drink more water",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-029",
+      "topic": "How to Choose Cat Food for Different Life Stages",
+      "category": "Cats",
+      "subcategory": "Cat Nutrition",
+      "primaryKeyword": "choose cat food by age",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-030",
+      "topic": "How to Read Cat Food Labels",
+      "category": "Cats",
+      "subcategory": "Cat Nutrition",
+      "primaryKeyword": "how to read cat food labels",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-031",
+      "topic": "How to Set Up a Comfortable Cat Feeding Area",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "cat feeding area setup",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-032",
+      "topic": "How to Choose the Best Litter Box Location",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "best litter box location",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-033",
+      "topic": "How Often Should You Clean a Cat Litter Box",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how often clean cat litter box",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-034",
+      "topic": "How to Reduce Litter Box Odor",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to reduce litter box odor",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-035",
+      "topic": "How Many Litter Boxes Does a Cat Need",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how many litter boxes does a cat need",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-036",
+      "topic": "How to Choose the Right Litter Box for Your Cat",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to choose a litter box for a cat",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-037",
+      "topic": "How to Help a Cat That Hides All Day",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat hide all day",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-038",
+      "topic": "Why Does My Cat Follow Me Everywhere",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat follow me everywhere",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-039",
+      "topic": "Why Does My Cat Meow at Night",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat meow at night",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-040",
+      "topic": "How to Help a Cat Sleep Better at Night",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "how to help a cat sleep at night",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-041",
+      "topic": "Why Does My Cat Wake Me Up Early",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat wake me up early",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-042",
+      "topic": "How to Stop a Cat From Waking You Up",
+      "category": "Cats",
+      "subcategory": "Cat Training",
+      "primaryKeyword": "stop cat from waking me up",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-043",
+      "topic": "Why Do Cats Zoom Around the House",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why do cats zoom around the house",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-044",
+      "topic": "How to Give an Indoor Cat More Exercise",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to exercise an indoor cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-045",
+      "topic": "Best Indoor Activities for Cats",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "best indoor activities for cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-046",
+      "topic": "How to Make Your Home More Cat Friendly",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to make a home cat friendly",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-047",
+      "topic": "How to Create a Safe Room for a New Cat",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "safe room for a new cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-048",
+      "topic": "How to Introduce a Cat to a New Home",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "introduce cat to a new home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-049",
+      "topic": "How to Prepare Your Home Before Adopting a Cat",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "prepare home before adopting a cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-050",
+      "topic": "Essential Supplies for a New Cat",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "essential supplies for a new cat",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-051",
+      "topic": "How to Introduce a Cat to a Dog",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "introduce a cat to a dog",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-052",
+      "topic": "How to Introduce Two Cats Safely",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "how to introduce two cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-053",
+      "topic": "How Long Does It Take Cats to Get Along",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "how long does it take cats to get along",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-054",
+      "topic": "How to Reduce Stress When Introducing Cats",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "reduce stress when introducing cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-055",
+      "topic": "How to Tell if Your Cat Is Stressed",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "signs your cat is stressed",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-056",
+      "topic": "How to Create a Calmer Environment for Your Cat",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "how to create a calm environment for a cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-057",
+      "topic": "Why Does My Cat Hide From Visitors",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat hide from visitors",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-058",
+      "topic": "How to Help a Shy Cat Become More Confident",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "help a shy cat become confident",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-059",
+      "topic": "Why Does My Cat Suddenly Avoid Me",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why is my cat avoiding me",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-060",
+      "topic": "How to Build Trust With a New Cat",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "how to build trust with a new cat",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-061",
+      "topic": "Popular Cat Breeds for First Time Owners",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "best cat breeds for first time owners",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-062",
+      "topic": "Ragdoll Cat Personality and Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Ragdoll cat personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-063",
+      "topic": "Maine Coon Cat Personality and Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Maine Coon cat care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-064",
+      "topic": "Siamese Cat Personality and Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Siamese cat personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-065",
+      "topic": "British Shorthair Cat Personality and Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "British Shorthair cat care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-066",
+      "topic": "Persian Cat Grooming and Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Persian cat grooming and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-067",
+      "topic": "Bengal Cat Personality and Exercise Needs",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Bengal cat personality and exercise",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-068",
+      "topic": "Scottish Fold Cat Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Scottish Fold cat care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-069",
+      "topic": "Sphynx Cat Care and Grooming Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Sphynx cat care and grooming",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-070",
+      "topic": "Russian Blue Cat Personality and Care Guide",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "Russian Blue cat care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-071",
+      "topic": "How to Choose a Cat Breed for Your Lifestyle",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "how to choose a cat breed",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-072",
+      "topic": "Best Cat Breeds for Apartment Living",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "best cat breeds for apartments",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-073",
+      "topic": "Best Cat Breeds for Families With Children",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "best cat breeds for families with children",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-074",
+      "topic": "Best Low Maintenance Cat Breeds",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "best low maintenance cat breeds",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-075",
+      "topic": "Best Cat Breeds for Busy Owners",
+      "category": "Cats",
+      "subcategory": "Cat Breeds",
+      "primaryKeyword": "best cats for busy owners",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-076",
+      "topic": "How to Keep an Indoor Cat Happy",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to keep an indoor cat happy",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-077",
+      "topic": "How to Choose Safe Toys for Cats",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to choose safe cat toys",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-078",
+      "topic": "Best Types of Toys for Indoor Cats",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "best toys for indoor cats",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-079",
+      "topic": "How to Make Simple DIY Cat Toys",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "easy DIY cat toys",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-080",
+      "topic": "How to Build a Daily Routine for Your Cat",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "daily routine for cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-081",
+      "topic": "How to Prepare Your Cat for a Long Car Trip",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "prepare cat for a long car trip",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-082",
+      "topic": "How to Travel With a Cat Safely",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to travel with a cat safely",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-083",
+      "topic": "How to Help a Cat During a House Move",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "help cat during a house move",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-084",
+      "topic": "How to Introduce a Cat to Children",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "introduce a cat to children",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-085",
+      "topic": "How to Teach Children to Respect Cats",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "teach children how to respect cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-086",
+      "topic": "How to Recognize Healthy Cat Body Language",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "cat body language guide",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-087",
+      "topic": "What Does a Cat's Tail Position Mean",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "cat tail positions meaning",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-088",
+      "topic": "What Do Different Cat Meows Mean",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "different cat meows meaning",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-089",
+      "topic": "Why Does My Cat Stare at Me",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat stare at me",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-090",
+      "topic": "Why Does My Cat Sleep on My Bed",
+      "category": "Cats",
+      "subcategory": "Cat Behavior",
+      "primaryKeyword": "why does my cat sleep on my bed",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "cat-091",
+      "topic": "How to Choose a Comfortable Cat Bed",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to choose a cat bed",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "cat-092",
+      "topic": "How Many Hours Do Cats Sleep",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how many hours do cats sleep",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-093",
+      "topic": "Why Do Cats Sleep So Much",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "why do cats sleep so much",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-094",
+      "topic": "How to Create a Comfortable Sleeping Area for Cats",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "comfortable sleeping area for cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-095",
+      "topic": "How to Keep Your Cat Cool in Hot Weather",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to keep a cat cool in hot weather",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-096",
+      "topic": "How to Keep Your Cat Warm in Cold Weather",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to keep a cat warm in cold weather",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-097",
+      "topic": "How to Cat Proof Your Home",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "how to cat proof your home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-098",
+      "topic": "How to Choose Safe Plants for a Cat Friendly Home",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "safe plants for cats",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-099",
+      "topic": "How to Create an Enriching Environment for an Indoor Cat",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "indoor cat enrichment ideas",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "cat-100",
+      "topic": "Complete New Cat Owner Checklist",
+      "category": "Cats",
+      "subcategory": "Everyday Cat Care",
+      "primaryKeyword": "new cat owner checklist",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-001",
+      "topic": "How to Stop a Puppy From Biting",
+      "category": "Dogs",
+      "subcategory": "Puppy Care",
+      "primaryKeyword": "how to stop a puppy from biting",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-002",
+      "topic": "How to Potty Train a Puppy",
+      "category": "Dogs",
+      "subcategory": "Puppy Care",
+      "primaryKeyword": "how to potty train a puppy",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-003",
+      "topic": "How to Crate Train a Puppy",
+      "category": "Dogs",
+      "subcategory": "Puppy Care",
+      "primaryKeyword": "how to crate train a puppy",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-004",
+      "topic": "How to Help a Puppy Adjust to a New Home",
+      "category": "Dogs",
+      "subcategory": "Puppy Care",
+      "primaryKeyword": "help a puppy adjust to a new home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-005",
+      "topic": "How Often Should You Feed a Puppy",
+      "category": "Dogs",
+      "subcategory": "Puppy Nutrition",
+      "primaryKeyword": "how often should you feed a puppy",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-006",
+      "topic": "How to Introduce a Puppy to an Older Dog",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "introduce a puppy to an older dog",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-007",
+      "topic": "How to Make a Puppy Feel Safe at Home",
+      "category": "Dogs",
+      "subcategory": "Puppy Care",
+      "primaryKeyword": "how to make a puppy feel safe",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-008",
+      "topic": "Why Does My Puppy Bite Everything",
+      "category": "Dogs",
+      "subcategory": "Puppy Behavior",
+      "primaryKeyword": "why does my puppy bite everything",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-009",
+      "topic": "Why Do Puppies Chew Furniture",
+      "category": "Dogs",
+      "subcategory": "Puppy Behavior",
+      "primaryKeyword": "why do puppies chew furniture",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-010",
+      "topic": "How to Stop a Puppy From Chewing Furniture",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "how to stop a puppy chewing furniture",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-011",
+      "topic": "How to Teach a Dog to Sit",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "how to teach a dog to sit",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-012",
+      "topic": "How to Teach a Dog to Stay",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "how to teach a dog to stay",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-013",
+      "topic": "How to Teach a Dog to Come When Called",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "teach a dog to come when called",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-014",
+      "topic": "How to Teach a Dog to Walk Nicely on a Leash",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "teach a dog to walk on a leash",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-015",
+      "topic": "How to Stop a Dog From Pulling on the Leash",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "stop dog from pulling on leash",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-016",
+      "topic": "How to Teach a Dog to Leave It",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "teach a dog leave it",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-017",
+      "topic": "How to Teach a Dog to Drop It",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "teach a dog drop it",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-018",
+      "topic": "How to Train a Dog Without Punishment",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "how to train a dog without punishment",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-019",
+      "topic": "How to Use Positive Reinforcement With Dogs",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "positive reinforcement dog training",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-020",
+      "topic": "How Long Should Dog Training Sessions Be",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "how long should dog training sessions be",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-021",
+      "topic": "How Often Should You Brush a Dog",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how often should you brush a dog",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-022",
+      "topic": "How to Bathe a Dog at Home",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how to bathe a dog at home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-023",
+      "topic": "How to Trim a Dog's Nails Safely",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how to trim a dog's nails",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-024",
+      "topic": "How to Brush a Dog's Teeth",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how to brush a dog's teeth",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-025",
+      "topic": "How to Clean a Dog's Ears",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how to clean a dog's ears",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-026",
+      "topic": "How to Reduce Dog Shedding",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how to reduce dog shedding",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-027",
+      "topic": "How to Prevent Mats in Long Haired Dogs",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "prevent mats in long haired dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-028",
+      "topic": "How to Choose the Right Dog Brush",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "best brush for dogs",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-029",
+      "topic": "How Often Should a Dog Be Groomed",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how often should a dog be groomed",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-030",
+      "topic": "How to Keep a Dog's Coat Healthy",
+      "category": "Dogs",
+      "subcategory": "Dog Grooming",
+      "primaryKeyword": "how to keep a dog's coat healthy",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-031",
+      "topic": "How Much Water Should a Dog Drink",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "how much water should a dog drink",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-032",
+      "topic": "How to Encourage a Dog to Drink More Water",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "encourage dog to drink more water",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-033",
+      "topic": "Wet Food vs Dry Food for Dogs",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "wet food vs dry food for dogs",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-034",
+      "topic": "How to Read Dog Food Labels",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "how to read dog food labels",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-035",
+      "topic": "How to Choose Dog Food by Life Stage",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "choose dog food by age",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-036",
+      "topic": "How to Create a Healthy Feeding Routine for Dogs",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "healthy feeding routine for dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-037",
+      "topic": "How to Choose Healthy Treats for Dogs",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "how to choose healthy dog treats",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-038",
+      "topic": "How Many Treats Can a Dog Have",
+      "category": "Dogs",
+      "subcategory": "Dog Nutrition",
+      "primaryKeyword": "how many treats can a dog have",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-039",
+      "topic": "How to Choose a Feeding Bowl for Your Dog",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to choose a dog food bowl",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-040",
+      "topic": "How to Create a Comfortable Feeding Area for a Dog",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "dog feeding area setup",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-041",
+      "topic": "Why Does My Dog Bark at Strangers",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why does my dog bark at strangers",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-042",
+      "topic": "How to Stop a Dog From Barking at the Door",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "stop dog barking at the door",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-043",
+      "topic": "Why Does My Dog Follow Me Everywhere",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why does my dog follow me everywhere",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-044",
+      "topic": "Why Does My Dog Lick Me",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why does my dog lick me",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-045",
+      "topic": "Why Does My Dog Lean on Me",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why does my dog lean on me",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-046",
+      "topic": "Why Does My Dog Stare at Me",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why does my dog stare at me",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-047",
+      "topic": "Why Does My Dog Sleep So Much",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "why does my dog sleep so much",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-048",
+      "topic": "How Many Hours Do Dogs Sleep",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how many hours do dogs sleep",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-049",
+      "topic": "Why Do Dogs Roll in Grass",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why do dogs roll in grass",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-050",
+      "topic": "Why Do Dogs Dig Holes",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "why do dogs dig holes",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-051",
+      "topic": "How to Stop a Dog From Digging",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "how to stop a dog from digging",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-052",
+      "topic": "How to Stop a Dog From Jumping on People",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "stop dog jumping on people",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-053",
+      "topic": "How to Teach a Dog Not to Jump",
+      "category": "Dogs",
+      "subcategory": "Dog Training",
+      "primaryKeyword": "teach dog not to jump",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-054",
+      "topic": "How to Help a Dog With Separation Anxiety",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "help dog with separation anxiety",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-055",
+      "topic": "How to Help a Dog Stay Calm When Left Alone",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "help dog stay calm when alone",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-056",
+      "topic": "How to Make a Dog Feel Safe in a New Home",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "make dog feel safe in new home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-057",
+      "topic": "How to Introduce a Dog to a New Baby",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "introduce dog to a new baby",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-058",
+      "topic": "How to Introduce a Dog to Children",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "introduce dog to children",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-059",
+      "topic": "How to Teach Children to Respect Dogs",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "teach children to respect dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-060",
+      "topic": "How to Read Basic Dog Body Language",
+      "category": "Dogs",
+      "subcategory": "Dog Behavior",
+      "primaryKeyword": "dog body language guide",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-061",
+      "topic": "Best Dog Breeds for First Time Owners",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best dog breeds for first time owners",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-062",
+      "topic": "Best Dog Breeds for Apartment Living",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best dog breeds for apartments",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-063",
+      "topic": "Best Dog Breeds for Families With Children",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best dog breeds for families with children",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-064",
+      "topic": "Best Low Maintenance Dog Breeds",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best low maintenance dog breeds",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-065",
+      "topic": "Best Dog Breeds for Active Owners",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best dog breeds for active owners",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-066",
+      "topic": "Golden Retriever Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Golden Retriever personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-067",
+      "topic": "Labrador Retriever Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Labrador Retriever personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-068",
+      "topic": "German Shepherd Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "German Shepherd personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-069",
+      "topic": "French Bulldog Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "French Bulldog personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-070",
+      "topic": "Poodle Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Poodle personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-071",
+      "topic": "Beagle Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Beagle personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-072",
+      "topic": "Dachshund Personality and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Dachshund personality and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-073",
+      "topic": "Cavalier King Charles Spaniel Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Cavalier King Charles Spaniel care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-074",
+      "topic": "Border Collie Personality and Exercise Needs",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Border Collie personality and exercise",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-075",
+      "topic": "Shih Tzu Grooming and Care Guide",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "Shih Tzu grooming and care",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-076",
+      "topic": "How to Choose a Dog Breed for Your Lifestyle",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "how to choose a dog breed",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-077",
+      "topic": "How to Choose the Right Dog for Your Family",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "how to choose the right dog for your family",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-078",
+      "topic": "Best Small Dogs for Apartment Living",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best small dogs for apartments",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-079",
+      "topic": "Best Large Dog Breeds for Families",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best large dog breeds for families",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-080",
+      "topic": "Best Dogs for First Time Pet Parents",
+      "category": "Dogs",
+      "subcategory": "Dog Breeds",
+      "primaryKeyword": "best dogs for first time pet parents",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-081",
+      "topic": "How Much Exercise Does a Dog Need",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how much exercise does a dog need",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-082",
+      "topic": "How to Exercise a Dog Indoors",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to exercise a dog indoors",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-083",
+      "topic": "Best Indoor Activities for Dogs",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "best indoor activities for dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-084",
+      "topic": "How to Create a Daily Routine for Your Dog",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "daily routine for dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-085",
+      "topic": "How to Choose Safe Toys for Dogs",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to choose safe dog toys",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-086",
+      "topic": "Best Types of Toys for Dogs",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "best toys for dogs",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-087",
+      "topic": "How to Keep an Active Dog Mentally Stimulated",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "mental stimulation for dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-088",
+      "topic": "How to Prepare a Dog for a Long Car Trip",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "prepare dog for a long car trip",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-089",
+      "topic": "How to Travel With a Dog Safely",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to travel with a dog safely",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-090",
+      "topic": "How to Help a Dog During a House Move",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "help dog during a house move",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+
+    {
+      "id": "dog-091",
+      "topic": "How to Keep a Dog Cool in Hot Weather",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to keep a dog cool in hot weather",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-092",
+      "topic": "How to Keep a Dog Warm in Cold Weather",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to keep a dog warm in cold weather",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-093",
+      "topic": "How to Dog Proof Your Home",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to dog proof your home",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-094",
+      "topic": "How to Choose a Comfortable Dog Bed",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to choose a dog bed",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-095",
+      "topic": "How to Create a Comfortable Sleeping Area for Dogs",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "comfortable sleeping area for dogs",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-096",
+      "topic": "How to Choose the Right Leash for Your Dog",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to choose a dog leash",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-097",
+      "topic": "How to Choose the Right Collar for Your Dog",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to choose a dog collar",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-098",
+      "topic": "How to Choose a Safe Harness for Your Dog",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "how to choose a dog harness",
+      "searchIntent": "Commercial Investigation",
+      "status": "unused"
+    },
+    {
+      "id": "dog-099",
+      "topic": "Complete New Puppy Owner Checklist",
+      "category": "Dogs",
+      "subcategory": "Puppy Care",
+      "primaryKeyword": "new puppy owner checklist",
+      "searchIntent": "Informational",
+      "status": "unused"
+    },
+    {
+      "id": "dog-100",
+      "topic": "Complete New Dog Owner Checklist",
+      "category": "Dogs",
+      "subcategory": "Everyday Dog Care",
+      "primaryKeyword": "new dog owner checklist",
+      "searchIntent": "Informational",
+      "status": "unused"
+    }
+  ]
+}
