@@ -30,18 +30,60 @@ function slugify(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
+/*
+ * Render article content safely.
+ *
+ * articles.json may contain real HTML such as:
+ * <p>...</p>
+ * <h2>...</h2>
+ * <ul>...</ul>
+ *
+ * The old version escaped all HTML, which caused tags
+ * to appear as visible text on the website.
+ */
 function formatContent(content = "") {
-  return String(content)
+  const raw = String(content || "").trim();
+
+  if (!raw) {
+    return "";
+  }
+
+  /*
+   * If the content already contains HTML,
+   * use the supplied article markup.
+   *
+   * Remove dangerous elements/attributes first.
+   */
+  if (/<\/?(p|h2|h3|h4|ul|ol|li|strong|em|blockquote|a|br)\b/i.test(raw)) {
+    return sanitizeArticleHtml(raw);
+  }
+
+  /*
+   * Fallback for plain-text articles.
+   */
+  return raw
     .split(/\n\s*\n/)
-    .map((paragraph) => {
-      const text = paragraph.trim();
-
-      if (!text) return "";
-
-      return `<p>${escapeHtml(text).replace(/\n/g, "<br>")}</p>`;
-    })
+    .map((paragraph) => paragraph.trim())
     .filter(Boolean)
+    .map((paragraph) => {
+      return `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`;
+    })
     .join("\n");
+}
+
+/*
+ * Very small HTML sanitizer intended for our own articles.json.
+ * It removes scripts, iframes, objects and inline event handlers.
+ */
+function sanitizeArticleHtml(html) {
+  return String(html)
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, "")
+    .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, "")
+    .replace(/<embed\b[^>]*>/gi, "")
+    .replace(/<form\b[^>]*>[\s\S]*?<\/form>/gi, "")
+    .replace(/\son[a-z]+\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi, "")
+    .replace(/javascript\s*:/gi, "");
 }
 
 function articleUrl(article) {
@@ -50,49 +92,95 @@ function articleUrl(article) {
   return `${SITE_URL}/article/${encodeURIComponent(slug)}/`;
 }
 
+function normalizeImagePath(image = "") {
+  const value = String(image || "").trim();
+
+  if (!value) {
+    return "";
+  }
+
+  /*
+   * Local site images should start with /images/
+   */
+  if (value.startsWith("/")) {
+    return value;
+  }
+
+  /*
+   * Convert a relative image path into a site-root path.
+   */
+  return `/${value.replace(/^\/+/, "")}`;
+}
+
+function imageExists(image = "") {
+  const normalized = normalizeImagePath(image);
+
+  if (!normalized.startsWith("/")) {
+    return false;
+  }
+
+  const relativePath = normalized.replace(/^\/+/, "");
+  const filePath = path.join(DIST_DIR, relativePath);
+
+  return fs.existsSync(filePath);
+}
+
 function articleCard(article) {
   const slug = article.slug || slugify(article.title);
   const url = `/article/${encodeURIComponent(slug)}/`;
 
   const title = escapeHtml(article.title || "Pet Care Guide");
-  const image = escapeHtml(article.image || "");
+  const imagePath = normalizeImagePath(article.image || "");
+  const image = escapeHtml(imagePath);
   const summary = escapeHtml(article.summary || "");
   const category = escapeHtml(article.category || "Pet Care");
+  const alt = escapeHtml(
+    article.alt ||
+      article.imageAlt ||
+      article.title ||
+      "Virixoo pet care guide"
+  );
 
   const pinterestUrl =
     `https://www.pinterest.com/pin/create/button/?` +
     `url=${encodeURIComponent(articleUrl(article))}` +
-    `&media=${encodeURIComponent(article.image || "")}` +
+    `&media=${encodeURIComponent(SITE_URL + imagePath)}` +
     `&description=${encodeURIComponent(article.title || "")}`;
 
   return `
 <article class="article-card">
 
+  ${
+    imagePath
+      ? `
   <a class="card-image-link" href="${url}" aria-label="${title}">
-    ${
-      image
-        ? `
     <img
       src="${image}"
-      alt="${title}"
+      alt="${alt}"
       loading="lazy"
       width="800"
       height="500"
     >
-    `
-        : ""
-    }
   </a>
+  `
+      : ""
+  }
 
   <div class="card-body">
 
-    <div class="category">${category}</div>
+    <div class="category">
+      ${category}
+    </div>
 
     <h2>
-      <a href="${url}">${title}</a>
+      <a href="${url}">
+        ${title}
+      </a>
     </h2>
 
-    <p>${summary}</p>
+    <p>
+      ${summary}
+    </p>
 
     <div class="card-actions">
 
@@ -118,10 +206,11 @@ function articleCard(article) {
 `;
 }
 
-function header(title, description) {
+function header(title, description, canonicalUrl = SITE_URL) {
   return `
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
   <meta charset="UTF-8">
@@ -136,6 +225,11 @@ function header(title, description) {
   <meta
     name="description"
     content="${escapeHtml(description)}"
+  >
+
+  <link
+    rel="canonical"
+    href="${escapeHtml(canonicalUrl)}"
   >
 
   <link
@@ -154,10 +248,23 @@ function header(title, description) {
   </a>
 
   <nav>
-    <a href="/">Home</a>
-    <a href="/dogs/">Dogs</a>
-    <a href="/cats/">Cats</a>
-    <a href="/about/">About</a>
+
+    <a href="/">
+      Home
+    </a>
+
+    <a href="/dogs/">
+      Dogs
+    </a>
+
+    <a href="/cats/">
+      Cats
+    </a>
+
+    <a href="/about/">
+      About
+    </a>
+
   </nav>
 
 </header>
@@ -173,12 +280,31 @@ function footer() {
 <footer class="site-footer">
 
   <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/dogs/">Dogs</a>
-    <a href="/cats/">Cats</a>
-    <a href="/about/">About</a>
-    <a href="/privacy-policy/">Privacy Policy</a>
-    <a href="/contact/">Contact</a>
+
+    <a href="/">
+      Home
+    </a>
+
+    <a href="/dogs/">
+      Dogs
+    </a>
+
+    <a href="/cats/">
+      Cats
+    </a>
+
+    <a href="/about/">
+      About
+    </a>
+
+    <a href="/privacy-policy/">
+      Privacy Policy
+    </a>
+
+    <a href="/contact/">
+      Contact
+    </a>
+
   </div>
 
   <p>
@@ -223,7 +349,8 @@ function createHomePage(articles) {
   const html = `
 ${header(
   "Virixoo - Expert Dog & Cat Care Guides",
-  "Expert dog and cat care guides covering nutrition, training, grooming, behavior, breeds, and everyday pet care."
+  "Expert dog and cat care guides covering nutrition, training, grooming, behavior, breeds, and everyday pet care.",
+  SITE_URL + "/"
 )}
 
 <section class="hero">
@@ -245,11 +372,17 @@ ${statsBox()}
 <section>
 
   <div class="section-heading">
-    <h2>Latest Pet Care Guides</h2>
+
+    <h2>
+      Latest Pet Care Guides
+    </h2>
+
   </div>
 
   <div class="article-grid">
+
     ${cards}
+
   </div>
 
 </section>
@@ -265,7 +398,9 @@ ${footer()}
 }
 
 function createArticlePage(article) {
-  const slug = article.slug || slugify(article.title);
+  const slug =
+    article.slug ||
+    slugify(article.title);
 
   const articleDir = path.join(
     DIST_DIR,
@@ -276,31 +411,66 @@ function createArticlePage(article) {
   ensureDir(articleDir);
 
   const title =
-    article.title || "Pet Care Guide";
+    article.title ||
+    "Pet Care Guide";
 
   const description =
     article.summary ||
     "Expert pet care guide from Virixoo.";
 
-  const image =
-    article.image || "";
+  const imagePath =
+    normalizeImagePath(article.image || "");
+
+  const alt =
+    article.alt ||
+    article.imageAlt ||
+    title;
+
+  const canonical =
+    articleUrl(article);
 
   const pinterestUrl =
     `https://www.pinterest.com/pin/create/button/?` +
-    `url=${encodeURIComponent(articleUrl(article))}` +
-    `&media=${encodeURIComponent(image)}` +
+    `url=${encodeURIComponent(canonical)}` +
+    `&media=${encodeURIComponent(
+      SITE_URL + imagePath
+    )}` +
     `&description=${encodeURIComponent(title)}`;
+
+  const imageMarkup =
+    imagePath
+      ? `
+  <figure class="article-figure">
+
+    <img
+      class="article-hero"
+      src="${escapeHtml(imagePath)}"
+      alt="${escapeHtml(alt)}"
+      width="1200"
+      height="700"
+      loading="eager"
+      fetchpriority="high"
+    >
+
+  </figure>
+  `
+      : "";
 
   const html = `
 ${header(
   `${title} | Virixoo`,
-  description
+  description,
+  canonical
 )}
 
 <article class="article-page">
 
   <div class="article-category">
-    ${escapeHtml(article.category || "Pet Care")}
+
+    ${escapeHtml(
+      article.category || "Pet Care"
+    )}
+
   </div>
 
   <h1>
@@ -311,7 +481,8 @@ ${header(
 
     <span>
       By ${escapeHtml(
-        article.author || "Virixoo Editorial Team"
+        article.author ||
+          "Virixoo Editorial Team"
       )}
     </span>
 
@@ -321,7 +492,9 @@ ${header(
     <span>•</span>
 
     <span>
-      Published ${escapeHtml(article.datePublished)}
+      Published ${escapeHtml(
+        article.datePublished
+      )}
     </span>
     `
         : ""
@@ -333,7 +506,9 @@ ${header(
     <span>•</span>
 
     <span>
-      Updated ${escapeHtml(article.dateModified)}
+      Updated ${escapeHtml(
+        article.dateModified
+      )}
     </span>
     `
         : ""
@@ -354,19 +529,7 @@ ${header(
 
   </div>
 
-  ${
-    image
-      ? `
-  <img
-    class="article-hero"
-    src="${escapeHtml(image)}"
-    alt="${escapeHtml(title)}"
-    width="1200"
-    height="700"
-  >
-  `
-      : ""
-  }
+  ${imageMarkup}
 
   <div class="article-content">
 
@@ -397,7 +560,10 @@ ${footer()}
 `;
 
   fs.writeFileSync(
-    path.join(articleDir, "index.html"),
+    path.join(
+      articleDir,
+      "index.html"
+    ),
     html,
     "utf8"
   );
@@ -408,37 +574,47 @@ function createCategoryPage(
   category,
   slug
 ) {
-  const filtered = articles.filter(
-    (article) =>
-      String(article.category || "").toLowerCase() ===
-      category.toLowerCase()
-  );
+  const filtered =
+    articles.filter(
+      (article) =>
+        String(
+          article.category || ""
+        ).toLowerCase() ===
+        category.toLowerCase()
+    );
 
-  const cards = filtered
-    .map(articleCard)
-    .join("\n");
+  const cards =
+    filtered
+      .map(articleCard)
+      .join("\n");
 
   const html = `
 ${header(
   `${category} Care Guides | Virixoo`,
-  `Expert ${category.toLowerCase()} care guides for responsible pet owners.`
+  `Expert ${category.toLowerCase()} care guides for responsible pet owners.`,
+  `${SITE_URL}/${slug}/`
 )}
 
 <section>
 
   <h1>
-    ${escapeHtml(category)} Care Guides
+    ${escapeHtml(category)}
+    Care Guides
   </h1>
 
   <p>
-    Practical ${escapeHtml(
+    Practical
+    ${escapeHtml(
       category.toLowerCase()
     )}
-    care information for responsible pet owners.
+    care information for responsible
+    pet owners.
   </p>
 
   <div class="article-grid">
+
     ${cards}
+
   </div>
 
 </section>
@@ -446,15 +622,19 @@ ${header(
 ${footer()}
 `;
 
-  const categoryDir = path.join(
-    DIST_DIR,
-    slug
-  );
+  const categoryDir =
+    path.join(
+      DIST_DIR,
+      slug
+    );
 
   ensureDir(categoryDir);
 
   fs.writeFileSync(
-    path.join(categoryDir, "index.html"),
+    path.join(
+      categoryDir,
+      "index.html"
+    ),
     html,
     "utf8"
   );
@@ -468,7 +648,8 @@ function createSimplePage(
   const html = `
 ${header(
   `${title} | Virixoo`,
-  text
+  text,
+  `${SITE_URL}/${slug}/`
 )}
 
 <section class="simple-page">
@@ -486,15 +667,19 @@ ${header(
 ${footer()}
 `;
 
-  const pageDir = path.join(
-    DIST_DIR,
-    slug
-  );
+  const pageDir =
+    path.join(
+      DIST_DIR,
+      slug
+    );
 
   ensureDir(pageDir);
 
   fs.writeFileSync(
-    path.join(pageDir, "index.html"),
+    path.join(
+      pageDir,
+      "index.html"
+    ),
     html,
     "utf8"
   );
@@ -509,7 +694,10 @@ Sitemap: ${SITE_URL}/sitemap.xml
 `.trim();
 
   fs.writeFileSync(
-    path.join(DIST_DIR, "robots.txt"),
+    path.join(
+      DIST_DIR,
+      "robots.txt"
+    ),
     robots,
     "utf8"
   );
@@ -542,29 +730,64 @@ function createSitemap(articles) {
   </url>
   `);
 
-  articles.forEach((article) => {
-    urls.push(`
+  urls.push(`
   <url>
-    <loc>${escapeHtml(articleUrl(article))}</loc>
+    <loc>${SITE_URL}/privacy-policy/</loc>
+  </url>
+  `);
+
+  urls.push(`
+  <url>
+    <loc>${SITE_URL}/contact/</loc>
+  </url>
+  `);
+
+  articles.forEach(
+    (article) => {
+
+      urls.push(`
+  <url>
+
+    <loc>
+      ${escapeHtml(
+        articleUrl(article)
+      )}
+    </loc>
+
     ${
       article.dateModified
-        ? `<lastmod>${escapeHtml(article.dateModified)}</lastmod>`
+        ? `
+    <lastmod>
+      ${escapeHtml(
+        article.dateModified
+      )}
+    </lastmod>
+    `
         : ""
     }
+
   </url>
-    `);
-  });
+      `);
+
+    }
+  );
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 >
+
 ${urls.join("\n")}
+
 </urlset>
 `;
 
   fs.writeFileSync(
-    path.join(DIST_DIR, "sitemap.xml"),
+    path.join(
+      DIST_DIR,
+      "sitemap.xml"
+    ),
     sitemap,
     "utf8"
   );
@@ -581,32 +804,46 @@ function copyPublicFiles() {
   ) {
     ensureDir(destination);
 
-    const entries = fs.readdirSync(
-      source,
-      { withFileTypes: true }
-    );
-
-    for (const entry of entries) {
-      const sourcePath = path.join(
+    const entries =
+      fs.readdirSync(
         source,
-        entry.name
+        {
+          withFileTypes: true
+        }
       );
 
-      const destinationPath = path.join(
-        destination,
-        entry.name
-      );
+    for (
+      const entry of entries
+    ) {
 
-      if (entry.isDirectory()) {
+      const sourcePath =
+        path.join(
+          source,
+          entry.name
+        );
+
+      const destinationPath =
+        path.join(
+          destination,
+          entry.name
+        );
+
+      if (
+        entry.isDirectory()
+      ) {
+
         copyDirectory(
           sourcePath,
           destinationPath
         );
+
       } else {
+
         fs.copyFileSync(
           sourcePath,
           destinationPath
         );
+
       }
     }
   }
@@ -617,37 +854,94 @@ function copyPublicFiles() {
   );
 }
 
+function validateArticles(
+  articles
+) {
+  articles.forEach(
+    (article, index) => {
+
+      if (
+        !article.title
+      ) {
+        throw new Error(
+          `Article ${index + 1} is missing a title.`
+        );
+      }
+
+      if (
+        !article.slug
+      ) {
+        article.slug =
+          slugify(article.title);
+      }
+
+      if (
+        !article.content
+      ) {
+        throw new Error(
+          `Article "${article.title}" is missing content.`
+        );
+      }
+
+      if (
+        article.image
+      ) {
+        article.image =
+          normalizeImagePath(
+            article.image
+          );
+      }
+
+    }
+  );
+}
+
 function build() {
   console.log(
     "Starting Virixoo build..."
   );
 
-  if (!fs.existsSync(DATA_FILE)) {
+  if (
+    !fs.existsSync(DATA_FILE)
+  ) {
     throw new Error(
       `articles.json not found: ${DATA_FILE}`
     );
   }
 
-  const raw = fs.readFileSync(
-    DATA_FILE,
-    "utf8"
-  );
+  const raw =
+    fs.readFileSync(
+      DATA_FILE,
+      "utf8"
+    );
 
-  const data = JSON.parse(raw);
+  const data =
+    JSON.parse(raw);
 
-  if (!Array.isArray(data.articles)) {
+  if (
+    !Array.isArray(
+      data.articles
+    )
+  ) {
     throw new Error(
       "articles.json must contain an 'articles' array."
     );
   }
 
-  const articles = data.articles;
+  const articles =
+    data.articles;
 
   console.log(
     `Found ${articles.length} articles.`
   );
 
-  if (fs.existsSync(DIST_DIR)) {
+  validateArticles(
+    articles
+  );
+
+  if (
+    fs.existsSync(DIST_DIR)
+  ) {
     fs.rmSync(
       DIST_DIR,
       {
@@ -657,11 +951,41 @@ function build() {
     );
   }
 
-  ensureDir(DIST_DIR);
+  ensureDir(
+    DIST_DIR
+  );
 
+  /*
+   * Copy CSS, images and all
+   * other public assets first.
+   */
   copyPublicFiles();
 
-  createHomePage(articles);
+  /*
+   * Warn about missing local images.
+   * The build will continue so one bad
+   * image does not destroy the whole site.
+   */
+  articles.forEach(
+    (article) => {
+
+      if (
+        article.image &&
+        !imageExists(
+          article.image
+        )
+      ) {
+        console.warn(
+          `WARNING: Image not found in public/: ${article.image}`
+        );
+      }
+
+    }
+  );
+
+  createHomePage(
+    articles
+  );
 
   articles.forEach(
     createArticlePage
@@ -699,7 +1023,9 @@ function build() {
 
   createRobots();
 
-  createSitemap(articles);
+  createSitemap(
+    articles
+  );
 
   console.log(
     "Virixoo build completed successfully."
@@ -711,13 +1037,18 @@ function build() {
 }
 
 try {
+
   build();
+
 } catch (error) {
+
   console.error(
     "BUILD FAILED:"
   );
 
-  console.error(error);
+  console.error(
+    error
+  );
 
   process.exit(1);
 }
