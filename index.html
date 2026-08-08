@@ -14,7 +14,7 @@
         .counter-item { color: #ffcc00; }
         .container { max-width: 1200px; margin: auto; padding: 60px 20px 20px 20px; }
         
-        /* تصميم الشبكة (Grid) */
+        /* تصميم الشبكة */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
         .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; }
@@ -25,21 +25,26 @@
         .read-more { background: none; border: none; color: #007bff; font-weight: bold; cursor: pointer; padding: 0; margin-top: 10px; text-align: left; font-size: 14px; }
         .read-more:hover { text-decoration: underline; }
 
-        /* نافذة قراءة المقال كاملة (Modal) */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: #fff; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; border-radius: 8px; position: relative; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; font-weight: bold; color: #333; }
-        .modal-content img { width: 100%; height: 300px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; }
-        .modal-content h2 { color: #222; margin-top: 0; }
-        .modal-content p { color: #444; line-height: 1.7; font-size: 16px; }
-
-        /* زر بنترست */
+        /* زر بنترست على البطاقة الرئيسية */
         .pinterest-btn {
             display: inline-block; background: #bd081c; color: #fff;
-            padding: 8px 15px; border-radius: 5px; text-decoration: none;
-            font-weight: bold; font-size: 14px; margin-top: 20px;
+            padding: 6px 12px; border-radius: 5px; text-decoration: none;
+            font-weight: bold; font-size: 13px; margin-top: 15px; text-align: center;
         }
         .pinterest-btn:hover { background: #990614; }
+
+        /* صفحة عرض المقال الكاملة */
+        #article-view { display: none; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 20px; }
+        #article-view img { width: 100%; height: 350px; object-fit: cover; border-radius: 5px; margin-bottom: 20px; }
+        #article-view h1 { color: #222; margin-top: 0; }
+        #article-view p { color: #444; line-height: 1.8; font-size: 16px; }
+        
+        .back-btn {
+            display: inline-block; background: #333; color: #fff;
+            padding: 8px 16px; border-radius: 5px; text-decoration: none;
+            font-weight: bold; margin-bottom: 20px; cursor: pointer;
+        }
+        .back-btn:hover { background: #555; }
     </style>
 </head>
 <body>
@@ -51,18 +56,18 @@
     </div>
 
     <div class="container">
-        <h1>Ultimate Pet Care Academy</h1>
+        <h1 id="main-title">Ultimate Pet Care Academy</h1>
+        
+        <!-- شبكة المقالات الرئيسية -->
         <div id="articles-container" class="grid">Loading expert guides...</div>
-    </div>
 
-    <!-- نافذة عرض المقال الكامل -->
-    <div id="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <img id="modal-img" src="" alt="">
-            <h2 id="modal-title"></h2>
-            <p id="modal-text"></p>
-            <a id="modal-pin" href="#" target="_blank" class="pinterest-btn">Pin to Pinterest</a>
+        <!-- صفحة المقال الكاملة (تفتح بملء الشاشة عند النقر) -->
+        <div id="article-view">
+            <button class="back-btn" onclick="showHome()">&larr; Back to Home</button>
+            <img id="view-img" src="" alt="">
+            <h1 id="view-title"></h1>
+            <p id="view-text"></p>
+            <a id="view-pin" href="#" target="_blank" class="pinterest-btn" style="margin-top: 20px;">Pin to Pinterest</a>
         </div>
     </div>
 
@@ -80,48 +85,71 @@
 
         let allArticles = [];
 
-        // جلب المقالات وعرضها كشبكة
+        // جلب المقالات
         fetch('articles.json')
             .then(response => response.json())
             .then(data => {
                 allArticles = data.articles;
-                const container = document.getElementById('articles-container');
-                container.innerHTML = ''; 
-                
-                data.articles.forEach(art => {
-                    container.innerHTML += `
-                        <div class="card">
-                            <div>
-                                <img src="${art.image}" alt="${art.title}">
-                                <h3 onclick="openArticle(${art.id})">${art.title}</h3>
-                                <p>${art.summary}</p>
-                            </div>
-                            <button class="read-more" onclick="openArticle(${art.id})">Read More &rarr;</button>
-                        </div>
-                    `;
-                });
+                renderHome();
             })
             .catch(err => console.error('Error loading articles:', err));
 
-        // فتح المقال الكامل في نافذة منبثقة
+        function renderHome() {
+            document.getElementById('main-title').style.display = 'block';
+            document.getElementById('article-view').style.display = 'none';
+            
+            const container = document.getElementById('articles-container');
+            container.style.display = 'grid';
+            container.innerHTML = ''; 
+            
+            const currentUrl = window.location.origin + window.location.pathname;
+
+            allArticles.forEach(art => {
+                const pinUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(currentUrl)}&media=${encodeURIComponent(art.image)}&description=${encodeURIComponent(art.title + " - " + art.summary)}`;
+
+                container.innerHTML += `
+                    <div class="card">
+                        <div>
+                            <img src="${art.image}" alt="${art.title}">
+                            <h3 onclick="openArticle(${art.id})">${art.title}</h3>
+                            <p>${art.summary}</p>
+                        </div>
+                        <div>
+                            <button class="read-more" onclick="openArticle(${art.id})">Read More &rarr;</button>
+                            <br>
+                            <a href="${pinUrl}" target="_blank" class="pinterest-btn">Pin to Pinterest</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // فتح المقال بصفحة كاملة
         function openArticle(id) {
             const art = allArticles.find(a => a.id === id);
             if (!art) return;
 
-            document.getElementById('modal-img').src = art.image;
-            document.getElementById('modal-title').innerText = art.title;
-            document.getElementById('modal-text').innerText = art.content;
+            document.getElementById('main-title').style.display = 'none';
+            document.getElementById('articles-container').style.display = 'none';
+            
+            document.getElementById('view-img').src = art.image;
+            document.getElementById('view-title').innerText = art.title;
+            document.getElementById('view-text').innerText = art.content;
 
-            const currentUrl = window.location.href;
+            const currentUrl = window.location.origin + window.location.pathname;
             const pinUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(currentUrl)}&media=${encodeURIComponent(art.image)}&description=${encodeURIComponent(art.title + " - " + art.summary)}`;
-            document.getElementById('modal-pin').href = pinUrl;
+            document.getElementById('view-pin').href = pinUrl;
 
-            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('article-view').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
-        // إغلاق النافذة
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+        // العودة للصفحة الرئيسية
+        function showHome() {
+            document.getElementById('article-view').style.display = 'none';
+            document.getElementById('main-title').style.display = 'block';
+            document.getElementById('articles-container').style.display = 'grid';
+            window.scrollTo(0, 0);
         }
     </script>
 </body>
