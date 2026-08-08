@@ -29,22 +29,20 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run generate
 
-      - name: Show generated files
+      - name: Check generated article
         run: |
           echo "Checking articles.json..."
-          ls -lh src/data/articles.json
-          echo "Article count:"
-          node -e "const d=require('./src/data/articles.json'); console.log(d.articles.length)"
+          test -f src/data/articles.json
+          node -e "const d=require('./src/data/articles.json'); console.log('Articles:', d.articles.length)"
 
       - name: Commit generated article
         run: |
           git config user.name "Virixoo Auto Publisher"
           git config user.email "actions@users.noreply.github.com"
-
           git add src/data/articles.json
 
           if git diff --cached --quiet; then
-            echo "No article changes detected."
+            echo "No changes to commit."
           else
             git commit -m "test: generate first Gemini article"
             git push
