@@ -1,180 +1,95 @@
 {
-  "categories": [
+  "category_group": "Ultimate Pet Care Guides",
+  "articles": [
     {
-      "id": "puppy-training",
-      "title": "Puppy Training & Socialization",
-      "articles": [
-        { "title": "How to Stop Puppy Biting and Mouthing Permanently", "summary": "Discover effective, positive reinforcement techniques to curb aggressive puppy biting.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "puppy biting, dog training" },
-        { "title": "The Ultimate 7-Day Crate Training Schedule", "summary": "A step-by-step foolproof method to get your puppy comfortable in their crate.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "crate training puppy, dog guide" },
-        { "title": "Essential Housebreaking Tips for Stubborn Puppies", "summary": "Master the art of indoor potty training with consistent scheduling cues.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "potty training puppy, housebreaking" },
-        { "title": "Leash Walking 101: Stop Your Puppy from Pulling", "summary": "Transform stressful walks into enjoyable bonding experiences using loose-leash drills.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "leash training, puppy walking" },
-        { "title": "Socialization Checklist: What Every Puppy Needs by 16 Weeks", "summary": "Expose your puppy to sounds, sights, and surfaces safely to prevent adult fear.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "puppy socialization, behavioral health" },
-        { "title": "How to Cure Separation Anxiety in Young Dogs", "summary": "Build your puppy's confidence to stay home alone without destructive howling.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "separation anxiety, dog behavior" },
-        { "title": "Teaching Basic Commands: Sit, Stay, and Come", "summary": "Fast-track obedience using high-value treats and short engaging sessions.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "dog commands, obedience training" },
-        { "title": "Preventing Resource Guarding Over Food and Toys", "summary": "Ensure your puppy feels secure and shares items willingly without aggression.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "resource guarding, puppy aggression" },
-        { "title": "Socializing Your Puppy with Other Pets and Cats", "summary": "Introduce your new puppy safely to resident cats and senior dogs in the household.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "pets introduction, social skills" },
-        { "title": "Handling the Dreaded Puppy Teething Phase", "summary": "Provide safe chew toys and natural remedies to soothe sore gums safely.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "puppy teething, chew toys" }
-      ]
+      "id": 1,
+      "title": "Ultimate Guide to Dog Nutrition: What Every Owner Needs to Know",
+      "slug": "ultimate-guide-to-dog-nutrition",
+      "keywords": ["dog nutrition", "healthy dog food", "canine diet essentials"],
+      "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
+      "summary": "Discover the core principles of dog nutrition, essential vitamins, proteins, and how to choose the right diet for a long, healthy canine life.",
+      "content": "Proper nutrition is the foundation of your dog's health, energy, and longevity. Feeding your canine companion a balanced diet rich in proteins, fats, carbohydrates, vitamins, and minerals ensures they maintain an active lifestyle and a strong immune system. When selecting commercial dog food, always check the ingredients list to ensure real meat is the primary component, avoiding excessive fillers like corn and soy. Furthermore, understanding your dog's specific life stage—whether they are a high-energy puppy, an adult, or a senior—is crucial for adjusting their caloric intake. Providing fresh water 24/7 and monitoring portion sizes will prevent canine obesity, one of the most common health issues today. Always consult your veterinarian before making radical changes to your pet's dietary routine."
     },
     {
-      "id": "dog-nutrition",
-      "title": "Dog Nutrition & Raw Diets",
-      "articles": [
-        { "title": "Top 10 Toxic Human Foods That Can Harm Your Dog", "summary": "Learn which common household foods are strictly poisonous to dogs.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "toxic foods for dogs, dog nutrition" },
-        { "title": "Understanding Commercial Dog Food Labels Like a Pro", "summary": "Decode ingredient lists to choose high-protein, filler-free kibble.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "dog food labels, pet diet" },
-        { "title": "Is a Raw Diet Safe for Your Dog? Benefits and Risks", "summary": "Explore the pros and cons of BARF diets and how to balance nutrients.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "raw diet for dogs, BARF" },
-        { "title": "How Much Should You Feed Your Dog Daily?", "summary": "Calculate exact portions based on age, weight, and activity level.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "dog feeding guide, portion control" },
-        { "title": "Safe Fruits and Vegetables Dogs Can Eat as Treats", "summary": "Healthy, low-calorie snack alternatives like blueberries, carrots, and apples.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "safe fruits for dogs, dog snacks" },
-        { "title": "Managing Canine Obesity: Weight Loss Meal Plans", "summary": "Help your overweight dog shed pounds safely with specialized dietary plans.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "obese dog, weight loss diet" },
-        { "title": "Grain-Free Diets Explained: What Vet Science Says", "summary": "Separate marketing myths from heart health facts regarding grain-free food.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "grain free dog food, DCM facts" },
-        { "title": "Essential Vitamins and Supplements for Senior Dogs", "summary": "Support joint mobility and cognitive health with targeted daily supplements.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "senior dog vitamins, joint supplements" },
-        { "title": "Hydration Needs: How Much Water Should a Dog Drink?", "summary": "Spot early signs of dehydration and kidney issues in active dogs.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "dog hydration, water intake" },
-        { "title": "Transitioning Your Dog to a New Food Safely", "summary": "Avoid upset stomachs by following a proper 7-day food mixing schedule.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "changing dog food, upset stomach" }
-      ]
+      "id": 2,
+      "title": "Essential Kitten Care: Your First Month Step-by-Step",
+      "slug": "essential-kitten-care-first-month",
+      "keywords": ["kitten care", "newborn kittens", "feline welfare"],
+      "image": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=800",
+      "summary": "A comprehensive step-by-step roadmap for raising a healthy newborn kitten during its crucial first month of life.",
+      "content": "Bringing home a newborn kitten requires immense dedication, warmth, and precise nutritional care. During the first few weeks, kittens rely entirely on mother's milk or a specialized feline milk replacer formula, bottle-fed every few hours. Keeping them warm is vital, as kittens cannot regulate their body temperature independently. As they approach four weeks of age, you can gently introduce litter box training by placing them inside after meals. Socialization is another critical milestone; gentle handling helps them grow into confident, friendly adult cats. Regular veterinary check-ups during this phase will ensure they are free of parasites, receive necessary vaccinations, and hit their growth milestones safely."
     },
     {
-      "id": "dog-behavior",
-      "title": "Dog Behavior & Psychology",
-      "articles": [
-        { "title": "Why Dogs Dig Holes and How to Stop It", "summary": "Identify triggers like boredom or heat-seeking and protect your backyard.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "dog digging, backyard protection" },
-        { "title": "Decoding Dog Tail Wagging: It Doesn't Always Mean Happy", "summary": "Read canine body language accurately to prevent accidental bites.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dog body language, tail wagging" },
-        { "title": "How to Stop Excessive Barking at the Door", "summary": "Train your dog to remain calm when delivery drivers or guests arrive.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "excessive barking, door training" },
-        { "title": "Understanding Canine Aggression Toward Other Dogs", "summary": "Identify fear-based reactions and handle leash reactivity professionally.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "dog aggression, leash reactivity" },
-        { "title": "Why Do Dogs Chase Cars and How to Prevent It", "summary": "Manage high prey-drive instincts and keep your dog safe outdoors.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "dog chasing cars, safety tips" },
-        { "title": "Managing Noise Phobias: Thunderstorms and Fireworks", "summary": "Create safe havens and desensitize your dog to loud unexpected noises.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "noise phobia dogs, thunder anxiety" },
-        { "title": "The Science of Canine Mental Stimulation and Puzzles", "summary": "Tire out an energetic dog's brain using interactive toy feeders.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "mental stimulation dogs, puzzle toys" },
-        { "title": "How to Stop Counter Surfing and Food Stealing", "summary": "Break bad kitchen habits through environmental management and training.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "counter surfing, dog stealing food" },
-        { "title": "Why Rescue Dogs Behave Differently and How to Help", "summary": "Navigate the 3-3-3 rule of decompression for newly adopted rescue dogs.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "rescue dog behavior, 3-3-3 rule" },
-        { "title": "Understanding Pack Hierarchy Myths in Modern Training", "summary": "Why dominance theory is outdated and positive reinforcement wins.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dominance myth dogs, training science" }
-      ]
+      "id": 3,
+      "title": "How to Cure Canine Anxiety: Practical Expert Solutions",
+      "slug": "how-to-cure-canine-anxiety",
+      "keywords": ["dog anxiety", "calming anxious dogs", "pet behavioral health"],
+      "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
+      "summary": "Learn effective behavioral techniques and environmental adjustments to help calm an anxious or stressed dog.",
+      "content": "Canine anxiety is a prevalent behavioral challenge triggered by thunderstorms, separation from owners, loud noises, or past trauma. Recognizing the early symptoms—such as excessive panting, trembling, destructive chewing, or relentless whining—is the first step toward effective treatment. Creating a safe, quiet space or a designated crate where your dog can retreat during stressful events provides a strong sense of security. Regular physical exercise and mental stimulation through puzzle toys significantly reduce pent-up nervous energy. In severe cases, professional behavioral trainers or veterinary-approved calming supplements can help restore your dog's emotional balance and peace of mind."
     },
     {
-      "id": "dog-health",
-      "title": "Dog Health & First Aid",
-      "articles": [
-        { "title": "Recognizing Early Signs of Hip Dysplasia in Large Breeds", "summary": "Spot stiffness and mobility issues early to improve long-term joint health.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "hip dysplasia dogs, joint health" },
-        { "title": "Essential Pet First Aid Kit Items Every Owner Needs", "summary": "Build a comprehensive emergency kit for cuts, ticks, and minor injuries.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "pet first aid kit, dog emergency" },
-        { "title": "How to Safely Remove a Tick and Prevent Lyme Disease", "summary": "Step-by-step removal guide using proper tools to protect your dog.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "tick removal dogs, lyme disease" },
-        { "title": "Understanding Canine Parvovirus: Symptoms and Prevention", "summary": "Identify early warning signs of parvo and the importance of strict vaccination.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "canine parvovirus, puppy health" },
-        { "title": "Dental Hygiene 101: Preventing Periodontal Disease", "summary": "How to brush dog teeth and prevent costly veterinary dental surgeries.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "dog teeth cleaning, dental care" },
-        { "title": "Recognizing Bloat (GDV): A Fatal Canine Emergency", "summary": "Learn the rapid symptoms of gastric torsion and why immediate vet care is vital.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "dog bloat symptoms, GDV emergency" },
-        { "title": "Managing Dog Allergies: Food vs. Environmental Triggers", "summary": "Identify itchy paws and skin rashes using elimination and testing strategies.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "dog allergies, skin rash treatment" },
-        { "title": "Safe Ear Cleaning Techniques to Prevent Infections", "summary": "Keep floppy-eared dogs free of painful yeast and bacterial ear infections.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "dog ear cleaning, ear infection" },
-        { "title": "Heatstroke Prevention and Emergency Cooling Steps", "summary": "Protect brachycephalic and active dogs from deadly summer heatwaves.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "heatstroke in dogs, summer safety" },
-        { "title": "Understanding Vaccination Schedules for Adult Dogs", "summary": "Keep immunity high against rabies, distemper, and parvo with booster shots.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dog vaccinations, booster schedule" }
-      ]
+      "id": 4,
+      "title": "Feline Hydration Secrets: Why Cats Refuse Water and How to Help",
+      "slug": "feline-hydration-secrets",
+      "keywords": ["cat hydration", "encourage cat to drink", "feline kidney health"],
+      "image": "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80",
+      "summary": "Explore why cats naturally drink very little water and practical strategies to prevent dehydration and kidney disease.",
+      "content": "Cats have a historically low thirst drive, originating from desert-dwelling ancestors who derived most of their moisture from prey. However, relying solely on dry kibble can lead to chronic dehydration and severe urinary tract or kidney complications. To encourage your feline friend to drink more water, try placing multiple bowls around the house away from their food and litter areas, as cats prefer separate dining and drinking zones. Investing in a circulating pet water fountain can work wonders, as cats are naturally attracted to moving water. Additionally, incorporating high-moisture wet food into their daily diet guarantees they receive adequate hydration effortlessly."
     },
     {
-      "id": "grooming-care",
-      "title": "Grooming & Coat Care",
-      "articles": [
-        { "title": "The Ultimate Brushing Guide for Double-Coated Breeds", "summary": "Manage heavy shedding seasons like a professional pet stylist.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "double coated dogs, shedding care" },
-        { "title": "How to Trim Dog Nails Without Hitting the Quick", "summary": "Step-by-step desensitization and clipping guide for nervous dogs.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dog nail clipping, quick bleeding" },
-        { "title": "Preventing and Removing Severe Matting in Long Hair", "summary": "Safe tools and detangling techniques to avoid shaving your dog.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "dog matting removal, coat care" },
-        { "title": "Bathing Frequency: How Often Should You Wash Your Dog?", "summary": "Protect natural skin oils while keeping your dog fresh and clean.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "dog bath guide, skin oils" },
-        { "title": "Choosing the Right Shampoo for Sensitive Dog Skin", "summary": "Avoid harsh sulfates and choose soothing oatmeal or medicated formulas.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "dog shampoo, sensitive skin" },
-        { "title": "How to Clean Dog Tear Stains Naturally", "summary": "Prevent discoloration around the eyes of white and small dog breeds.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "tear stains removal, small dogs" },
-        { "title": "Managing Dog Paw Pad Health in Winter and Summer", "summary": "Protect paws from hot pavement and ice-melting chemical salts.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "dog paw protection, ice salt" },
-        { "title": "Desensitize Your Dog to Home Hair Clippers", "summary": "Make grooming sessions stress-free using positive reinforcement.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "dog clippers, grooming training" },
-        { "title": "Understanding Canine Skin Parasites: Fleas and Mites", "summary": "Identify scratching symptoms and choose effective prevention treatments.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "fleas on dogs, skin mites" },
-        { "title": "Professional Grooming Secrets for a Show-Quality Coat", "summary": "Daily maintenance habits that keep your pet looking pristine year-round.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dog grooming secrets, coat shine" }
-      ]
+      "id": 5,
+      "title": "Dog Dental Care 101: Preventing Tooth Decay and Gum Disease",
+      "slug": "dog-dental-care-preventing-decay",
+      "keywords": ["dog dental care", "canine tooth decay", "bad breath in dogs"],
+      "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
+      "summary": "A complete guide to maintaining your dog's dental hygiene, preventing plaque buildup, and eliminating bad breath.",
+      "content": "Dental hygiene is frequently overlooked by pet owners, yet periodontal disease affects over 80% of dogs by the age of three. Plaque and tartar buildup do not just cause terrible bad breath; they can lead to severe bacterial infections entering the bloodstream and damaging vital organs like the heart and kidneys. Regular tooth brushing using a canine-specific enzymatic toothpaste is the gold standard for prevention. If your dog resists brushing, you can utilize veterinary dental chews, specialized dry kibble textures, and oral rinses designed to break down plaque safely. Scheduling professional cleaning sessions with your vet ensures long-term oral health."
     },
     {
-      "id": "dog-breeds",
-      "title": "Dog Breeds & Genetics",
-      "articles": [
-        { "title": "Best Low-Shedding Dog Breeds for Allergy Sufferers", "summary": "Explore hypoallergenic companion dogs that fit urban lifestyles.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "hypoallergenic dogs, low shedding" },
-        { "title": "High-Energy Working Dog Breeds: Are You Ready?", "summary": "Understand the mental and physical demands of herding and sporting dogs.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "working dog breeds, high energy" },
-        { "title": "Gentle Giant Dog Breeds: Care, Cost, and Lifespan", "summary": "Everything you need to know before adopting Mastiffs, Danes, and Newfoundlands.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "giant dog breeds, mastiff care" },
-        { "title": "Small Apartment Dogs That Don't Require Marathon Walks", "summary": "Calm, low-activity companion breeds ideal for city flats and seniors.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "apartment dogs, small breeds" },
-        { "title": "Brachycephalic Breeds Explained: Health and Breathing", "summary": "Understand flat-faced dogs like Pugs and Bulldogs and their special needs.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "brachycephalic dogs, flat faced" },
-        { "title": "Smartest Dog Breeds: Training Challenges and Intelligence", "summary": "Border Collies, Poodles, and German Shepherds: managing high-IQ pets.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "smartest dog breeds, intelligence" },
-        { "title": "Family-Friendly Dogs That Excel Around Young Children", "summary": "Patient, sturdy breeds known for gentle temperaments with kids.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "family dogs, kids companions" },
-        { "title": "Guard Dog Breeds: Protection vs. Territorial Aggression", "summary": "Socialize guard breeds correctly to ensure safety without liability.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "guard dog breeds, protection training" },
-        { "title": "Rare Dog Breeds Worth Knowing: History and Traits", "summary": "Fascinating lesser-known canine companions with unique characteristics.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "rare dog breeds, canine history" },
-        { "title": "Mixed Breed vs. Purebred: Health, Cost, and Temperament", "summary": "Debunking common myths about hybrid vigor and genetic health.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "mixed breed dogs, purebred comparison" }
-      ]
+      "id": 6,
+      "title": "Understanding Cat Body Language: What Your Feline Is Telling You",
+      "slug": "understanding-cat-body-language",
+      "keywords": ["cat body language", "feline behavior", "why cats purr"],
+      "image": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=800&q=80",
+      "summary": "Decode the subtle signs of cat communication, from tail movements and ear positions to purring and slow blinking.",
+      "content": "Cats communicate primarily through complex body language rather than vocalizations, making it essential for owners to understand their physical cues. A slow blink from your cat is the ultimate sign of trust, affection, and contentment, often called a 'cat kiss.' Conversely, flattened ears, a twitching tail tip, or dilated pupils usually indicate fear, agitation, or an imminent attack. Purring generally signifies happiness, though cats occasionally purr when stressed or in pain to self-soothe. By paying close attention to these subtle signals, you can build a deeper, more harmonious bond with your feline companion and avoid accidental scratches."
     },
     {
-      "id": "senior-dog-care",
-      "title": "Senior Dog Care & Comfort",
-      "articles": [
-        { "title": "Recognizing Signs of Aging in Your Senior Dog", "summary": "Adapt your routine to support failing sight, hearing, and joint stiffness.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "senior dog care, aging signs" },
-        { "title": "Managing Canine Cognitive Dysfunction (Dog Dementia)", "summary": "Coping strategies for night pacing, confusion, and house-soiling in seniors.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dog dementia, cognitive dysfunction" },
-        { "title": "Best Orthopedic Dog Beds for Arthritis Relief", "summary": "Improve mobility and sleep quality for dogs with hip and joint pain.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "orthopedic dog bed, arthritis relief" },
-        { "title": "Pain Management Options for Senior Dogs with Arthritis", "summary": "Work with your veterinarian on NSAIDs, physical therapy, and laser treatments.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "dog arthritis pain, senior care" },
-        { "title": "Adjusting Diets for Aging Canines with Lower Energy", "summary": "Prevent weight gain and support kidney health in older dogs.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "senior dog diet, kidney health" },
-        { "title": "Home Modifications for Blind or Deaf Senior Dogs", "summary": "Create a safe, hazard-free environment for pets losing their senses.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "blind dog care, deaf dog home safety" },
-        { "title": "Incontinence Management: Diapers and Medical Options", "summary": "Keep your senior dog clean, comfortable, and dry indoors.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "dog incontinence, senior dog diapers" },
-        { "title": "Gentle Exercise Routines for Older Dogs", "summary": "Maintain muscle mass without straining aging joints and ligaments.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "senior dog exercise, low impact" },
-        { "title": "Knowing When It's Time: Quality of Life Assessments", "summary": "Compassionate guidance for evaluating pain, comfort, and palliative care.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "quality of life dog, end of life care" },
-        { "title": "Palliative Care and Comfort Measures for Terminally Ill Pets", "summary": "Ensure dignity and peace during your dog's final stages of life.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "palliative care dogs, comfort measures" }
-      ]
+      "id": 7,
+      "title": "The Ultimate Guide to Puppy Socialization: Weeks to Remember",
+      "slug": "ultimate-guide-to-puppy-socialization",
+      "keywords": ["puppy socialization", "training young dogs", "behavioral development"],
+      "image": "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80",
+      "summary": "Master the critical socialization window for puppies to ensure they grow into well-adjusted, confident adult dogs.",
+      "content": "The window of socialization in puppies—typically occurring between 8 and 16 weeks of age—is the most crucial developmental period of their lives. During this golden window, exposing your puppy safely to diverse environments, new people, friendly animals, different sounds, and varying surfaces shapes their permanent worldview. Positive reinforcement, such as giving treats and praise during novel experiences, teaches them that the world is a safe, welcoming place. Neglecting this phase often leads to lifelong fearfulness, reactivity, or aggression. Patience, consistency, and safe exposure form the bedrock of a well-behaved adult dog."
     },
     {
-      "id": "dog-travel-gear",
-      "title": "Travel & Outdoor Gear",
-      "articles": [
-        { "title": "Crash-Tested Dog Car Harnesses for Safe Road Trips", "summary": "Protect your dog and family during car accidents with certified restraints.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "dog car harness, crash tested safety" },
-        { "title": "Air Travel with Dogs: Airline Rules and Crate Prep", "summary": "Navigate cargo vs. in-cabin policies and international pet passports.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "flying with dogs, airline pet rules" },
-        { "title": "Hiking with Dogs: Essential Gear and Trail Safety", "summary": "Pack water bowls, first aid, and booties for rugged outdoor adventures.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "hiking with dogs, trail gear" },
-        { "title": "Water Safety: Teaching Your Dog to Swim and Wear Life Jackets", "summary": "Prevent drowning accidents with canine flotation devices and pool ramps.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "dog life jacket, swimming safety" },
-        { "title": "Camping with Dogs: Setting Up a Safe Outdoor Campsite", "summary": "Manage tie-outs, wildlife awareness, and tent sleeping arrangements.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "camping with dogs, outdoor setup" },
-        { "title": "Best Dog Backpacks for Long Trail Hikes", "summary": "How to condition your dog to carry their own water and supplies safely.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "dog backpack, hiking supplies" },
-        { "title": "Preventing Car Sickness in Puppies and Dogs", "summary": "Natural remedies and behavioral steps to make road trips vomit-free.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "car sickness dogs, motion sickness" },
-        { "title": "Choosing the Best Dog Leash and Collar for Every Activity", "summary": "Compare slip leads, martindales, retractables, and standard leashes.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "dog leash review, collars guide" },
-        { "title": "Protecting Your Dog from Dehydration on Hot Outdoor Trips", "summary": "Portable water bottles, cooling vests, and shade setup essentials.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "dog dehydration prevention, cooling vest" },
-        { "title": "Winter Outdoor Gear: Dog Coats and Booties Explained", "summary": "Keep short-haired breeds warm during freezing winter walks.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "winter dog coats, booties protection" }
-      ]
+      "id": 8,
+      "title": "Common Toxic Foods for Pets: What to Keep Away Immediately",
+      "slug": "common-toxic-foods-for-pets",
+      "keywords": ["toxic foods for pets", "what dogs cannot eat", "cat poisonous foods"],
+      "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80",
+      "summary": "A life-saving guide identifying everyday human foods that are severely toxic or fatal to dogs and cats.",
+      "content": "Many common household foods that are completely safe for humans can act as lethal poisons to our pets. Chocolate, grapes, raisins, onions, garlic, and products containing artificial sweeteners like xylitol cause severe internal organ failure in dogs and cats. Even small amounts of macadamia nuts or avocado can trigger extreme toxicity symptoms ranging from vomiting and lethargy to seizures. If you suspect your pet has ingested any toxic substance, contact your veterinarian or an emergency animal poison control center immediately. Prevention by keeping kitchen counters clean and securing pantry doors is always your best defense."
     },
     {
-      "id": "dog-activities-sports",
-      "title": "Activities & Dog Sports",
-      "articles": [
-        { "title": "Introduction to Dog Agility Training for Beginners", "summary": "Build coordination and teamwork through jumps, tunnels, and weave poles.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "dog agility training, beginner course" },
-        { "title": "Dock Jumping 101: How to Train Your Water-Loving Dog", "summary": "Exciting high-flying water sports training for Retrievers and active breeds.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "dock jumping dogs, water sports" },
-        { "title": "Scent Work and Tracking: Mental Exercise for Any Dog", "summary": "Tap into your dog's powerful sense of nose with indoor tracking games.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "dog scent work, tracking games" },
-        { "title": "Flyball Basics: Fast-Paced Team Relay for Dogs", "summary": "High-energy ball-retrieving hurdle racing for athletic companions.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "flyball for dogs, relay racing" },
-        { "title": "Canicross and Bikejoring: Running with Your Dog Safely", "summary": "Pulling sports that combine running or biking with an energetic harnessed dog.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "canicross, bikejoring dogs" },
-        { "title": "Herding Trials and Instinct Tests for Working Breeds", "summary": "Channel natural livestock herding drives into structured farm sports.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "herding trials, instincts test" },
-        { "title": "Disc Dog Training: Catching Frisbees Like a Pro", "summary": "Master timing, throws, and safe airborne catches for active retrievers.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "disc dog training, frisbee catch" },
-        { "title": "Obedience Rally Competitions for Precision Training", "summary": "Navigate timed sign-posted courses emphasizing teamwork and precision.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "rally obedience, dog competition" },
-        { "title": "Earthdog Tests for Terriers: Channeling Den Hunting Instincts", "summary": "Safe underground tunnel trials for small terrier working breeds.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "earthdog tests, terrier instincts" },
-        { "title": "Building a DIY Backyard Obstacle Course for Your Dog", "summary": "Fun, inexpensive agility hurdles and tunnels you can make at home.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "DIY dog agility course, backyard fun" }
-      ]
+      "id": 9,
+      "title": "Senior Pet Care: Keeping Your Aging Companion Comfortable",
+      "slug": "senior-pet-care-comfort",
+      "keywords": ["senior pet care", "aging dog health", "old cat comfort"],
+      "image": "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80",
+      "summary": "Practical advice on adapting your home, diet, and healthcare routines to support your senior pets with dignity.",
+      "content": "As pets enter their golden years—typically around age seven and older—their metabolic needs, physical agility, and medical requirements change significantly. Joint stiffness, arthritis, declining vision, and hearing loss are common challenges that require environmental adjustments within the home. Providing orthopedic memory foam beds, adding ramps or steps to favorite resting places, and keeping food and water bowls easily accessible makes a massive difference in their daily comfort. Regular geriatric veterinary screenings every six months help detect age-related conditions like kidney disease or diabetes early, ensuring a high quality of life."
     },
     {
-      "id": "eco-friendly-pet-care",
-      "title": "Eco-Friendly & Sustainable Care",
-      "articles": [
-        { "title": "Sustainable Pet Ownership: Reducing Your Dog's Carbon Pawprint", "summary": "Eco-friendly lifestyle habits for conscious pet parents.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "sustainable pet care, eco dog" },
-        { "title": "Biodegradable Dog Poop Bags: Which Ones Really Work?", "summary": "Compare plant-based compostable bags to traditional plastic alternatives.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "biodegradable poop bags, eco friendly" },
-        { "title": "Eco-Friendly Dog Beds Made from Recycled Materials", "summary": "Comfortable, sustainable bedding options that keep plastics out of oceans.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "recycled dog beds, sustainable pet" },
-        { "title": "Natural Chemical-Free Flea and Tick Preventatives", "summary": "Explore essential oil sprays and amber collars as chemical alternatives.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "natural flea control, herbal repellent" },
-        { "title": "Zero-Waste Homemade Dog Treats and Bakery Recipes", "summary": "Bake healthy, packaging-free snacks using kitchen surplus ingredients.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "homemade dog treats, zero waste" },
-        { "title": "Eco-Friendly Dog Toys Made from Hemp and Organic Cotton", "summary": "Durable, non-toxic chew toys built from sustainable renewable fibers.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "eco dog toys, hemp chew toys" },
-        { "title": "Environmental Impact of Commercial Pet Food Packaging", "summary": "How bulk purchasing and sustainable brands reduce landfill waste.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "pet food packaging waste, green pet" },
-        { "title": "Upcycling Household Items into Interactive Dog Toys", "summary": "Turn old t-shirts and boxes into engaging puzzle feeders for free.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "upcycled dog toys, DIY puzzles" },
-        { "title": "Non-Toxic Household Cleaning Products Safe for Pets", "summary": "Protect paws and respiratory systems from harsh chemical floor cleaners.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "pet safe cleaners, non toxic home" },
-        { "title": "Supporting Ethical and Sustainable Pet Product Brands", "summary": "How to identify greenwashing and back genuinely responsible manufacturers.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "ethical pet brands, greenwashing" }
-      ]
-    },
-    {
-      "id": "rescue-adoption",
-      "title": "Rescue & Adoption Guide",
-      "articles": [
-        { "title": "What to Expect When Adopting a Shelter Dog", "summary": "Prepare your home and mindset for a smooth rescue transition.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "shelter dog adoption, rescue guide" },
-        { "title": "Helping a Fearful Rescue Dog Decompress at Home", "summary": "Gentle techniques to build trust with traumatized or timid shelter dogs.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "fearful rescue dog, decompression" },
-        { "title": "Fostering 101: How to Foster a Shelter Dog Successfully", "summary": "Provide temporary shelter and behavioral rehabilitation for rescue groups.", "image": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80", "keywords": "fostering shelter dogs, pet foster" },
-        { "title": "Questions to Ask Shelter Staff Before Adopting", "summary": "Uncover medical history, bite records, and trigger points before signing.", "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80", "keywords": "dog adoption questions, shelter check" },
-        { "title": "Introducing a Rescue Dog to Your Existing Pets Safely", "summary": "Neutral ground introductions and slow pacing to prevent territorial fights.", "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80", "keywords": "introducing rescue dogs, pets integration" },
-        { "title": "Rehabilitation Tips for Dogs with Past Abuse History", "summary": "Patience, positive conditioning, and professional behaviorist support.", "image": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80", "keywords": "abused dog rehabilitation, trust building" },
-        { "title": "Special Needs Dog Adoption: Giving Handicapped Pets a Home", "summary": "Care tips for blind, deaf, or wheel-chair bound rescue dogs.", "image": "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=800&q=80", "keywords": "special needs dogs, handicapped pets" },
-        { "title": "Senior Dog Rescue: Why Older Pets Make the Best Companions", "summary": "Enjoy the calm, housebroken, and loving nature of older rescue dogs.", "image": "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80", "keywords": "senior dog rescue, older pet adoption" },
-        { "title": "Breed-Specific Rescues: Finding Your Dream Breed in Need", "summary": "Connect with specialized organizations dedicated to purebred rescue.", "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", "keywords": "breed specific rescue, purebred adoption" },
-        { "title": "The Emotional Rewards of Giving a Shelter Dog a Second Chance", "summary": "Discover the unmatched loyalty and gratitude of a rescued companion.", "image": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80", "keywords": "rescue dog gratitude, second chance" }
-      ]
+      "id": 10,
+      "title": "Indoor Cat Enrichment: Beating Boredom and Promoting Fitness",
+      "slug": "indoor-cat-enrichment-fitness",
+      "keywords": ["indoor cat enrichment", "cat toys fitness", "preventing feline obesity"],
+      "image": "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80",
+      "summary": "Creative and engaging strategies to stimulate your indoor cat's mind and body to prevent destructive boredom.",
+      "content": "While indoor cats enjoy safety from outdoor hazards, they face a high risk of sedentary boredom, obesity, and stress-related behavioral issues. Simulating their natural hunting instincts through interactive play sessions with feather wands, laser pointers, or puzzle feeders keeps their minds sharp and bodies agile. Vertical territory—such as multi-level cat trees, wall shelves, and window perches—expands their living space and offers safe observation posts. Rotating their toys every week prevents them from losing interest, ensuring your indoor feline stays happy, active, and mentally fulfilled throughout its life."
     }
   ]
 }
