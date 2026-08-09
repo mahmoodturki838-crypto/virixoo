@@ -34,12 +34,9 @@ function slugify(value = "") {
  * Render article content safely.
  *
  * articles.json may contain real HTML such as:
- * <p>...</p>
- * <h2>...</h2>
- * <ul>...</ul>
+ * <p>, <h2>, <h3>, <ul>, <ol>, <strong>, etc.
  *
- * The old version escaped all HTML, which caused tags
- * to appear as visible text on the website.
+ * Plain text is also supported.
  */
 function formatContent(content = "") {
   const raw = String(content || "").trim();
@@ -48,19 +45,10 @@ function formatContent(content = "") {
     return "";
   }
 
-  /*
-   * If the content already contains HTML,
-   * use the supplied article markup.
-   *
-   * Remove dangerous elements/attributes first.
-   */
   if (/<\/?(p|h2|h3|h4|ul|ol|li|strong|em|blockquote|a|br)\b/i.test(raw)) {
     return sanitizeArticleHtml(raw);
   }
 
-  /*
-   * Fallback for plain-text articles.
-   */
   return raw
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
@@ -72,8 +60,7 @@ function formatContent(content = "") {
 }
 
 /*
- * Very small HTML sanitizer intended for our own articles.json.
- * It removes scripts, iframes, objects and inline event handlers.
+ * Small HTML sanitizer intended for our own articles.json.
  */
 function sanitizeArticleHtml(html) {
   return String(html)
@@ -99,16 +86,10 @@ function normalizeImagePath(image = "") {
     return "";
   }
 
-  /*
-   * Local site images should start with /images/
-   */
   if (value.startsWith("/")) {
     return value;
   }
 
-  /*
-   * Convert a relative image path into a site-root path.
-   */
   return `/${value.replace(/^\/+/, "")}`;
 }
 
@@ -134,6 +115,7 @@ function articleCard(article) {
   const image = escapeHtml(imagePath);
   const summary = escapeHtml(article.summary || "");
   const category = escapeHtml(article.category || "Pet Care");
+
   const alt = escapeHtml(
     article.alt ||
       article.imageAlt ||
@@ -166,39 +148,35 @@ function articleCard(article) {
       : ""
   }
 
-  <div class="card-body">
+  <div class="category">
+    ${category}
+  </div>
 
-    <div class="category">
-      ${category}
-    </div>
+  <h2>
+    <a href="${url}">
+      ${title}
+    </a>
+  </h2>
 
-    <h2>
-      <a href="${url}">
-        ${title}
-      </a>
-    </h2>
+  <p>
+    ${summary}
+  </p>
 
-    <p>
-      ${summary}
-    </p>
+  <div class="card-actions">
 
-    <div class="card-actions">
+    <a class="read-more" href="${url}">
+      Read More →
+    </a>
 
-      <a class="read-more" href="${url}">
-        Read More →
-      </a>
-
-      <a
-        class="pinterest-btn"
-        href="${pinterestUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share ${title} on Pinterest"
-      >
-        📌 Pinterest
-      </a>
-
-    </div>
+    <a
+      class="pinterest-btn"
+      href="${pinterestUrl}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Share ${title} on Pinterest"
+    >
+      📌 Pinterest
+    </a>
 
   </div>
 
@@ -210,7 +188,6 @@ function header(title, description, canonicalUrl = SITE_URL) {
   return `
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
   <meta charset="UTF-8">
@@ -243,33 +220,147 @@ function header(title, description, canonicalUrl = SITE_URL) {
 
 <header class="site-header">
 
-  <a href="/" class="logo">
-    Virixoo
-  </a>
+  <div class="site-header-inner">
 
-  <nav>
-
-    <a href="/">
-      Home
+    <a class="site-logo" href="/">
+      Virixoo
     </a>
 
-    <a href="/dogs/">
-      Dogs
-    </a>
+    <nav class="main-nav" aria-label="Main navigation">
 
-    <a href="/cats/">
-      Cats
-    </a>
+      <a href="/">
+        Home
+      </a>
 
-    <a href="/about/">
-      About
-    </a>
+      <a href="/dogs/">
+        Dogs
+      </a>
 
-  </nav>
+      <a href="/cats/">
+        Cats
+      </a>
+
+      <a href="/about/">
+        About
+      </a>
+
+    </nav>
+
+  </div>
 
 </header>
 
 <main class="site-main">
+`;
+}
+
+/*
+ * Real visitor counter.
+ *
+ * /api/visit records the page visit.
+ * /api/stats returns today's, this month's,
+ * and this year's real counters.
+ */
+function statsBox() {
+  return `
+<div
+  id="virixoo-stats"
+  class="virixoo-stats"
+  aria-label="Virixoo visitor statistics"
+>
+  <span class="stats-loading">👁 Loading...</span>
+</div>
+
+<script>
+(function () {
+  const statsElement = document.getElementById("virixoo-stats");
+
+  if (!statsElement) {
+    return;
+  }
+
+  function formatNumber(value) {
+    const number = Number(value) || 0;
+
+    if (number >= 1000000) {
+      return (number / 1000000).toFixed(1).replace(/\\.0$/, "") + "m";
+    }
+
+    if (number >= 1000) {
+      return (number / 1000).toFixed(1).replace(/\\.0$/, "") + "k";
+    }
+
+    return number.toLocaleString("en-US");
+  }
+
+  async function recordVisit() {
+    try {
+      await fetch("/api/visit", {
+        method: "GET",
+        cache: "no-store",
+        credentials: "same-origin"
+      });
+    } catch (error) {
+      console.warn("Visit tracking failed:", error);
+    }
+  }
+
+  async function loadStats() {
+    try {
+      const response = await fetch("/api/stats", {
+        method: "GET",
+        cache: "no-store",
+        credentials: "same-origin"
+      });
+
+      if (!response.ok) {
+        throw new Error("Stats request failed");
+      }
+
+      const data = await response.json();
+
+      const today =
+        data.today ??
+        data.Today ??
+        data.todayVisits ??
+        0;
+
+      const month =
+        data.thisMonth ??
+        data.month ??
+        data.monthVisits ??
+        0;
+
+      const year =
+        data.thisYear ??
+        data.year ??
+        data.yearVisits ??
+        0;
+
+      statsElement.innerHTML =
+        '<span class="stats-icon">👁</span> ' +
+        '<span>' + formatNumber(today) + ' d</span>' +
+        '<span class="stats-separator">·</span>' +
+        '<span>' + formatNumber(month) + ' m</span>' +
+        '<span class="stats-separator">·</span>' +
+        '<span>' + formatNumber(year) + ' y</span>';
+
+    } catch (error) {
+      console.warn("Could not load visitor statistics:", error);
+
+      statsElement.innerHTML = "";
+    }
+  }
+
+  /*
+   * Record the visit first, then read the updated statistics.
+   */
+  recordVisit()
+    .then(loadStats)
+    .catch(loadStats);
+
+})();
+</script>
 `;
 }
 
@@ -279,7 +370,7 @@ function footer() {
 
 <footer class="site-footer">
 
-  <div class="footer-links">
+  <nav class="footer-nav" aria-label="Footer navigation">
 
     <a href="/">
       Home
@@ -305,9 +396,11 @@ function footer() {
       Contact
     </a>
 
-  </div>
+  </nav>
 
-  <p>
+  ${statsBox()}
+
+  <p class="copyright">
     © ${new Date().getFullYear()} Virixoo. All rights reserved.
   </p>
 
@@ -315,29 +408,6 @@ function footer() {
 
 </body>
 </html>
-`;
-}
-
-function statsBox() {
-  return `
-<section class="stats-box">
-
-  <div>
-    <strong>Dogs</strong>
-    <span>Expert Care Guides</span>
-  </div>
-
-  <div>
-    <strong>Cats</strong>
-    <span>Expert Care Guides</span>
-  </div>
-
-  <div>
-    <strong>Virixoo</strong>
-    <span>Pet Care Resources</span>
-  </div>
-
-</section>
 `;
 }
 
@@ -353,36 +423,27 @@ ${header(
   SITE_URL + "/"
 )}
 
-<section class="hero">
+<section class="hero-section">
 
   <h1>
     Expert Dog & Cat Care Guides
   </h1>
 
   <p>
-    Practical guides for responsible pet owners covering
-    nutrition, training, grooming, behavior, breeds,
-    health, and everyday care.
+    Practical and easy-to-understand guides for healthier,
+    happier dogs and cats.
   </p>
 
 </section>
 
-${statsBox()}
+<section class="articles-section">
 
-<section>
+  <h2>
+    Latest Pet Care Guides
+  </h2>
 
-  <div class="section-heading">
-
-    <h2>
-      Latest Pet Care Guides
-    </h2>
-
-  </div>
-
-  <div class="article-grid">
-
+  <div class="articles-grid">
     ${cards}
-
   </div>
 
 </section>
@@ -440,44 +501,31 @@ function createArticlePage(article) {
   const imageMarkup =
     imagePath
       ? `
-  <figure class="article-figure">
-
-    <img
-      class="article-hero"
-      src="${escapeHtml(imagePath)}"
-      alt="${escapeHtml(alt)}"
-      width="1200"
-      height="700"
-      loading="eager"
-      fetchpriority="high"
-    >
-
-  </figure>
-  `
+<img
+  class="article-hero"
+  src="${escapeHtml(imagePath)}"
+  alt="${escapeHtml(alt)}"
+  width="1200"
+  height="700"
+  loading="eager"
+  fetchpriority="high"
+>
+`
       : "";
 
-  const html = `
-${header(
-  `${title} | Virixoo`,
-  description,
-  canonical
-)}
+  const html = `${header(
+    `${title} | Virixoo`,
+    description,
+    canonical
+  )}
 
-<article class="article-page">
-
-  <div class="article-category">
-
-    ${escapeHtml(
-      article.category || "Pet Care"
-    )}
-
-  </div>
-
-  <h1>
-    ${escapeHtml(title)}
-  </h1>
+<article class="single-article">
 
   <div class="article-meta">
+
+    <span>
+      ${escapeHtml(article.category || "Pet Care")}
+    </span>
 
     <span>
       By ${escapeHtml(
@@ -516,28 +564,26 @@ ${header(
 
   </div>
 
-  <div class="article-actions">
+  <h1>
+    ${escapeHtml(title)}
+  </h1>
 
-    <a
-      class="pinterest-btn"
-      href="${pinterestUrl}"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      📌 Share on Pinterest
-    </a>
-
-  </div>
+  <a
+    class="pinterest-btn"
+    href="${pinterestUrl}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    📌 Share on Pinterest
+  </a>
 
   ${imageMarkup}
 
   <div class="article-content">
-
     ${formatContent(article.content)}
-
   </div>
 
-  <div class="article-bottom-share">
+  <div class="article-share">
 
     <span>
       Found this guide helpful?
@@ -588,33 +634,20 @@ function createCategoryPage(
       .map(articleCard)
       .join("\n");
 
-  const html = `
-${header(
-  `${category} Care Guides | Virixoo`,
-  `Expert ${category.toLowerCase()} care guides for responsible pet owners.`,
-  `${SITE_URL}/${slug}/`
-)}
+  const html = `${header(
+    `${category} Care Guides | Virixoo`,
+    `Expert ${category.toLowerCase()} care guides for responsible pet owners.`,
+    `${SITE_URL}/${slug}/`
+  )}
 
-<section>
+<section class="category-page">
 
   <h1>
-    ${escapeHtml(category)}
-    Care Guides
+    ${escapeHtml(category)} Care Guides
   </h1>
 
-  <p>
-    Practical
-    ${escapeHtml(
-      category.toLowerCase()
-    )}
-    care information for responsible
-    pet owners.
-  </p>
-
-  <div class="article-grid">
-
+  <div class="articles-grid">
     ${cards}
-
   </div>
 
 </section>
@@ -645,12 +678,11 @@ function createSimplePage(
   text,
   slug
 ) {
-  const html = `
-${header(
-  `${title} | Virixoo`,
-  text,
-  `${SITE_URL}/${slug}/`
-)}
+  const html = `${header(
+    `${title} | Virixoo`,
+    text,
+    `${SITE_URL}/${slug}/`
+  )}
 
 <section class="simple-page">
 
@@ -707,72 +739,71 @@ function createSitemap(articles) {
   const urls = [];
 
   urls.push(`
-  <url>
-    <loc>${SITE_URL}/</loc>
-  </url>
-  `);
+<url>
+  <loc>${SITE_URL}/</loc>
+</url>
+`);
 
   urls.push(`
-  <url>
-    <loc>${SITE_URL}/dogs/</loc>
-  </url>
-  `);
+<url>
+  <loc>${SITE_URL}/dogs/</loc>
+</url>
+`);
 
   urls.push(`
-  <url>
-    <loc>${SITE_URL}/cats/</loc>
-  </url>
-  `);
+<url>
+  <loc>${SITE_URL}/cats/</loc>
+</url>
+`);
 
   urls.push(`
-  <url>
-    <loc>${SITE_URL}/about/</loc>
-  </url>
-  `);
+<url>
+  <loc>${SITE_URL}/about/</loc>
+</url>
+`);
 
   urls.push(`
-  <url>
-    <loc>${SITE_URL}/privacy-policy/</loc>
-  </url>
-  `);
+<url>
+  <loc>${SITE_URL}/privacy-policy/</loc>
+</url>
+`);
 
   urls.push(`
-  <url>
-    <loc>${SITE_URL}/contact/</loc>
-  </url>
-  `);
+<url>
+  <loc>${SITE_URL}/contact/</loc>
+</url>
+`);
 
   articles.forEach(
     (article) => {
-
       urls.push(`
-  <url>
+<url>
 
-    <loc>
-      ${escapeHtml(
-        articleUrl(article)
-      )}
-    </loc>
+  <loc>
+    ${escapeHtml(
+      articleUrl(article)
+    )}
+  </loc>
 
-    ${
+  ${
+    article.dateModified
+      ? `
+  <lastmod>
+    ${escapeHtml(
       article.dateModified
-        ? `
-    <lastmod>
-      ${escapeHtml(
-        article.dateModified
-      )}
-    </lastmod>
-    `
-        : ""
-    }
+    )}
+  </lastmod>
+  `
+      : ""
+  }
 
-  </url>
-      `);
-
+</url>
+`);
     }
   );
 
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+  const sitemap = `
+<?xml version="1.0" encoding="UTF-8"?>
 
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -781,7 +812,7 @@ function createSitemap(articles) {
 ${urls.join("\n")}
 
 </urlset>
-`;
+`.trim();
 
   fs.writeFileSync(
     path.join(
@@ -815,7 +846,6 @@ function copyPublicFiles() {
     for (
       const entry of entries
     ) {
-
       const sourcePath =
         path.join(
           source,
@@ -831,19 +861,15 @@ function copyPublicFiles() {
       if (
         entry.isDirectory()
       ) {
-
         copyDirectory(
           sourcePath,
           destinationPath
         );
-
       } else {
-
         fs.copyFileSync(
           sourcePath,
           destinationPath
         );
-
       }
     }
   }
@@ -860,32 +886,24 @@ function validateArticles(
   articles.forEach(
     (article, index) => {
 
-      if (
-        !article.title
-      ) {
+      if (!article.title) {
         throw new Error(
           `Article ${index + 1} is missing a title.`
         );
       }
 
-      if (
-        !article.slug
-      ) {
+      if (!article.slug) {
         article.slug =
           slugify(article.title);
       }
 
-      if (
-        !article.content
-      ) {
+      if (!article.content) {
         throw new Error(
           `Article "${article.title}" is missing content.`
         );
       }
 
-      if (
-        article.image
-      ) {
+      if (article.image) {
         article.image =
           normalizeImagePath(
             article.image
@@ -956,15 +974,13 @@ function build() {
   );
 
   /*
-   * Copy CSS, images and all
-   * other public assets first.
+   * Copy CSS, images and
+   * all other public assets.
    */
   copyPublicFiles();
 
   /*
    * Warn about missing local images.
-   * The build will continue so one bad
-   * image does not destroy the whole site.
    */
   articles.forEach(
     (article) => {
@@ -1037,11 +1053,8 @@ function build() {
 }
 
 try {
-
   build();
-
 } catch (error) {
-
   console.error(
     "BUILD FAILED:"
   );
