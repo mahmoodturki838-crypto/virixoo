@@ -7,10 +7,18 @@ const PUBLIC_DIR = path.join(ROOT, "public");
 const DIST_DIR = path.join(ROOT, "dist");
 
 const SITE_URL = "https://virixoo.com";
+const SITE_NAME = "Virixoo";
+const DEFAULT_IMAGE = `${SITE_URL}/images/virixoo-default.jpg`;
+
+
+/* =========================================================
+   Basic Helpers
+   ========================================================= */
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
+
 
 function escapeHtml(value = "") {
   return String(value)
@@ -21,6 +29,7 @@ function escapeHtml(value = "") {
     .replace(/'/g, "&#039;");
 }
 
+
 function slugify(value = "") {
   return String(value)
     .toLowerCase()
@@ -29,6 +38,38 @@ function slugify(value = "") {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+
+function truncateText(value = "", maxLength = 160) {
+  const text = String(value || "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return (
+    text
+      .slice(0, maxLength - 3)
+      .trim()
+      .replace(/[.,;:!?-]+$/, "") +
+    "..."
+  );
+}
+
+
+function safeJsonLd(data) {
+  return JSON.stringify(data)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
+}
+
+
+/* =========================================================
+   Content Formatting
+   ========================================================= */
 
 function formatContent(content = "") {
   const raw = String(content || "").trim();
@@ -57,6 +98,7 @@ function formatContent(content = "") {
     })
     .join("\n");
 }
+
 
 function sanitizeArticleHtml(html) {
   return String(html)
@@ -90,6 +132,11 @@ function sanitizeArticleHtml(html) {
     );
 }
 
+
+/* =========================================================
+   URL / Image Helpers
+   ========================================================= */
+
 function articleUrl(article) {
   const slug =
     article.slug ||
@@ -100,12 +147,20 @@ function articleUrl(article) {
   )}/`;
 }
 
+
 function normalizeImagePath(image = "") {
-  const value =
-    String(image || "").trim();
+  const value = String(image || "").trim();
 
   if (!value) {
     return "";
+  }
+
+  if (
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("//")
+  ) {
+    return value;
   }
 
   if (value.startsWith("/")) {
@@ -115,9 +170,40 @@ function normalizeImagePath(image = "") {
   return `/${value.replace(/^\/+/, "")}`;
 }
 
+
+function absoluteImageUrl(image = "") {
+  const normalized = normalizeImagePath(image);
+
+  if (!normalized) {
+    return DEFAULT_IMAGE;
+  }
+
+  if (
+    normalized.startsWith("http://") ||
+    normalized.startsWith("https://")
+  ) {
+    return normalized;
+  }
+
+  return `${SITE_URL}${normalized}`;
+}
+
+
 function imageExists(image = "") {
   const normalized =
     normalizeImagePath(image);
+
+  if (!normalized) {
+    return false;
+  }
+
+  if (
+    normalized.startsWith("http://") ||
+    normalized.startsWith("https://") ||
+    normalized.startsWith("//")
+  ) {
+    return true;
+  }
 
   if (!normalized.startsWith("/")) {
     return false;
@@ -134,6 +220,148 @@ function imageExists(image = "") {
 
   return fs.existsSync(filePath);
 }
+
+
+/* =========================================================
+   SEO Schema Helpers
+   ========================================================= */
+
+function createWebSiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: `${SITE_URL}/`,
+    name: SITE_NAME,
+    description:
+      "Expert dog and cat care guides covering nutrition, training, grooming, behavior, breeds, and everyday pet care.",
+    publisher: {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: `${SITE_URL}/`
+    }
+  };
+}
+
+
+function createOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: `${SITE_URL}/`
+  };
+}
+
+
+function createArticleSchema(article) {
+  const title =
+    article.title ||
+    "Pet Care Guide";
+
+  const description =
+    truncateText(
+      article.summary ||
+        "Expert pet care guide from Virixoo.",
+      160
+    );
+
+  const canonical =
+    articleUrl(article);
+
+  const image =
+    absoluteImageUrl(
+      article.image || ""
+    );
+
+  const published =
+    article.datePublished ||
+    undefined;
+
+  const modified =
+    article.dateModified ||
+    article.datePublished ||
+    undefined;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${canonical}#article`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonical
+    },
+    headline: title,
+    description,
+    image: [image],
+    author: {
+      "@type": "Person",
+      name:
+        article.author ||
+        "Virixoo Editorial Team"
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: `${SITE_URL}/`
+    }
+  };
+
+  if (published) {
+    schema.datePublished = published;
+  }
+
+  if (modified) {
+    schema.dateModified = modified;
+  }
+
+  if (article.category) {
+    schema.articleSection =
+      article.category;
+  }
+
+  return schema;
+}
+
+
+function createBreadcrumbSchema(items) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map(
+      (item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: item.url
+      })
+    )
+  };
+}
+
+
+function schemaScript(schema) {
+  return `
+<script type="application/ld+json">
+${safeJsonLd(schema)}
+</script>
+`;
+}
+
+
+function multipleSchemaScripts(schemas = []) {
+  return schemas
+    .filter(Boolean)
+    .map(schemaScript)
+    .join("\n");
+}
+
+
+/* =========================================================
+   Article Cards
+   ========================================================= */
 
 function articleCard(article) {
   const slug =
@@ -159,7 +387,10 @@ function articleCard(article) {
 
   const summary =
     escapeHtml(
-      article.summary || ""
+      truncateText(
+        article.summary || "",
+        170
+      )
     );
 
   const category =
@@ -182,7 +413,9 @@ function articleCard(article) {
       articleUrl(article)
     )}` +
     `&media=${encodeURIComponent(
-      SITE_URL + imagePath
+      absoluteImageUrl(
+        article.image || ""
+      )
     )}` +
     `&description=${encodeURIComponent(
       article.title || ""
@@ -250,11 +483,43 @@ function articleCard(article) {
 `;
 }
 
+
+/* =========================================================
+   Header + SEO
+   ========================================================= */
+
 function header(
   title,
   description,
-  canonicalUrl = SITE_URL
+  canonicalUrl = SITE_URL,
+  options = {}
 ) {
+  const safeTitle =
+    truncateText(
+      title ||
+        `${SITE_NAME} - Pet Care Guides`,
+      70
+    );
+
+  const safeDescription =
+    truncateText(
+      description ||
+        "Expert dog and cat care guides from Virixoo.",
+      160
+    );
+
+  const image =
+    absoluteImageUrl(
+      options.image || ""
+    );
+
+  const ogType =
+    options.type ||
+    "website";
+
+  const schemas =
+    options.schemas || [];
+
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -268,19 +533,106 @@ function header(
     content="width=device-width, initial-scale=1.0"
   >
 
+  <meta
+    name="robots"
+    content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  >
+
+  <meta
+    name="theme-color"
+    content="#2563eb"
+  >
+
   <title>
-    ${escapeHtml(title)}
+    ${escapeHtml(safeTitle)}
   </title>
 
   <meta
     name="description"
-    content="${escapeHtml(description)}"
+    content="${escapeHtml(safeDescription)}"
   >
 
   <link
     rel="canonical"
     href="${escapeHtml(canonicalUrl)}"
   >
+
+  <!-- Open Graph -->
+
+  <meta
+    property="og:type"
+    content="${escapeHtml(ogType)}"
+  >
+
+  <meta
+    property="og:site_name"
+    content="${SITE_NAME}"
+  >
+
+  <meta
+    property="og:title"
+    content="${escapeHtml(safeTitle)}"
+  >
+
+  <meta
+    property="og:description"
+    content="${escapeHtml(safeDescription)}"
+  >
+
+  <meta
+    property="og:url"
+    content="${escapeHtml(canonicalUrl)}"
+  >
+
+  <meta
+    property="og:image"
+    content="${escapeHtml(image)}"
+  >
+
+  <meta
+    property="og:image:alt"
+    content="${escapeHtml(
+      options.imageAlt ||
+        safeTitle
+    )}"
+  >
+
+  <!-- Twitter / X -->
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+
+  <meta
+    name="twitter:title"
+    content="${escapeHtml(safeTitle)}"
+  >
+
+  <meta
+    name="twitter:description"
+    content="${escapeHtml(safeDescription)}"
+  >
+
+  <meta
+    name="twitter:url"
+    content="${escapeHtml(canonicalUrl)}"
+  >
+
+  <meta
+    name="twitter:image"
+    content="${escapeHtml(image)}"
+  >
+
+  <meta
+    name="twitter:image:alt"
+    content="${escapeHtml(
+      options.imageAlt ||
+        safeTitle
+    )}"
+  >
+
+  ${multipleSchemaScripts(schemas)}
 
   <link
     rel="stylesheet"
@@ -298,6 +650,7 @@ function header(
     <a
       class="site-logo"
       href="/"
+      aria-label="Virixoo Home"
     >
       Virixoo
     </a>
@@ -333,18 +686,11 @@ function header(
 `;
 }
 
-/*
- * REAL VISITOR COUNTER
- *
- * Every page view sends:
- *
- * POST /api/visit
- *
- * The visit function stores the real
- * counters in Netlify Blobs.
- *
- * Then /api/stats reads the counters.
- */
+
+/* =========================================================
+   Real Visitor Counter
+   ========================================================= */
+
 function statsBox() {
   return `
 <div
@@ -498,10 +844,6 @@ function statsBox() {
 
   }
 
-  /*
-   * First record the real visit.
-   * Then load the updated counters.
-   */
   recordVisit()
     .then(
       loadStats
@@ -514,6 +856,11 @@ function statsBox() {
 </script>
 `;
 }
+
+
+/* =========================================================
+   Footer
+   ========================================================= */
 
 function footer() {
   return `
@@ -567,6 +914,11 @@ function footer() {
 `;
 }
 
+
+/* =========================================================
+   Home Page
+   ========================================================= */
+
 function createHomePage(
   articles
 ) {
@@ -575,11 +927,24 @@ function createHomePage(
       .map(articleCard)
       .join("\n");
 
+  const homeSchema =
+    createWebSiteSchema();
+
+  const organizationSchema =
+    createOrganizationSchema();
+
   const html = `
 ${header(
   "Virixoo - Expert Dog & Cat Care Guides",
   "Expert dog and cat care guides covering nutrition, training, grooming, behavior, breeds, and everyday pet care.",
-  SITE_URL + "/"
+  SITE_URL + "/",
+  {
+    type: "website",
+    schemas: [
+      homeSchema,
+      organizationSchema
+    ]
+  }
 )}
 
 <section class="hero-section">
@@ -596,9 +961,12 @@ ${header(
 
 </section>
 
-<section class="articles-section">
+<section
+  class="articles-section"
+  aria-labelledby="latest-guides"
+>
 
-  <h2>
+  <h2 id="latest-guides">
     Latest Pet Care Guides
   </h2>
 
@@ -620,6 +988,11 @@ ${footer()}
     "utf8"
   );
 }
+
+
+/* =========================================================
+   Article Page
+   ========================================================= */
 
 function createArticlePage(
   article
@@ -644,11 +1017,19 @@ function createArticlePage(
     "Pet Care Guide";
 
   const description =
-    article.summary ||
-    "Expert pet care guide from Virixoo.";
+    truncateText(
+      article.summary ||
+        "Expert pet care guide from Virixoo.",
+      160
+    );
 
   const imagePath =
     normalizeImagePath(
+      article.image || ""
+    );
+
+  const imageUrl =
+    absoluteImageUrl(
       article.image || ""
     );
 
@@ -660,13 +1041,20 @@ function createArticlePage(
   const canonical =
     articleUrl(article);
 
+  const category =
+    article.category ||
+    "Pet Care";
+
+  const categorySlug =
+    slugify(category);
+
   const pinterestUrl =
     `https://www.pinterest.com/pin/create/button/?` +
     `url=${encodeURIComponent(
       canonical
     )}` +
     `&media=${encodeURIComponent(
-      SITE_URL + imagePath
+      imageUrl
     )}` +
     `&description=${encodeURIComponent(
       title
@@ -691,10 +1079,40 @@ function createArticlePage(
 `
       : "";
 
+  const articleSchema =
+    createArticleSchema(
+      article
+    );
+
+  const breadcrumbSchema =
+    createBreadcrumbSchema([
+      {
+        name: "Home",
+        url: `${SITE_URL}/`
+      },
+      {
+        name: category,
+        url: `${SITE_URL}/${categorySlug}/`
+      },
+      {
+        name: title,
+        url: canonical
+      }
+    ]);
+
   const html = `${header(
     `${title} | Virixoo`,
     description,
-    canonical
+    canonical,
+    {
+      type: "article",
+      image: article.image || "",
+      imageAlt: alt,
+      schemas: [
+        articleSchema,
+        breadcrumbSchema
+      ]
+    }
   )}
 
 <article class="single-article">
@@ -703,8 +1121,7 @@ function createArticlePage(
 
     <span>
       ${escapeHtml(
-        article.category ||
-        "Pet Care"
+        category
       )}
     </span>
 
@@ -746,6 +1163,39 @@ function createArticlePage(
     }
 
   </div>
+
+  <nav
+    aria-label="Breadcrumb"
+    class="article-breadcrumbs"
+  >
+
+    <a href="/">
+      Home
+    </a>
+
+    <span aria-hidden="true">
+      /
+    </span>
+
+    <a href="/${escapeHtml(
+      categorySlug
+    )}/">
+      ${escapeHtml(
+        category
+      )}
+    </a>
+
+    <span aria-hidden="true">
+      /
+    </span>
+
+    <span>
+      ${escapeHtml(
+        title
+      )}
+    </span>
+
+  </nav>
 
   <h1>
     ${escapeHtml(title)}
@@ -800,6 +1250,11 @@ ${footer()}
   );
 }
 
+
+/* =========================================================
+   Category Pages
+   ========================================================= */
+
 function createCategoryPage(
   articles,
   category,
@@ -819,13 +1274,55 @@ function createCategoryPage(
       .map(articleCard)
       .join("\n");
 
+  const canonical =
+    `${SITE_URL}/${slug}/`;
+
+  const breadcrumbSchema =
+    createBreadcrumbSchema([
+      {
+        name: "Home",
+        url: `${SITE_URL}/`
+      },
+      {
+        name: `${category} Care Guides`,
+        url: canonical
+      }
+    ]);
+
   const html = `${header(
     `${category} Care Guides | Virixoo`,
     `Expert ${category.toLowerCase()} care guides for responsible pet owners.`,
-    `${SITE_URL}/${slug}/`
+    canonical,
+    {
+      type: "website",
+      schemas: [
+        breadcrumbSchema
+      ]
+    }
   )}
 
 <section class="category-page">
+
+  <nav
+    aria-label="Breadcrumb"
+    class="article-breadcrumbs"
+  >
+
+    <a href="/">
+      Home
+    </a>
+
+    <span aria-hidden="true">
+      /
+    </span>
+
+    <span>
+      ${escapeHtml(
+        category
+      )}
+    </span>
+
+  </nav>
 
   <h1>
     ${escapeHtml(
@@ -862,18 +1359,71 @@ ${footer()}
   );
 }
 
+
+/* =========================================================
+   Simple Pages
+   ========================================================= */
+
 function createSimplePage(
   title,
   text,
   slug
 ) {
+  const canonical =
+    `${SITE_URL}/${slug}/`;
+
+  const description =
+    truncateText(
+      text,
+      160
+    );
+
+  const breadcrumbSchema =
+    createBreadcrumbSchema([
+      {
+        name: "Home",
+        url: `${SITE_URL}/`
+      },
+      {
+        name: title,
+        url: canonical
+      }
+    ]);
+
   const html = `${header(
     `${title} | Virixoo`,
-    text,
-    `${SITE_URL}/${slug}/`
+    description,
+    canonical,
+    {
+      type: "website",
+      schemas: [
+        breadcrumbSchema
+      ]
+    }
   )}
 
 <section class="simple-page">
+
+  <nav
+    aria-label="Breadcrumb"
+    class="article-breadcrumbs"
+  >
+
+    <a href="/">
+      Home
+    </a>
+
+    <span aria-hidden="true">
+      /
+    </span>
+
+    <span>
+      ${escapeHtml(
+        title
+      )}
+    </span>
+
+  </nav>
 
   <h1>
     ${escapeHtml(title)}
@@ -908,6 +1458,11 @@ ${footer()}
   );
 }
 
+
+/* =========================================================
+   Robots.txt
+   ========================================================= */
+
 function createRobots() {
 
   const robots = `
@@ -926,6 +1481,11 @@ Sitemap: ${SITE_URL}/sitemap.xml
     "utf8"
   );
 }
+
+
+/* =========================================================
+   Sitemap
+   ========================================================= */
 
 function createSitemap(
   articles
@@ -1020,6 +1580,11 @@ ${urls.join("\n")}
   );
 }
 
+
+/* =========================================================
+   Copy Public Files
+   ========================================================= */
+
 function copyPublicFiles() {
 
   if (
@@ -1091,6 +1656,11 @@ function copyPublicFiles() {
   );
 }
 
+
+/* =========================================================
+   Validate Articles
+   ========================================================= */
+
 function validateArticles(
   articles
 ) {
@@ -1135,6 +1705,11 @@ function validateArticles(
     }
   );
 }
+
+
+/* =========================================================
+   Build
+   ========================================================= */
 
 function build() {
 
@@ -1275,6 +1850,11 @@ function build() {
     `Generated ${articles.length} article pages.`
   );
 }
+
+
+/* =========================================================
+   Run Build
+   ========================================================= */
 
 try {
 
