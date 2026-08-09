@@ -1,3 +1,12 @@
+/* =========================================================
+   VIRIXOO - Professional Pet Care Website
+   Main Stylesheet
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   Base
+   --------------------------------------------------------- */
+
 * {
     box-sizing: border-box;
 }
@@ -8,10 +17,15 @@ html {
 
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f7f8fa;
-    color: #222;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    background: #f6f8fb;
+    color: #1f2937;
     line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 a {
@@ -23,347 +37,509 @@ img {
     display: block;
 }
 
-.container {
-    width: min(1180px, calc(100% - 32px));
-    margin: 0 auto;
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Header */
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
 
 .site-header {
-    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.96);
     border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+    backdrop-filter: blur(10px);
 }
 
-.header-inner {
-    min-height: 70px;
+.site-header-inner {
+    width: min(1180px, calc(100% - 32px));
+    min-height: 72px;
+    margin: 0 auto;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 25px;
+    gap: 30px;
 }
 
-.logo {
+.site-logo {
     text-decoration: none;
+    color: #2563eb;
     font-size: 28px;
     font-weight: 800;
-    color: #222;
+    letter-spacing: -0.7px;
+    transition: color 0.2s ease;
 }
 
-.site-header nav {
+.site-logo:hover {
+    color: #1d4ed8;
+}
+
+.main-nav {
     display: flex;
-    gap: 22px;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
-.site-header nav a {
+.main-nav a {
+    position: relative;
+    padding: 9px 13px;
+    border-radius: 8px;
+
     text-decoration: none;
-    color: #444;
-    font-size: 15px;
+    color: #4b5563;
+    font-size: 14px;
     font-weight: 600;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
 }
 
-.site-header nav a:hover {
+.main-nav a:hover {
     color: #2563eb;
+    background: #eff6ff;
 }
 
-/* Hero */
+/* ---------------------------------------------------------
+   Main
+   --------------------------------------------------------- */
 
-.hero {
+.site-main {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    min-height: 55vh;
+}
+
+/* ---------------------------------------------------------
+   Hero
+   --------------------------------------------------------- */
+
+.hero-section {
+    padding: 75px 20px 55px;
     text-align: center;
-    padding: 60px 0 45px;
 }
 
-.hero h1 {
-    margin: 0 auto 15px;
-    max-width: 850px;
-    font-size: clamp(34px, 5vw, 56px);
-    line-height: 1.15;
+.hero-section h1 {
+    max-width: 900px;
+    margin: 0 auto 18px;
+
+    color: #111827;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -1.5px;
 }
 
-.hero p {
-    max-width: 750px;
-    margin: auto;
-    color: #606770;
+.hero-section p {
+    max-width: 720px;
+    margin: 0 auto;
+
+    color: #667085;
     font-size: 18px;
+    line-height: 1.8;
 }
 
-/* Visitor statistics */
+/* ---------------------------------------------------------
+   Articles Section
+   --------------------------------------------------------- */
 
-.visitor-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    max-width: 700px;
-    margin: 35px auto;
+.articles-section {
+    padding: 15px 0 70px;
 }
 
-.visitor-stat {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 20px 15px;
-    text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,.05);
-}
+.articles-section > h2 {
+    margin: 0 0 28px;
 
-.visitor-stat strong {
-    display: block;
-    color: #2563eb;
+    color: #111827;
     font-size: 30px;
-    line-height: 1.2;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
 }
 
-.visitor-stat span {
-    display: block;
-    margin-top: 6px;
-    color: #6b7280;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
+/* ---------------------------------------------------------
+   Articles Grid
+   --------------------------------------------------------- */
 
-/* Articles */
-
-.article-grid {
+.articles-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 25px;
-    padding-bottom: 60px;
+    gap: 26px;
 }
 
-.card {
-    background: #fff;
-    border: 1px solid #e6e8eb;
-    border-radius: 14px;
-    overflow: hidden;
+/* ---------------------------------------------------------
+   Article Cards
+   --------------------------------------------------------- */
+
+.article-card {
+    min-width: 0;
+
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 18px rgba(0,0,0,.05);
-    transition: .2s ease;
+
+    background: #ffffff;
+    border: 1px solid #e6eaf0;
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.05);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 28px rgba(0,0,0,.09);
+.article-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #d8e3f7;
+
+    box-shadow:
+        0 14px 35px rgba(15, 23, 42, 0.10);
 }
 
 .card-image-link {
     display: block;
+    overflow: hidden;
+    background: #eef2f7;
 }
 
 .card-image-link img {
     width: 100%;
-    height: 210px;
+    height: 215px;
+
     object-fit: cover;
+
+    transition: transform 0.35s ease;
 }
 
-.card-body {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+.article-card:hover .card-image-link img {
+    transform: scale(1.035);
 }
 
-.category {
+.article-card > .category {
+    margin: 20px 20px 0;
+
     color: #2563eb;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
     text-transform: uppercase;
 }
 
-.card h2 {
-    margin: 8px 0 10px;
+.article-card h2 {
+    margin: 8px 20px 10px;
+
     font-size: 21px;
     line-height: 1.35;
+    letter-spacing: -0.25px;
 }
 
-.card h2 a {
+.article-card h2 a {
+    color: #172033;
     text-decoration: none;
-    color: #202124;
+
+    transition: color 0.2s ease;
 }
 
-.card h2 a:hover {
+.article-card h2 a:hover {
     color: #2563eb;
 }
 
-.card p {
-    margin: 0;
-    color: #5f6368;
-    font-size: 15px;
-}
+.article-card > p {
+    margin: 0 20px;
 
-/* Buttons */
+    color: #667085;
+    font-size: 15px;
+    line-height: 1.7;
+}
 
 .card-actions {
     margin-top: auto;
-    padding-top: 20px;
+    padding: 20px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    border-top: 1px solid #eee;
+
+    border-top: 1px solid #eef0f3;
 }
 
 .read-more {
+    display: inline-flex;
+    align-items: center;
+
     color: #2563eb;
     text-decoration: none;
+
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 700;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .read-more:hover {
-    text-decoration: underline;
+    color: #1d4ed8;
+    transform: translateX(2px);
 }
 
 .pinterest-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    padding: 8px 12px;
+
     background: #bd081c;
-    color: #fff;
-    padding: 8px 13px;
+    color: #ffffff;
+
     border-radius: 7px;
+
     text-decoration: none;
-    font-size: 13px;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: 700;
+
     white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
 .pinterest-btn:hover {
     background: #9f0718;
+    transform: translateY(-1px);
 }
 
-/* Article page */
+/* ---------------------------------------------------------
+   Category Pages
+   --------------------------------------------------------- */
 
-.article-page {
-    padding: 45px 0 70px;
+.category-page {
+    padding: 55px 0 75px;
 }
 
-.article-page article {
-    max-width: 900px;
-    margin: auto;
-    background: #fff;
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 5px 25px rgba(0,0,0,.06);
-}
+.category-page h1 {
+    margin: 0 0 35px;
 
-.article-page h1 {
-    margin: 10px 0 15px;
-    font-size: clamp(32px, 5vw, 48px);
+    color: #111827;
+    font-size: clamp(32px, 4vw, 46px);
     line-height: 1.2;
+    letter-spacing: -1px;
+}
+
+/* ---------------------------------------------------------
+   Single Article
+   --------------------------------------------------------- */
+
+.single-article {
+    max-width: 900px;
+    margin: 55px auto 75px;
+
+    padding: 42px;
+
+    background: #ffffff;
+    border: 1px solid #e7ebf0;
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+.single-article h1 {
+    margin: 12px 0 18px;
+
+    color: #111827;
+
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.18;
+    letter-spacing: -1px;
 }
 
 .article-meta {
-    color: #6b7280;
-    font-size: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+
     margin-bottom: 20px;
+
+    color: #667085;
+    font-size: 13px;
 }
 
 .article-hero {
     width: 100%;
     max-height: 560px;
+
+    margin: 25px 0 32px;
+
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 30px;
+
+    border-radius: 13px;
 }
 
 .article-content {
-    color: #333;
+    color: #303846;
+
     font-size: 18px;
     line-height: 1.9;
 }
 
 .article-content p {
-    margin-bottom: 22px;
+    margin: 0 0 23px;
 }
 
-/* Footer */
+.article-content h2 {
+    margin: 38px 0 15px;
 
-.site-footer {
-    background: #202124;
-    color: #fff;
-    padding: 35px 0;
-    margin-top: 30px;
+    color: #111827;
+    font-size: 29px;
+    line-height: 1.3;
 }
 
-.footer-links {
+.article-content h3 {
+    margin: 30px 0 12px;
+
+    color: #1f2937;
+    font-size: 23px;
+    line-height: 1.35;
+}
+
+.article-content ul,
+.article-content ol {
+    margin: 0 0 25px;
+    padding-left: 25px;
+}
+
+.article-content li {
+    margin-bottom: 8px;
+}
+
+.article-content a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.article-content a:hover {
+    text-decoration: underline;
+}
+
+.article-content blockquote {
+    margin: 28px 0;
+    padding: 18px 22px;
+
+    background: #f8fafc;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+
+    color: #475467;
+}
+
+.article-share {
+    margin-top: 35px;
+    padding-top: 25px;
+
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
 
-.footer-links a {
-    color: #fff;
-    text-decoration: none;
+    border-top: 1px solid #e5e7eb;
+
+    color: #667085;
     font-size: 14px;
 }
 
-.site-footer p {
+/* ---------------------------------------------------------
+   Simple Pages
+   --------------------------------------------------------- */
+
+.simple-page {
+    max-width: 850px;
+    margin: 55px auto 75px;
+
+    padding: 42px;
+
+    background: #ffffff;
+    border: 1px solid #e7ebf0;
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.05);
+}
+
+.simple-page h1 {
+    margin: 0 0 20px;
+
+    color: #111827;
+    font-size: clamp(32px, 4vw, 45px);
+    line-height: 1.2;
+}
+
+.simple-page p {
+    margin: 0;
+
+    color: #4b5563;
+    font-size: 17px;
+    line-height: 1.9;
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+
+.site-footer {
+    margin-top: 35px;
+    padding: 42px 20px 28px;
+
+    background: #111827;
+    color: #ffffff;
+
     text-align: center;
-    color: #b8bcc3;
+}
+
+.footer-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+
+    margin-bottom: 18px;
+}
+
+.footer-nav a {
+    padding: 4px 0;
+
+    color: #d1d5db;
+    text-decoration: none;
+
     font-size: 13px;
-    margin: 20px 0 0;
+    font-weight: 600;
+
+    transition: color 0.2s ease;
 }
 
-/* Mobile */
-
-@media (max-width: 900px) {
-    .article-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.footer-nav a:hover {
+    color: #ffffff;
 }
 
-@media (max-width: 650px) {
-
-    .container {
-        width: calc(100% - 22px);
-    }
-
-    .header-inner {
-        flex-direction: column;
-        padding: 15px 0;
-    }
-
-    .site-header nav {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 14px;
-    }
-
-    .hero {
-        padding: 40px 0;
-    }
-
-    .hero p {
-        font-size: 16px;
-    }
-
-    .visitor-stats {
-        grid-template-columns: 1fr;
-        max-width: 350px;
-    }
-
-    .article-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .article-page article {
-        padding: 25px 18px;
-    }
-
-    .article-content {
-        font-size: 17px;
-    }
-
-    .card-actions {
-        align-items: center;
-    }
-}
-/* =========================================
-   Virixoo Real Visitor Counter
-   ========================================= */
+/* ---------------------------------------------------------
+   Real Visitor Counter
+   --------------------------------------------------------- */
 
 .virixoo-stats {
     display: inline-flex;
@@ -371,19 +547,21 @@ img {
     justify-content: center;
     gap: 8px;
 
-    margin: 18px auto 8px;
-    padding: 7px 14px;
+    margin: 16px auto 8px;
+    padding: 8px 15px;
 
     background: #2563eb;
     color: #ffffff;
 
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
 
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1;
 
-    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.22);
+    box-shadow:
+        0 4px 12px rgba(37, 99, 235, 0.25);
 
     white-space: nowrap;
 }
@@ -402,15 +580,217 @@ img {
     opacity: 0.9;
 }
 
+.site-footer .copyright {
+    margin: 18px 0 0;
+
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* ---------------------------------------------------------
+   Accessibility / Focus
+   --------------------------------------------------------- */
+
+a:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 3px;
+    border-radius: 5px;
+}
+
+/* ---------------------------------------------------------
+   Tablet
+   --------------------------------------------------------- */
+
+@media (max-width: 950px) {
+
+    .articles-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-section {
+        padding-top: 60px;
+    }
+
+    .single-article {
+        margin-top: 40px;
+    }
+}
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
 @media (max-width: 650px) {
-    .virixoo-stats {
+
+    .site-header {
+        position: relative;
+    }
+
+    .site-header-inner {
+        width: calc(100% - 22px);
+        min-height: auto;
+
+        padding: 14px 0;
+
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .site-logo {
+        font-size: 26px;
+    }
+
+    .main-nav {
+        width: 100%;
+
+        flex-wrap: wrap;
+        gap: 3px;
+
+        justify-content: center;
+    }
+
+    .main-nav a {
+        padding: 7px 9px;
+        font-size: 13px;
+    }
+
+    .site-main {
+        width: calc(100% - 22px);
+    }
+
+    .hero-section {
+        padding: 45px 5px 35px;
+    }
+
+    .hero-section h1 {
+        font-size: 35px;
+        letter-spacing: -0.8px;
+    }
+
+    .hero-section p {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .articles-section {
+        padding-bottom: 45px;
+    }
+
+    .articles-section > h2 {
+        font-size: 25px;
+    }
+
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .card-image-link img {
+        height: 210px;
+    }
+
+    .single-article {
+        margin: 30px auto 50px;
+        padding: 25px 18px;
+        border-radius: 14px;
+    }
+
+    .single-article h1 {
+        font-size: 31px;
+        letter-spacing: -0.5px;
+    }
+
+    .article-meta {
+        font-size: 12px;
+    }
+
+    .article-content {
+        font-size: 17px;
+        line-height: 1.85;
+    }
+
+    .article-content h2 {
+        font-size: 25px;
+    }
+
+    .article-content h3 {
+        font-size: 21px;
+    }
+
+    .article-share {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .category-page {
+        padding: 40px 0 55px;
+    }
+
+    .category-page h1 {
+        font-size: 32px;
+    }
+
+    .simple-page {
+        margin: 35px auto 50px;
+        padding: 28px 20px;
+        border-radius: 14px;
+    }
+
+    .simple-page h1 {
+        font-size: 31px;
+    }
+
+    .simple-page p {
+        font-size: 16px;
+    }
+
+    .card-actions {
+        align-items: center;
+    }
+
+    .pinterest-btn {
+        padding: 8px 10px;
         font-size: 11px;
+    }
+
+    .virixoo-stats {
+        margin-top: 14px;
         padding: 7px 12px;
         gap: 6px;
-        margin-top: 15px;
+        font-size: 11px;
     }
 
     .virixoo-stats .stats-icon {
         font-size: 12px;
+    }
+
+    .footer-nav {
+        gap: 7px 15px;
+    }
+}
+
+/* ---------------------------------------------------------
+   Very Small Screens
+   --------------------------------------------------------- */
+
+@media (max-width: 380px) {
+
+    .hero-section h1 {
+        font-size: 31px;
+    }
+
+    .card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .read-more,
+    .pinterest-btn {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .virixoo-stats {
+        font-size: 10px;
     }
 }
