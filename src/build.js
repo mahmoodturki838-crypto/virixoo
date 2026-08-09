@@ -30,14 +30,6 @@ function slugify(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
-/*
- * Render article content safely.
- *
- * articles.json may contain real HTML such as:
- * <p>, <h2>, <h3>, <ul>, <ol>, <strong>, etc.
- *
- * Plain text is also supported.
- */
 function formatContent(content = "") {
   const raw = String(content || "").trim();
 
@@ -45,7 +37,11 @@ function formatContent(content = "") {
     return "";
   }
 
-  if (/<\/?(p|h2|h3|h4|ul|ol|li|strong|em|blockquote|a|br)\b/i.test(raw)) {
+  if (
+    /<\/?(p|h2|h3|h4|ul|ol|li|strong|em|blockquote|a|br)\b/i.test(
+      raw
+    )
+  ) {
     return sanitizeArticleHtml(raw);
   }
 
@@ -54,33 +50,59 @@ function formatContent(content = "") {
     .map((paragraph) => paragraph.trim())
     .filter(Boolean)
     .map((paragraph) => {
-      return `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`;
+      return `<p>${escapeHtml(paragraph).replace(
+        /\n/g,
+        "<br>"
+      )}</p>`;
     })
     .join("\n");
 }
 
-/*
- * Small HTML sanitizer intended for our own articles.json.
- */
 function sanitizeArticleHtml(html) {
   return String(html)
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
-    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, "")
-    .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, "")
-    .replace(/<embed\b[^>]*>/gi, "")
-    .replace(/<form\b[^>]*>[\s\S]*?<\/form>/gi, "")
-    .replace(/\son[a-z]+\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi, "")
-    .replace(/javascript\s*:/gi, "");
+    .replace(
+      /<script\b[^>]*>[\s\S]*?<\/script>/gi,
+      ""
+    )
+    .replace(
+      /<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi,
+      ""
+    )
+    .replace(
+      /<object\b[^>]*>[\s\S]*?<\/object>/gi,
+      ""
+    )
+    .replace(
+      /<embed\b[^>]*>/gi,
+      ""
+    )
+    .replace(
+      /<form\b[^>]*>[\s\S]*?<\/form>/gi,
+      ""
+    )
+    .replace(
+      /\son[a-z]+\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi,
+      ""
+    )
+    .replace(
+      /javascript\s*:/gi,
+      ""
+    );
 }
 
 function articleUrl(article) {
-  const slug = article.slug || slugify(article.title);
+  const slug =
+    article.slug ||
+    slugify(article.title);
 
-  return `${SITE_URL}/article/${encodeURIComponent(slug)}/`;
+  return `${SITE_URL}/article/${encodeURIComponent(
+    slug
+  )}/`;
 }
 
 function normalizeImagePath(image = "") {
-  const value = String(image || "").trim();
+  const value =
+    String(image || "").trim();
 
   if (!value) {
     return "";
@@ -94,40 +116,77 @@ function normalizeImagePath(image = "") {
 }
 
 function imageExists(image = "") {
-  const normalized = normalizeImagePath(image);
+  const normalized =
+    normalizeImagePath(image);
 
   if (!normalized.startsWith("/")) {
     return false;
   }
 
-  const relativePath = normalized.replace(/^\/+/, "");
-  const filePath = path.join(DIST_DIR, relativePath);
+  const relativePath =
+    normalized.replace(/^\/+/, "");
+
+  const filePath =
+    path.join(
+      DIST_DIR,
+      relativePath
+    );
 
   return fs.existsSync(filePath);
 }
 
 function articleCard(article) {
-  const slug = article.slug || slugify(article.title);
-  const url = `/article/${encodeURIComponent(slug)}/`;
+  const slug =
+    article.slug ||
+    slugify(article.title);
 
-  const title = escapeHtml(article.title || "Pet Care Guide");
-  const imagePath = normalizeImagePath(article.image || "");
-  const image = escapeHtml(imagePath);
-  const summary = escapeHtml(article.summary || "");
-  const category = escapeHtml(article.category || "Pet Care");
+  const url =
+    `/article/${encodeURIComponent(slug)}/`;
 
-  const alt = escapeHtml(
-    article.alt ||
-      article.imageAlt ||
+  const title =
+    escapeHtml(
       article.title ||
-      "Virixoo pet care guide"
-  );
+        "Pet Care Guide"
+    );
+
+  const imagePath =
+    normalizeImagePath(
+      article.image || ""
+    );
+
+  const image =
+    escapeHtml(imagePath);
+
+  const summary =
+    escapeHtml(
+      article.summary || ""
+    );
+
+  const category =
+    escapeHtml(
+      article.category ||
+        "Pet Care"
+    );
+
+  const alt =
+    escapeHtml(
+      article.alt ||
+        article.imageAlt ||
+        article.title ||
+        "Virixoo pet care guide"
+    );
 
   const pinterestUrl =
     `https://www.pinterest.com/pin/create/button/?` +
-    `url=${encodeURIComponent(articleUrl(article))}` +
-    `&media=${encodeURIComponent(SITE_URL + imagePath)}` +
-    `&description=${encodeURIComponent(article.title || "")}`;
+    `url=${encodeURIComponent(
+      articleUrl(article)
+    )}` +
+    `&media=${encodeURIComponent(
+      SITE_URL + imagePath
+    )}` +
+    `&description=${encodeURIComponent(
+      article.title || ""
+    )}`;
 
   return `
 <article class="article-card">
@@ -135,7 +194,11 @@ function articleCard(article) {
   ${
     imagePath
       ? `
-  <a class="card-image-link" href="${url}" aria-label="${title}">
+  <a
+    class="card-image-link"
+    href="${url}"
+    aria-label="${title}"
+  >
     <img
       src="${image}"
       alt="${alt}"
@@ -164,7 +227,10 @@ function articleCard(article) {
 
   <div class="card-actions">
 
-    <a class="read-more" href="${url}">
+    <a
+      class="read-more"
+      href="${url}"
+    >
       Read More →
     </a>
 
@@ -184,10 +250,15 @@ function articleCard(article) {
 `;
 }
 
-function header(title, description, canonicalUrl = SITE_URL) {
+function header(
+  title,
+  description,
+  canonicalUrl = SITE_URL
+) {
   return `
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
   <meta charset="UTF-8">
@@ -197,7 +268,9 @@ function header(title, description, canonicalUrl = SITE_URL) {
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>${escapeHtml(title)}</title>
+  <title>
+    ${escapeHtml(title)}
+  </title>
 
   <meta
     name="description"
@@ -222,11 +295,17 @@ function header(title, description, canonicalUrl = SITE_URL) {
 
   <div class="site-header-inner">
 
-    <a class="site-logo" href="/">
+    <a
+      class="site-logo"
+      href="/"
+    >
       Virixoo
     </a>
 
-    <nav class="main-nav" aria-label="Main navigation">
+    <nav
+      class="main-nav"
+      aria-label="Main navigation"
+    >
 
       <a href="/">
         Home
@@ -255,11 +334,16 @@ function header(title, description, canonicalUrl = SITE_URL) {
 }
 
 /*
- * Real visitor counter.
+ * REAL VISITOR COUNTER
  *
- * /api/visit records the page visit.
- * /api/stats returns today's, this month's,
- * and this year's real counters.
+ * Every page view sends:
+ *
+ * POST /api/visit
+ *
+ * The visit function stores the real
+ * counters in Netlify Blobs.
+ *
+ * Then /api/stats reads the counters.
  */
 function statsBox() {
   return `
@@ -268,56 +352,106 @@ function statsBox() {
   class="virixoo-stats"
   aria-label="Virixoo visitor statistics"
 >
-  <span class="stats-loading">👁 Loading...</span>
+  <span class="stats-loading">
+    👁 Loading...
+  </span>
 </div>
 
 <script>
 (function () {
-  const statsElement = document.getElementById("virixoo-stats");
+
+  const statsElement =
+    document.getElementById(
+      "virixoo-stats"
+    );
 
   if (!statsElement) {
     return;
   }
 
   function formatNumber(value) {
-    const number = Number(value) || 0;
+
+    const number =
+      Number(value) || 0;
 
     if (number >= 1000000) {
-      return (number / 1000000).toFixed(1).replace(/\\.0$/, "") + "m";
+      return (
+        number / 1000000
+      )
+        .toFixed(1)
+        .replace(/\\.0$/, "") +
+        "m";
     }
 
     if (number >= 1000) {
-      return (number / 1000).toFixed(1).replace(/\\.0$/, "") + "k";
+      return (
+        number / 1000
+      )
+        .toFixed(1)
+        .replace(/\\.0$/, "") +
+        "k";
     }
 
-    return number.toLocaleString("en-US");
+    return number.toLocaleString(
+      "en-US"
+    );
   }
 
   async function recordVisit() {
+
     try {
-      await fetch("/api/visit", {
-        method: "GET",
-        cache: "no-store",
-        credentials: "same-origin"
-      });
+
+      await fetch(
+        "/api/visit",
+        {
+          method: "POST",
+          cache: "no-store",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify({
+            page:
+              window.location.pathname
+          })
+        }
+      );
+
     } catch (error) {
-      console.warn("Visit tracking failed:", error);
+
+      console.warn(
+        "Visit tracking failed:",
+        error
+      );
+
     }
+
   }
 
   async function loadStats() {
+
     try {
-      const response = await fetch("/api/stats", {
-        method: "GET",
-        cache: "no-store",
-        credentials: "same-origin"
-      });
+
+      const response =
+        await fetch(
+          "/api/stats",
+          {
+            method: "GET",
+            cache: "no-store",
+            credentials:
+              "same-origin"
+          }
+        );
 
       if (!response.ok) {
-        throw new Error("Stats request failed");
+        throw new Error(
+          "Stats request failed"
+        );
       }
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       const today =
         data.today ??
@@ -339,25 +473,42 @@ function statsBox() {
 
       statsElement.innerHTML =
         '<span class="stats-icon">👁</span> ' +
-        '<span>' + formatNumber(today) + ' d</span>' +
+        '<span>' +
+        formatNumber(today) +
+        ' d</span>' +
         '<span class="stats-separator">·</span>' +
-        '<span>' + formatNumber(month) + ' m</span>' +
+        '<span>' +
+        formatNumber(month) +
+        ' m</span>' +
         '<span class="stats-separator">·</span>' +
-        '<span>' + formatNumber(year) + ' y</span>';
+        '<span>' +
+        formatNumber(year) +
+        ' y</span>';
 
     } catch (error) {
-      console.warn("Could not load visitor statistics:", error);
+
+      console.warn(
+        "Could not load visitor statistics:",
+        error
+      );
 
       statsElement.innerHTML = "";
+
     }
+
   }
 
   /*
-   * Record the visit first, then read the updated statistics.
+   * First record the real visit.
+   * Then load the updated counters.
    */
   recordVisit()
-    .then(loadStats)
-    .catch(loadStats);
+    .then(
+      loadStats
+    )
+    .catch(
+      loadStats
+    );
 
 })();
 </script>
@@ -370,7 +521,10 @@ function footer() {
 
 <footer class="site-footer">
 
-  <nav class="footer-nav" aria-label="Footer navigation">
+  <nav
+    class="footer-nav"
+    aria-label="Footer navigation"
+  >
 
     <a href="/">
       Home
@@ -401,20 +555,25 @@ function footer() {
   ${statsBox()}
 
   <p class="copyright">
-    © ${new Date().getFullYear()} Virixoo. All rights reserved.
+    © ${new Date().getFullYear()}
+    Virixoo. All rights reserved.
   </p>
 
 </footer>
 
 </body>
+
 </html>
 `;
 }
 
-function createHomePage(articles) {
-  const cards = articles
-    .map(articleCard)
-    .join("\n");
+function createHomePage(
+  articles
+) {
+  const cards =
+    articles
+      .map(articleCard)
+      .join("\n");
 
   const html = `
 ${header(
@@ -430,7 +589,8 @@ ${header(
   </h1>
 
   <p>
-    Practical and easy-to-understand guides for healthier,
+    Practical and easy-to-understand
+    guides for healthier,
     happier dogs and cats.
   </p>
 
@@ -452,24 +612,32 @@ ${footer()}
 `;
 
   fs.writeFileSync(
-    path.join(DIST_DIR, "index.html"),
+    path.join(
+      DIST_DIR,
+      "index.html"
+    ),
     html,
     "utf8"
   );
 }
 
-function createArticlePage(article) {
+function createArticlePage(
+  article
+) {
   const slug =
     article.slug ||
     slugify(article.title);
 
-  const articleDir = path.join(
-    DIST_DIR,
-    "article",
-    slug
-  );
+  const articleDir =
+    path.join(
+      DIST_DIR,
+      "article",
+      slug
+    );
 
-  ensureDir(articleDir);
+  ensureDir(
+    articleDir
+  );
 
   const title =
     article.title ||
@@ -480,7 +648,9 @@ function createArticlePage(article) {
     "Expert pet care guide from Virixoo.";
 
   const imagePath =
-    normalizeImagePath(article.image || "");
+    normalizeImagePath(
+      article.image || ""
+    );
 
   const alt =
     article.alt ||
@@ -492,19 +662,27 @@ function createArticlePage(article) {
 
   const pinterestUrl =
     `https://www.pinterest.com/pin/create/button/?` +
-    `url=${encodeURIComponent(canonical)}` +
+    `url=${encodeURIComponent(
+      canonical
+    )}` +
     `&media=${encodeURIComponent(
       SITE_URL + imagePath
     )}` +
-    `&description=${encodeURIComponent(title)}`;
+    `&description=${encodeURIComponent(
+      title
+    )}`;
 
   const imageMarkup =
     imagePath
       ? `
 <img
   class="article-hero"
-  src="${escapeHtml(imagePath)}"
-  alt="${escapeHtml(alt)}"
+  src="${escapeHtml(
+    imagePath
+  )}"
+  alt="${escapeHtml(
+    alt
+  )}"
   width="1200"
   height="700"
   loading="eager"
@@ -524,13 +702,16 @@ function createArticlePage(article) {
   <div class="article-meta">
 
     <span>
-      ${escapeHtml(article.category || "Pet Care")}
+      ${escapeHtml(
+        article.category ||
+        "Pet Care"
+      )}
     </span>
 
     <span>
       By ${escapeHtml(
         article.author ||
-          "Virixoo Editorial Team"
+        "Virixoo Editorial Team"
       )}
     </span>
 
@@ -540,7 +721,8 @@ function createArticlePage(article) {
     <span>•</span>
 
     <span>
-      Published ${escapeHtml(
+      Published
+      ${escapeHtml(
         article.datePublished
       )}
     </span>
@@ -554,7 +736,8 @@ function createArticlePage(article) {
     <span>•</span>
 
     <span>
-      Updated ${escapeHtml(
+      Updated
+      ${escapeHtml(
         article.dateModified
       )}
     </span>
@@ -580,7 +763,9 @@ function createArticlePage(article) {
   ${imageMarkup}
 
   <div class="article-content">
-    ${formatContent(article.content)}
+    ${formatContent(
+      article.content
+    )}
   </div>
 
   <div class="article-share">
@@ -643,7 +828,9 @@ function createCategoryPage(
 <section class="category-page">
 
   <h1>
-    ${escapeHtml(category)} Care Guides
+    ${escapeHtml(
+      category
+    )} Care Guides
   </h1>
 
   <div class="articles-grid">
@@ -661,7 +848,9 @@ ${footer()}
       slug
     );
 
-  ensureDir(categoryDir);
+  ensureDir(
+    categoryDir
+  );
 
   fs.writeFileSync(
     path.join(
@@ -705,7 +894,9 @@ ${footer()}
       slug
     );
 
-  ensureDir(pageDir);
+  ensureDir(
+    pageDir
+  );
 
   fs.writeFileSync(
     path.join(
@@ -718,6 +909,7 @@ ${footer()}
 }
 
 function createRobots() {
+
   const robots = `
 User-agent: *
 Allow: /
@@ -735,7 +927,9 @@ Sitemap: ${SITE_URL}/sitemap.xml
   );
 }
 
-function createSitemap(articles) {
+function createSitemap(
+  articles
+) {
   const urls = [];
 
   urls.push(`
@@ -776,6 +970,7 @@ function createSitemap(articles) {
 
   articles.forEach(
     (article) => {
+
       urls.push(`
 <url>
 
@@ -799,6 +994,7 @@ function createSitemap(articles) {
 
 </url>
 `);
+
     }
   );
 
@@ -825,7 +1021,12 @@ ${urls.join("\n")}
 }
 
 function copyPublicFiles() {
-  if (!fs.existsSync(PUBLIC_DIR)) {
+
+  if (
+    !fs.existsSync(
+      PUBLIC_DIR
+    )
+  ) {
     return;
   }
 
@@ -833,19 +1034,24 @@ function copyPublicFiles() {
     source,
     destination
   ) {
-    ensureDir(destination);
+
+    ensureDir(
+      destination
+    );
 
     const entries =
       fs.readdirSync(
         source,
         {
-          withFileTypes: true
+          withFileTypes:
+            true
         }
       );
 
     for (
       const entry of entries
     ) {
+
       const sourcePath =
         path.join(
           source,
@@ -861,16 +1067,21 @@ function copyPublicFiles() {
       if (
         entry.isDirectory()
       ) {
+
         copyDirectory(
           sourcePath,
           destinationPath
         );
+
       } else {
+
         fs.copyFileSync(
           sourcePath,
           destinationPath
         );
+
       }
+
     }
   }
 
@@ -883,27 +1094,38 @@ function copyPublicFiles() {
 function validateArticles(
   articles
 ) {
+
   articles.forEach(
     (article, index) => {
 
-      if (!article.title) {
+      if (
+        !article.title
+      ) {
         throw new Error(
           `Article ${index + 1} is missing a title.`
         );
       }
 
-      if (!article.slug) {
+      if (
+        !article.slug
+      ) {
         article.slug =
-          slugify(article.title);
+          slugify(
+            article.title
+          );
       }
 
-      if (!article.content) {
+      if (
+        !article.content
+      ) {
         throw new Error(
           `Article "${article.title}" is missing content.`
         );
       }
 
-      if (article.image) {
+      if (
+        article.image
+      ) {
         article.image =
           normalizeImagePath(
             article.image
@@ -915,12 +1137,15 @@ function validateArticles(
 }
 
 function build() {
+
   console.log(
     "Starting Virixoo build..."
   );
 
   if (
-    !fs.existsSync(DATA_FILE)
+    !fs.existsSync(
+      DATA_FILE
+    )
   ) {
     throw new Error(
       `articles.json not found: ${DATA_FILE}`
@@ -958,8 +1183,11 @@ function build() {
   );
 
   if (
-    fs.existsSync(DIST_DIR)
+    fs.existsSync(
+      DIST_DIR
+    )
   ) {
+
     fs.rmSync(
       DIST_DIR,
       {
@@ -967,21 +1195,15 @@ function build() {
         force: true
       }
     );
+
   }
 
   ensureDir(
     DIST_DIR
   );
 
-  /*
-   * Copy CSS, images and
-   * all other public assets.
-   */
   copyPublicFiles();
 
-  /*
-   * Warn about missing local images.
-   */
   articles.forEach(
     (article) => {
 
@@ -991,9 +1213,11 @@ function build() {
           article.image
         )
       ) {
+
         console.warn(
           `WARNING: Image not found in public/: ${article.image}`
         );
+
       }
 
     }
@@ -1053,8 +1277,11 @@ function build() {
 }
 
 try {
+
   build();
+
 } catch (error) {
+
   console.error(
     "BUILD FAILED:"
   );
