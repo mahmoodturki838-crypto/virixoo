@@ -14,7 +14,7 @@ const DEFAULT_IMAGE_PATH = "/images/virixoo-default.svg";
 const DEFAULT_IMAGE_URL = `${SITE_URL}${DEFAULT_IMAGE_PATH}`;
 
 const BRAND_LOGO_PATH = "/images/brand/virixoo-logo.svg";
-const HERO_PETS_PATH = "/images/home/hero-pets.webp";
+const HERO_PETS_PATH = "/images/virixoo-hero-dog-cat.webp";
 const DOG_CARE_IMAGE_PATH = "/images/home/dog-care.webp";
 const CAT_CARE_IMAGE_PATH = "/images/home/cat-care.webp";
 
@@ -761,8 +761,9 @@ function createHomePage(articles) {
   const featuredSlugs = new Set(seedFeatured.map((a) => a.slug));
   const discoveryPool = ordered.filter((a) => !featuredSlugs.has(a.slug));
 
-  const dogHeroImage = pickExistingArticleImage(dogs);
-  const catHeroImage = pickExistingArticleImage(cats);
+  const heroPetsImage = publicImageExists(HERO_PETS_PATH)
+    ? HERO_PETS_PATH
+    : (pickExistingArticleImage(dogs) || pickExistingArticleImage(cats));
 
   const dogCareImage = publicImageExists(DOG_CARE_IMAGE_PATH)
     ? DOG_CARE_IMAGE_PATH
@@ -812,30 +813,17 @@ ${header(
     </div>
   </div>
 
-  <div class="hero-pets hero-pets-pair" aria-label="Happy dog and cat">
-    <div class="hero-pet hero-dog-photo">
-      <img
-        src="${escapeHtml(dogHeroImage)}"
-        alt="Happy dog featured in Virixoo dog care guides"
-        width="620"
-        height="620"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      >
-    </div>
-    <div class="hero-pet hero-cat-photo">
-      <img
-        src="${escapeHtml(catHeroImage)}"
-        alt="Happy cat featured in Virixoo cat care guides"
-        width="520"
-        height="520"
-        loading="eager"
-        decoding="async"
-      >
-    </div>
-    <span class="hero-heart-mark" aria-hidden="true">♡</span>
-    <span class="hero-paw-mark" aria-hidden="true">🐾</span>
+  <div class="hero-pets hero-pets-feature" aria-label="Happy dog and cat">
+    <img
+      class="hero-pets-feature-image"
+      src="${escapeHtml(heroPetsImage)}"
+      alt="Happy golden retriever and tabby cat representing Virixoo pet care guides"
+      width="1536"
+      height="1024"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    >
   </div>
 
   <aside class="hero-stats" aria-label="Virixoo guide library">
@@ -1995,6 +1983,12 @@ function build() {
 
   createDefaultImage();
   createArticleIndex(articles);
+
+  if (!publicImageExists(HERO_PETS_PATH)) {
+    console.warn(
+      `WARNING: Hero image missing: ${HERO_PETS_PATH}. Falling back to an article image.`
+    );
+  }
 
   for (const article of articles) {
     if (
