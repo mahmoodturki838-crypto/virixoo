@@ -271,6 +271,14 @@ function staticImagePath(preferred = "", fallback = DEFAULT_IMAGE_PATH) {
   return DEFAULT_IMAGE_PATH;
 }
 
+function pickExistingArticleImage(articles = [], fallback = DEFAULT_IMAGE_PATH) {
+  for (const article of articles) {
+    const image = normalizeImagePath(article && article.image ? article.image : "");
+    if (image && publicImageExists(image)) return image;
+  }
+  return staticImagePath(fallback, DEFAULT_IMAGE_PATH);
+}
+
 function absoluteImageUrl(image = "") {
   const displayed = displayImagePath(image);
 
@@ -753,20 +761,16 @@ function createHomePage(articles) {
   const featuredSlugs = new Set(seedFeatured.map((a) => a.slug));
   const discoveryPool = ordered.filter((a) => !featuredSlugs.has(a.slug));
 
-  const heroImage = staticImagePath(
-    HERO_PETS_PATH,
-    dogs[0]?.image || cats[0]?.image || DEFAULT_IMAGE_PATH
-  );
+  const dogHeroImage = pickExistingArticleImage(dogs);
+  const catHeroImage = pickExistingArticleImage(cats);
 
-  const dogCareImage = staticImagePath(
-    DOG_CARE_IMAGE_PATH,
-    dogs[0]?.image || DEFAULT_IMAGE_PATH
-  );
+  const dogCareImage = publicImageExists(DOG_CARE_IMAGE_PATH)
+    ? DOG_CARE_IMAGE_PATH
+    : pickExistingArticleImage(dogs);
 
-  const catCareImage = staticImagePath(
-    CAT_CARE_IMAGE_PATH,
-    cats[0]?.image || DEFAULT_IMAGE_PATH
-  );
+  const catCareImage = publicImageExists(CAT_CARE_IMAGE_PATH)
+    ? CAT_CARE_IMAGE_PATH
+    : pickExistingArticleImage(cats);
 
   const html = `
 ${header(
@@ -808,16 +812,30 @@ ${header(
     </div>
   </div>
 
-  <div class="hero-pets">
-    <img
-      src="${escapeHtml(heroImage)}"
-      alt="Dog and cat representing Virixoo pet care guides"
-      width="760"
-      height="560"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-    >
+  <div class="hero-pets hero-pets-pair" aria-label="Happy dog and cat">
+    <div class="hero-pet hero-dog-photo">
+      <img
+        src="${escapeHtml(dogHeroImage)}"
+        alt="Happy dog featured in Virixoo dog care guides"
+        width="620"
+        height="620"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      >
+    </div>
+    <div class="hero-pet hero-cat-photo">
+      <img
+        src="${escapeHtml(catHeroImage)}"
+        alt="Happy cat featured in Virixoo cat care guides"
+        width="520"
+        height="520"
+        loading="eager"
+        decoding="async"
+      >
+    </div>
+    <span class="hero-heart-mark" aria-hidden="true">♡</span>
+    <span class="hero-paw-mark" aria-hidden="true">🐾</span>
   </div>
 
   <aside class="hero-stats" aria-label="Virixoo guide library">
