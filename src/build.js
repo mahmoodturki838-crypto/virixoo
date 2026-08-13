@@ -13,7 +13,7 @@ const SITE_TAGLINE = "Happy Pets, Happy Life";
 const DEFAULT_IMAGE_PATH = "/images/virixoo-default.svg";
 const DEFAULT_IMAGE_URL = `${SITE_URL}${DEFAULT_IMAGE_PATH}`;
 
-const BRAND_LOGO_PATH = "/images/brand/virixoo-logo.svg";
+const BRAND_LOGO_PATH = "/images/virixoo-logo.webp";
 const HERO_PETS_PATH = "/images/virixoo-hero-dog-cat.webp";
 const DOG_CARE_IMAGE_PATH = "/images/home/dog-care.webp";
 const CAT_CARE_IMAGE_PATH = "/images/home/cat-care.webp";
@@ -421,27 +421,23 @@ ${safeJsonLd(schema)}
    ========================================================= */
 
 function logoMarkup() {
-  const logoExists = publicImageExists(BRAND_LOGO_PATH);
-
-  if (logoExists) {
+  if (publicImageExists(BRAND_LOGO_PATH)) {
     return `
-      <img class="brand-logo-image"
+      <img
+        class="brand-logo-image brand-logo-final"
         src="${escapeHtml(BRAND_LOGO_PATH)}"
-        alt="Virixoo"
-        width="210"
-        height="64"
-        decoding="async">`;
+        alt="Virixoo - Happy Pets, Happy Life"
+        width="520"
+        height="170"
+        decoding="async"
+      >`;
   }
 
   return `
-      <span class="brand-mark" aria-hidden="true">
-        <span class="brand-heart">♡</span>
-        <span class="brand-pets">🐶🐱</span>
-      </span>
-      <span class="brand-copy">
-        <strong>Virixoo</strong>
-        <small>${SITE_TAGLINE}</small>
-      </span>`;
+    <span class="brand-copy brand-copy-fallback">
+      <strong>Virixoo</strong>
+      <small>${SITE_TAGLINE}</small>
+    </span>`;
 }
 
 function header(
@@ -1983,6 +1979,12 @@ function build() {
 
   createDefaultImage();
   createArticleIndex(articles);
+
+  if (!publicImageExists(BRAND_LOGO_PATH)) {
+    console.warn(
+      `WARNING: Brand logo missing: ${BRAND_LOGO_PATH}. Using text fallback.`
+    );
+  }
 
   if (!publicImageExists(HERO_PETS_PATH)) {
     console.warn(
