@@ -55,6 +55,67 @@ function truncateText(value = "", maxLength = 160) {
   );
 }
 
+function stripHtml(value = "") {
+  return String(value || "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&#039;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function readingTime(content = "") {
+  const words = stripHtml(content).split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 220));
+}
+
+function topicTokens(article) {
+  const raw = [
+    article.title,
+    article.primaryKeyword,
+    ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
+  ].filter(Boolean).join(" ").toLowerCase();
+
+  const stop = new Set([
+    "the","and","for","with","your","you","how","why","what","when","from",
+    "this","that","dog","dogs","cat","cats","my","is","are","a","an","to",
+    "of","in","on","at","so","much","common","guide","safe","signs","causes"
+  ]);
+
+  return new Set(
+    raw.replace(/[^a-z0-9\s-]/g, " ")
+      .split(/\s+/)
+      .filter((word) => word.length > 2 && !stop.has(word))
+  );
+}
+
+function relatedArticles(article, allArticles, limit = 6) {
+  const baseTokens = topicTokens(article);
+
+  return allArticles
+    .filter((candidate) => candidate.slug !== article.slug)
+    .map((candidate) => {
+      const candidateTokens = topicTokens(candidate);
+      let overlap = 0;
+      for (const token of baseTokens) {
+        if (candidateTokens.has(token)) overlap += 1;
+      }
+      const sameCategory =
+        String(candidate.category).toLowerCase() ===
+        String(article.category).toLowerCase();
+
+      return {
+        candidate,
+        score: overlap * 10 + (sameCategory ? 5 : 0) + (Number(candidate.id) || 0) / 100000
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((item) => item.candidate);
+}
+
 function safeJsonLd(data) {
   return JSON.stringify(data)
     .replace(/</g, "\\u003c")
@@ -432,7 +493,7 @@ function footer() {
 
     <p>
       © ${new Date().getFullYear()} Virixoo.
-      Practical dog and cat care guides.
+      Practical dog and cat care guides. Educational information only; not a substitute for veterinary care.
     </p>
 
     <nav aria-label="Footer navigation">
@@ -455,82 +516,34 @@ function footer() {
    Article Cards
    ========================================================= */
 
-function articleCard(article) {
-  const url =
-    `/article/${encodeURIComponent(article.slug)}/`;
-
+function articleCard(article, options = {}) {
+  const url = `/article/${encodeURIComponent(article.slug)}/`;
   const image = displayImagePath(article.image || "");
-
-  const alt =
-    article.alt ||
-    article.imageAlt ||
-    article.title ||
-    "Virixoo pet care guide";
-
+  const alt = article.alt || article.imageAlt || article.title || "Virixoo pet care guide";
   const pinterestUrl = pinterestShareUrl(article);
+  const compact = options.compact === true;
+  const headingTag = options.headingTag || "h2";
 
   return `
-<article class="article-card">
-
-  <a
-    class="card-image-link"
-    href="${url}"
-    aria-label="Read ${escapeHtml(article.title)}"
-  >
-    <img
-      class="article-card-image"
-      src="${escapeHtml(image)}"
-      alt="${escapeHtml(alt)}"
-      loading="lazy"
-      width="800"
-      height="500"
-    >
+<article class="article-card${compact ? " article-card-compact" : ""}" data-article-card>
+  <a class="card-image-link" href="${url}" aria-label="Read ${escapeHtml(article.title)}">
+    <img class="article-card-image" src="${escapeHtml(image)}"
+      alt="${escapeHtml(alt)}" loading="lazy" decoding="async" width="800" height="500">
   </a>
-
   <div class="article-card-body">
-
-    <div class="category">
-      ${escapeHtml(article.category)}
+    <div class="card-topline">
+      <a class="category-pill" href="/${slugify(article.category)}/">${escapeHtml(article.category)}</a>
+      <span class="reading-time">${readingTime(article.content)} min read</span>
     </div>
-
-    <h2>
-      <a href="${url}">
-        ${escapeHtml(article.title)}
-      </a>
-    </h2>
-
-    <p>
-      ${escapeHtml(
-        truncateText(article.summary || "", 170)
-      )}
-    </p>
-
+    <${headingTag}><a href="${url}">${escapeHtml(article.title)}</a></${headingTag}>
+    ${compact ? "" : `<p>${escapeHtml(truncateText(article.summary || "", 155))}</p>`}
     <div class="article-card-actions">
-
-      <a
-        class="read-more"
-        href="${url}"
-        aria-label="Read more about ${escapeHtml(article.title)}"
-      >
-        Read More →
-      </a>
-
-      <a
-        class="pinterest-button"
-        href="${escapeHtml(pinterestUrl)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share ${escapeHtml(article.title)} on Pinterest"
-      >
-        📌 Pinterest
-      </a>
-
+      <a class="read-more" href="${url}">Read guide →</a>
+      <a class="pinterest-button" href="${escapeHtml(pinterestUrl)}"
+        target="_blank" rel="noopener noreferrer">📌 Save</a>
     </div>
-
   </div>
-
-</article>
-`;
+</article>`;
 }
 
 /* =========================================================
@@ -538,63 +551,123 @@ function articleCard(article) {
    ========================================================= */
 
 function createHomePage(articles) {
-  const ordered = [...articles].sort(
-    (a, b) => Number(b.id) - Number(a.id)
-  );
-
-  const cards = ordered
-    .map(articleCard)
-    .join("\n");
+  const ordered = [...articles].sort((a, b) => Number(b.id) - Number(a.id));
+  const featured = ordered.slice(0, 3);
+  const browsePool = ordered.slice(3);
+  const dogsCount = articles.filter((a) => a.category === "Dogs").length;
+  const catsCount = articles.filter((a) => a.category === "Cats").length;
 
   const html = `
 ${header(
-  "Virixoo - Expert Dog & Cat Care Guides",
+  "Virixoo - Practical Dog & Cat Care Guides",
   "Practical dog and cat care guides covering health, behavior, nutrition, grooming and everyday pet care.",
   `${SITE_URL}/`,
-  {
-    schemas: [
-      createWebSiteSchema(),
-      createOrganizationSchema()
-    ]
-  }
+  { schemas: [createWebSiteSchema(), createOrganizationSchema()] }
 )}
 
-<section class="hero-section">
-  <h1>Expert Dog & Cat Care Guides</h1>
-  <p>
-    Practical, easy-to-understand guides for healthier,
-    happier pets.
-  </p>
-</section>
-
-<section
-  class="articles-section"
-  aria-labelledby="latest-guides"
->
-  <h2 id="latest-guides">
-    Latest Pet Care Guides
-  </h2>
-
-  <div class="articles-grid">
-    ${cards}
+<section class="hero-section home-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">Practical pet care, made clearer</span>
+    <h1>Trusted Guides for Happier Dogs & Cats</h1>
+    <p>Clear, useful guidance for everyday pet health, behavior, nutrition, grooming and training questions.</p>
+    <div class="hero-actions">
+      <a class="primary-button" href="/dogs/">Explore Dog Guides</a>
+      <a class="secondary-button" href="/cats/">Explore Cat Guides</a>
+    </div>
+  </div>
+  <div class="hero-stats" aria-label="Virixoo guide library">
+    <div><strong>${articles.length}</strong><span>Total guides</span></div>
+    <div><strong>${dogsCount}</strong><span>Dog guides</span></div>
+    <div><strong>${catsCount}</strong><span>Cat guides</span></div>
   </div>
 </section>
 
-${footer()}
-`;
+<section class="trust-strip" aria-label="Virixoo editorial principles">
+  <span>✓ Easy to understand</span>
+  <span>✓ Safety-first guidance</span>
+  <span>✓ Clear veterinary warning signs</span>
+  <span>✓ Regularly expanded library</span>
+</section>
 
-  fs.writeFileSync(
-    path.join(DIST_DIR, "index.html"),
-    html,
-    "utf8"
-  );
+<section class="articles-section featured-section" aria-labelledby="featured-guides">
+  <div class="section-heading">
+    <div><span class="eyebrow">Start here</span><h2 id="featured-guides">Featured Pet Care Guides</h2></div>
+  </div>
+  <div class="articles-grid featured-grid">
+    ${featured.map((article) => articleCard(article)).join("\n")}
+  </div>
+</section>
+
+<section class="articles-section discovery-section" aria-labelledby="discover-guides">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">From our library</span>
+      <h2 id="discover-guides">Discover More Helpful Guides</h2>
+      <p>A fresh selection from Virixoo each time you visit.</p>
+    </div>
+    <button class="shuffle-button" id="shuffle-guides" type="button">Show different guides</button>
+  </div>
+
+  <div class="articles-grid" id="dynamic-article-grid" data-display-count="9">
+    ${browsePool.map((article) => articleCard(article)).join("\n")}
+  </div>
+</section>
+
+<section class="category-cta-grid">
+  <a class="category-cta" href="/dogs/">
+    <span class="category-icon" aria-hidden="true">🐕</span>
+    <div><span class="eyebrow">Dog care</span><h2>Explore ${dogsCount} Dog Guides</h2>
+    <p>Health, behavior, training, grooming and everyday care.</p></div>
+  </a>
+  <a class="category-cta" href="/cats/">
+    <span class="category-icon" aria-hidden="true">🐈</span>
+    <div><span class="eyebrow">Cat care</span><h2>Explore ${catsCount} Cat Guides</h2>
+    <p>Health, behavior, nutrition, grooming and home care.</p></div>
+  </a>
+</section>
+
+<section class="editorial-note">
+  <span class="eyebrow">Our approach</span>
+  <h2>Useful information without unnecessary complexity</h2>
+  <p>Virixoo articles help pet owners understand common situations, recognize warning signs and know when professional veterinary care may be appropriate. Our guides are educational and are not a substitute for diagnosis or treatment from a veterinarian.</p>
+  <a href="/about/">Learn about Virixoo →</a>
+</section>
+
+<script>
+(function () {
+  const grid = document.getElementById("dynamic-article-grid");
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll("[data-article-card]"));
+  const count = Math.min(Number(grid.dataset.displayCount || 9), cards.length);
+
+  function shuffleAndShow() {
+    const shuffled = cards
+      .map((card) => ({ card, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((item) => item.card);
+
+    shuffled.forEach((card, index) => {
+      card.hidden = index >= count;
+      grid.appendChild(card);
+    });
+  }
+
+  shuffleAndShow();
+  const button = document.getElementById("shuffle-guides");
+  if (button) button.addEventListener("click", shuffleAndShow);
+})();
+</script>
+
+${footer()}`;
+
+  fs.writeFileSync(path.join(DIST_DIR, "index.html"), html, "utf8");
 }
 
 /* =========================================================
    Article Page
    ========================================================= */
 
-function createArticlePage(article) {
+function createArticlePage(article, allArticles) {
   const articleDir = path.join(
     DIST_DIR,
     "article",
@@ -626,6 +699,7 @@ function createArticlePage(article) {
 
   const image = displayImagePath(article.image || "");
   const pinterestUrl = pinterestShareUrl(article);
+  const related = relatedArticles(article, allArticles, 6);
 
   const html = `
 ${header(
@@ -657,21 +731,12 @@ ${header(
   </nav>
 
   <div class="article-meta">
-    <span>
-      ${escapeHtml(article.category)}
-    </span>
-
-    <span>
-      By ${escapeHtml(
-        article.author || "Virixoo Editorial Team"
-      )}
-    </span>
-
-    ${
-      article.datePublished
-        ? `<span>${escapeHtml(article.datePublished)}</span>`
-        : ""
-    }
+    <a class="category-pill" href="/${categorySlug}/">${escapeHtml(article.category)}</a>
+    <span>By ${escapeHtml(article.author || "Virixoo Editorial Team")}</span>
+    <span>${readingTime(article.content)} min read</span>
+    ${article.dateModified || article.datePublished
+      ? `<span>Updated ${escapeHtml(article.dateModified || article.datePublished)}</span>`
+      : ""}
   </div>
 
   <h1>
@@ -718,7 +783,22 @@ ${header(
     ${formatContent(article.content)}
   </div>
 
+  <aside class="editorial-box" aria-label="Editorial note">
+    <strong>Virixoo Editorial Note</strong>
+    <p>This guide is for general educational purposes. Pet symptoms can have different causes, so contact a veterinarian when signs are severe, persistent, worsening or otherwise concerning.</p>
+  </aside>
 </article>
+
+${related.length ? `
+<section class="articles-section related-section" aria-labelledby="related-guides">
+  <div class="section-heading">
+    <div><span class="eyebrow">Keep reading</span><h2 id="related-guides">Related ${escapeHtml(article.category)} Guides</h2></div>
+    <a href="/${categorySlug}/">View all ${escapeHtml(article.category)} guides →</a>
+  </div>
+  <div class="articles-grid related-grid">
+    ${related.map((item) => articleCard(item, { compact: true, headingTag: "h3" })).join("\n")}
+  </div>
+</section>` : ""}
 
 ${footer()}
 `;
@@ -734,57 +814,54 @@ ${footer()}
    Category Pages
    ========================================================= */
 
-function createCategoryPage(
-  articles,
-  category,
-  slug
-) {
+function createCategoryPage(articles, category, slug) {
   const filtered = articles
-    .filter(
-      (article) =>
-        String(article.category).toLowerCase() ===
-        category.toLowerCase()
-    )
-    .sort(
-      (a, b) => Number(b.id) - Number(a.id)
-    );
+    .filter((article) => String(article.category).toLowerCase() === category.toLowerCase())
+    .sort((a, b) => Number(b.id) - Number(a.id));
+
+  const description =
+    category === "Dogs"
+      ? "Browse practical dog care guides covering health, behavior, training, nutrition, grooming and everyday questions."
+      : "Browse practical cat care guides covering health, behavior, nutrition, grooming, litter box issues and everyday questions.";
 
   const html = `
 ${header(
   `${category} Care Guides | Virixoo`,
-  `Practical ${category.toLowerCase()} care guides from Virixoo.`,
-  `${SITE_URL}/${slug}/`
+  description,
+  `${SITE_URL}/${slug}/`,
+  { schemas: [createBreadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}/` },
+      { name: `${category} Care Guides`, url: `${SITE_URL}/${slug}/` }
+    ])] }
 )}
 
-<section class="category-header">
-  <h1>
-    ${escapeHtml(category)} Care Guides
-  </h1>
+<nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
+  <a href="/">Home</a> › <span>${escapeHtml(category)} Care Guides</span>
+</nav>
 
-  <p>
-    Helpful, practical guides for
-    ${escapeHtml(category.toLowerCase())} owners.
-  </p>
+<section class="category-header">
+  <span class="eyebrow">${escapeHtml(category)} library</span>
+  <h1>${escapeHtml(category)} Care Guides</h1>
+  <p>${escapeHtml(description)}</p>
+  <div class="category-count">${filtered.length} practical guides and growing</div>
 </section>
 
 <section class="articles-section">
   <div class="articles-grid">
-    ${filtered.map(articleCard).join("\n")}
+    ${filtered.map((article) => articleCard(article)).join("\n")}
   </div>
 </section>
 
-${footer()}
-`;
+<section class="editorial-note category-editorial-note">
+  <h2>How to use these guides</h2>
+  <p>Start with the guide that best matches your question. Virixoo helps you understand common causes, safe next steps and warning signs. For urgent, severe or persistent symptoms, seek veterinary care.</p>
+</section>
+
+${footer()}`;
 
   const dir = path.join(DIST_DIR, slug);
-
   ensureDir(dir);
-
-  fs.writeFileSync(
-    path.join(dir, "index.html"),
-    html,
-    "utf8"
-  );
+  fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
 }
 
 /* =========================================================
@@ -1326,7 +1403,7 @@ function build() {
   createHomePage(articles);
 
   for (const article of articles) {
-    createArticlePage(article);
+    createArticlePage(article, articles);
   }
 
   createCategoryPage(
