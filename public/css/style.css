@@ -2352,3 +2352,96 @@ button {
     height: 240px;
   }
 }
+
+/* =========================================================
+   Virixoo Final Unified Brand Logo
+   ========================================================= */
+
+.site-brand {
+  min-width: 250px;
+  max-width: 310px;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo-final {
+  display: block;
+  width: 100%;
+  max-width: 290px;
+  height: 68px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.brand-copy-fallback {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.brand-copy-fallback strong {
+  color: var(--navy);
+  font-size: 28px;
+  font-weight: 850;
+  letter-spacing: -0.6px;
+}
+
+.brand-copy-fallback small {
+  margin-top: 6px;
+  color: #8d91a6;
+  font-size: 12px;
+}
+
+/* Hide the old emoji-based brand pieces if older markup is ever cached */
+.site-brand .brand-mark,
+.site-brand .brand-heart,
+.site-brand .brand-pets {
+  display: none !important;
+}
+
+@media (max-width: 1240px) {
+  .site-brand {
+    min-width: 220px;
+    max-width: 260px;
+  }
+
+  .brand-logo-final {
+    max-width: 250px;
+    height: 62px;
+  }
+}
+
+@media (max-width: 980px) {
+  .site-brand {
+    min-width: 190px;
+    max-width: 230px;
+  }
+
+  .brand-logo-final {
+    max-width: 225px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 680px) {
+  .site-brand {
+    min-width: 0;
+    max-width: 205px;
+  }
+
+  .brand-logo-final {
+    max-width: 200px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-brand {
+    max-width: 180px;
+  }
+
+  .brand-logo-final {
+    max-width: 178px;
+    height: 46px;
+  }
+}
