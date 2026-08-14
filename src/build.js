@@ -657,6 +657,8 @@ function footer() {
 })();
 </script>
 
+<script src="/js/visitor-counter.js" defer></script>
+
 </body>
 </html>`;
 }
