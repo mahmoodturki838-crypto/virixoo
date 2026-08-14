@@ -907,7 +907,7 @@ ${header(
         articleCard(article, {
           compact: true,
           headingTag: "h3",
-          showPinterest: false
+          showPinterest: true
         })
       )
       .join("\n")}
@@ -936,7 +936,7 @@ ${header(
       .map((article) =>
         articleCard(article, {
           headingTag: "h3",
-          showPinterest: false
+          showPinterest: true
         })
       )
       .join("\n")}
@@ -1149,7 +1149,7 @@ ${
         articleCard(item, {
           compact: true,
           headingTag: "h3",
-          showPinterest: false
+          showPinterest: true
         })
       )
       .join("\n")}
@@ -1251,7 +1251,7 @@ ${header(
       .map((article) =>
         articleCard(article, {
           headingTag: "h3",
-          showPinterest: false
+          showPinterest: true
         })
       )
       .join("\n")}
@@ -1390,7 +1390,7 @@ ${header(
       .map((article) =>
         articleCard(article, {
           headingTag: "h3",
-          showPinterest: false
+          showPinterest: true
         })
       )
       .join("\n")}
