@@ -1040,10 +1040,10 @@ ${header(
   <div class="hero-decor hero-decor-right" aria-hidden="true">🐾</div>
 
   <div class="hero-copy">
-    <span class="hero-badge"><span aria-hidden="true">🐾</span> Trusted Pet Care Guides</span>
+    <span class="hero-badge"><span aria-hidden="true">🐾</span> Practical Pet Care Guides</span>
 
     <h1>
-      Expert care for happy
+      Clear guidance for happy
       <span class="hero-cat-word">cats</span>
       &amp;
       <span class="hero-dog-word">dogs</span>
