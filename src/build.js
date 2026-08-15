@@ -10,6 +10,7 @@ const DIST_DIR = path.join(ROOT, "dist");
 const SITE_URL = "https://virixoo.com";
 const SITE_NAME = "Virixoo";
 const SITE_TAGLINE = "Happy Pets, Happy Life";
+const EDITORIAL_TEAM_NAME = "Virixoo Editorial Team";
 const DEFAULT_IMAGE_PATH = "/images/virixoo-default.svg";
 const DEFAULT_IMAGE_URL = `${SITE_URL}${DEFAULT_IMAGE_PATH}`;
 
@@ -345,7 +346,28 @@ function createOrganizationSchema() {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
-    url: `${SITE_URL}/`
+    url: `${SITE_URL}/`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}${BRAND_LOGO_PATH}`
+    }
+  };
+}
+
+function createWebPageSchema(title, description, url, type = "WebPage") {
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": `${url}#webpage`,
+    name: title,
+    description: truncateText(description, 200),
+    url,
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`
+    },
+    publisher: {
+      "@id": `${SITE_URL}/#organization`
+    }
   };
 }
 
@@ -378,7 +400,8 @@ function createArticleSchema(article) {
     image: [absoluteImageUrl(article.image || "")],
     author: {
       "@type": "Organization",
-      name: article.author || "Virixoo Editorial Team"
+      name: article.author || EDITORIAL_TEAM_NAME,
+      url: `${SITE_URL}/editorial-team/`
     },
     publisher: {
       "@type": "Organization",
@@ -453,6 +476,7 @@ function header(
 
   const schemas = options.schemas || [];
   const active = options.active || "";
+  const robots = options.robots || "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
 
   function navClass(key) {
     return active === key ? ' class="active"' : "";
@@ -469,7 +493,7 @@ function header(
 >
 <meta
   name="robots"
-  content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+  content="${escapeHtml(robots)}"
 >
 <meta name="theme-color" content="#ffffff">
 
@@ -580,8 +604,8 @@ function footer() {
     <div class="footer-trust-item">
       <span class="footer-trust-icon">♢</span>
       <div>
-        <strong>Expert Content</strong>
-        <span>Clear, useful pet care guides</span>
+        <strong>Clear Guidance</strong>
+        <span>Practical, carefully prepared pet care information</span>
       </div>
     </div>
 
@@ -612,6 +636,8 @@ function footer() {
       <a href="/dogs/">Dogs</a>
       <a href="/cats/">Cats</a>
       <a href="/about/">About</a>
+      <a href="/editorial-policy/">Editorial Policy</a>
+      <a href="/editorial-team/">Editorial Team</a>
       <a href="/privacy-policy/">Privacy</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -773,7 +799,7 @@ function createHomePage(articles) {
 
   const html = `
 ${header(
-  "Virixoo | Expert Dog & Cat Care Guides",
+  "Virixoo | Practical Dog & Cat Care Guides",
   "Practical dog and cat care guides covering health, behavior, nutrition, grooming and training.",
   `${SITE_URL}/`,
   {
@@ -829,7 +855,7 @@ ${header(
       <span class="hero-stat-icon">▤</span>
       <div>
         <strong>${articles.length}+</strong>
-        <span>Expert Guides</span>
+        <span>Pet Care Guides</span>
         <small>Helpful pet care articles</small>
       </div>
     </div>
@@ -1070,7 +1096,7 @@ ${header(
       <a class="category-pill category-${categorySlug}" href="/${categorySlug}/">
         ${escapeHtml(category)}
       </a>
-      <span>By ${escapeHtml(article.author || "Virixoo Editorial Team")}</span>
+      <span>By <a href="/editorial-team/">${escapeHtml(article.author || EDITORIAL_TEAM_NAME)}</a></span>
       <span>${readingTime(article.content)} min read</span>
       ${
         article.dateModified || article.datePublished
@@ -1125,6 +1151,7 @@ ${header(
       This guide is for general educational purposes. Pet symptoms can have
       different causes, so contact a veterinarian when signs are severe,
       persistent, worsening or otherwise concerning.
+      <a href="/editorial-policy/">Read our editorial policy</a>.
     </p>
   </aside>
 </article>
@@ -1423,7 +1450,10 @@ function createSearchPage(articles) {
 ${header(
   "Search Pet Care Guides | Virixoo",
   "Search Virixoo dog and cat care guides.",
-  `${SITE_URL}/search/`
+  `${SITE_URL}/search/`,
+  {
+    robots: "noindex,follow"
+  }
 )}
 
 <section class="search-page">
@@ -1557,24 +1587,39 @@ ${footer()}`;
 }
 
 /* =========================================================
-   Simple Pages
+   Information Pages
    ========================================================= */
 
-function createSimplePage(
+function createInfoPage({
   title,
-  text,
+  description,
   slug,
-  active = ""
-) {
+  contentHtml,
+  active = "",
+  schemaType = "WebPage"
+}) {
   const dir = path.join(DIST_DIR, slug);
   ensureDir(dir);
+
+  const canonical = `${SITE_URL}/${slug}/`;
+
+  const schemas = [
+    createWebPageSchema(title, description, canonical, schemaType),
+    createBreadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}/` },
+      { name: title, url: canonical }
+    ])
+  ];
 
   const html = `
 ${header(
   `${title} | Virixoo`,
-  text,
-  `${SITE_URL}/${slug}/`,
-  { active }
+  description,
+  canonical,
+  {
+    active,
+    schemas
+  }
 )}
 
 <nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
@@ -1583,9 +1628,8 @@ ${header(
   <span>${escapeHtml(title)}</span>
 </nav>
 
-<article class="single-article simple-page">
-  <h1>${escapeHtml(title)}</h1>
-  <p>${escapeHtml(text)}</p>
+<article class="single-article simple-page info-page">
+  ${contentHtml}
 </article>
 
 ${footer()}
@@ -1894,8 +1938,9 @@ function createSitemap(articles) {
     { loc: `${SITE_URL}/cats/` },
     { loc: `${SITE_URL}/dogs/` },
     { loc: `${SITE_URL}/categories/` },
-    { loc: `${SITE_URL}/search/` },
     { loc: `${SITE_URL}/about/` },
+    { loc: `${SITE_URL}/editorial-policy/` },
+    { loc: `${SITE_URL}/editorial-team/` },
     { loc: `${SITE_URL}/privacy-policy/` },
     { loc: `${SITE_URL}/contact/` }
   ];
@@ -2026,25 +2071,431 @@ function build() {
   createCategoriesPage(articles);
   createSearchPage(articles);
 
-  createSimplePage(
-    "About Virixoo",
-    "Virixoo provides practical and easy-to-understand guides for dog and cat owners, covering nutrition, training, grooming, behavior and everyday pet care.",
-    "about",
-    "about"
-  );
+  createInfoPage({
+    title: "About Virixoo",
+    description: "Learn how Virixoo creates practical dog and cat care guides, what our editorial approach is, and how we handle health-related pet information.",
+    slug: "about",
+    active: "about",
+    schemaType: "AboutPage",
+    contentHtml: `
+      <header class="article-header">
+        <span class="hero-badge">🐾 About Virixoo</span>
+        <h1>Practical pet care information, written for everyday owners</h1>
+        <p class="article-summary">
+          Virixoo is an independent pet care website focused on clear, useful
+          guidance for people who share their lives with cats and dogs.
+        </p>
+      </header>
 
-  createSimplePage(
-    "Privacy Policy",
-    "Virixoo respects your privacy. This page contains information about how the site handles visitor data and advertising technologies.",
-    "privacy-policy"
-  );
+      <section>
+        <h2>Our Mission</h2>
+        <p>
+          Our goal is to make everyday pet care easier to understand. We publish
+          practical guides about behavior, nutrition, grooming, training, common
+          health concerns and the questions pet owners frequently face at home.
+        </p>
+      </section>
 
-  createSimplePage(
-    "Contact",
-    "For questions, corrections or general inquiries, please contact the Virixoo team.",
-    "contact",
-    "contact"
-  );
+      <section>
+        <h2>What We Cover</h2>
+        <p>
+          Virixoo focuses on cats and dogs. Our content is designed to help readers
+          understand common situations, recognize useful next steps and identify
+          warning signs that may require professional veterinary attention.
+        </p>
+      </section>
+
+      <section>
+        <h2>How We Create Our Content</h2>
+        <p>
+          Articles are prepared by the <a href="/editorial-team/">Virixoo Editorial Team</a>.
+          We aim to use clear language, stay focused on the question being answered,
+          avoid unnecessary alarm, and distinguish general educational information
+          from veterinary diagnosis or treatment.
+        </p>
+        <p>
+          Digital and AI-assisted tools may be used during research, outlining,
+          drafting or production. Published material remains subject to editorial
+          review for clarity, relevance, consistency and obvious factual issues.
+          AI output is not treated as a veterinary source.
+        </p>
+      </section>
+
+      <section>
+        <h2>Health and Veterinary Information</h2>
+        <p>
+          Virixoo does not provide veterinary diagnosis and does not replace a
+          licensed veterinarian. When an article discusses symptoms or health
+          concerns, we aim to explain common possibilities and warning signs while
+          encouraging veterinary care when symptoms are severe, persistent,
+          worsening or otherwise concerning.
+        </p>
+      </section>
+
+      <section>
+        <h2>Corrections and Updates</h2>
+        <p>
+          Pet care information can change, and published pages may be updated when
+          we identify an error, improve clarity or add useful context. Readers can
+          report concerns through our <a href="/contact/">Contact page</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Our Editorial Standards</h2>
+        <p>
+          For more detail about sourcing, AI-assisted tools, corrections, health
+          content and how we separate education from veterinary advice, read our
+          <a href="/editorial-policy/">Editorial Policy</a>.
+        </p>
+      </section>
+    `
+  });
+
+  createInfoPage({
+    title: "Editorial Policy",
+    description: "Read Virixoo's editorial standards for pet care content, including sourcing, health information, AI-assisted tools, corrections and updates.",
+    slug: "editorial-policy",
+    schemaType: "WebPage",
+    contentHtml: `
+      <header class="article-header">
+        <span class="hero-badge">Editorial Standards</span>
+        <h1>Virixoo Editorial Policy</h1>
+        <p class="article-summary">
+          This policy explains how Virixoo prepares, reviews and updates its dog
+          and cat care content.
+        </p>
+      </header>
+
+      <section>
+        <h2>1. Purpose of Our Content</h2>
+        <p>
+          Virixoo publishes educational information for cat and dog owners. Our
+          goal is to explain pet care topics in practical language without
+          overstating certainty or presenting general information as a diagnosis.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Research and Sources</h2>
+        <p>
+          We aim to base health and care information on established veterinary
+          principles and reputable references. When a topic depends on individual
+          circumstances, we avoid presenting a single explanation as the only
+          possible cause.
+        </p>
+      </section>
+
+      <section>
+        <h2>3. Writing and Editorial Review</h2>
+        <p>
+          Content is prepared by the <a href="/editorial-team/">Virixoo Editorial Team</a>.
+          Before publication, we aim to check each guide for clarity, relevance,
+          internal consistency, useful context and obvious factual problems.
+        </p>
+      </section>
+
+      <section>
+        <h2>4. AI-Assisted Tools</h2>
+        <p>
+          Virixoo may use digital or AI-assisted tools to support research,
+          outlining, drafting, formatting or production. These tools do not replace
+          editorial responsibility, and AI-generated text is not considered a
+          veterinary authority or primary medical source.
+        </p>
+      </section>
+
+      <section>
+        <h2>5. Health and Safety Content</h2>
+        <p>
+          Our health-related articles are educational. Unless a page explicitly
+          states otherwise, content should not be interpreted as having been
+          individually reviewed by a veterinarian. We do not claim that Virixoo
+          provides diagnosis, treatment or emergency veterinary services.
+        </p>
+        <p>
+          Readers should contact a veterinarian for severe, persistent, worsening,
+          unusual or urgent symptoms, or whenever they are concerned about an
+          animal's condition.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. Corrections</h2>
+        <p>
+          If we identify a meaningful error, we aim to correct it. Readers may
+          report factual concerns, broken links or unclear information through our
+          <a href="/contact/">Contact page</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>7. Updates</h2>
+        <p>
+          Articles may be updated to improve accuracy, clarity, usefulness,
+          internal links, formatting or current context. Where available, the
+          article page displays its most recent modification date.
+        </p>
+      </section>
+
+      <section>
+        <h2>8. Editorial Independence</h2>
+        <p>
+          Editorial content should be written to help readers first. If Virixoo
+          uses advertising or commercial partnerships, those relationships should
+          not determine the factual conclusions of our pet care guides.
+        </p>
+      </section>
+    `
+  });
+
+  createInfoPage({
+    title: "Virixoo Editorial Team",
+    description: "Meet the Virixoo Editorial Team and learn how the team prepares practical dog and cat care content.",
+    slug: "editorial-team",
+    schemaType: "WebPage",
+    contentHtml: `
+      <header class="article-header">
+        <span class="hero-badge">🐾 Our Team</span>
+        <h1>Virixoo Editorial Team</h1>
+        <p class="article-summary">
+          The Virixoo Editorial Team prepares and maintains our practical dog and
+          cat care guides.
+        </p>
+      </header>
+
+      <section>
+        <h2>What the Team Does</h2>
+        <p>
+          The team researches topics, organizes information, writes and edits
+          articles, checks internal consistency, updates older pages and maintains
+          Virixoo's content library.
+        </p>
+      </section>
+
+      <section>
+        <h2>Our Scope</h2>
+        <p>
+          Virixoo covers everyday cat and dog care, including behavior, feeding,
+          grooming, training and common health questions. We aim to make complex
+          topics easier to understand while being clear about the limits of
+          general online information.
+        </p>
+      </section>
+
+      <section>
+        <h2>What We Do Not Claim</h2>
+        <p>
+          The Virixoo Editorial Team is not presented as a veterinary clinic, and
+          we do not claim that every article is reviewed by a veterinarian. When
+          professional veterinary assessment matters, our content should say so.
+        </p>
+      </section>
+
+      <section>
+        <h2>How We Work</h2>
+        <p>
+          We may use digital and AI-assisted tools during research, drafting,
+          organization or production. Editorial responsibility remains with the
+          Virixoo team, and our standards are described in the
+          <a href="/editorial-policy/">Editorial Policy</a>.
+        </p>
+      </section>
+    `
+  });
+
+  createInfoPage({
+    title: "Privacy Policy",
+    description: "Virixoo's privacy policy explains how visitor data, cookies, analytics, advertising technologies and third-party services may be handled.",
+    slug: "privacy-policy",
+    schemaType: "WebPage",
+    contentHtml: `
+      <header class="article-header">
+        <span class="hero-badge">Privacy</span>
+        <h1>Privacy Policy</h1>
+        <p class="article-summary">
+          This policy explains the types of information Virixoo may process when
+          you visit the website and how third-party services may be involved.
+        </p>
+        <p><strong>Last updated:</strong> August 15, 2026</p>
+      </header>
+
+      <section>
+        <h2>Information We May Collect</h2>
+        <p>
+          Like many websites, Virixoo may process basic technical information such
+          as IP address, browser type, device information, referring pages,
+          requested URLs and timestamps through hosting logs, security tools or
+          analytics technologies.
+        </p>
+      </section>
+
+      <section>
+        <h2>Visitor Counter and Analytics</h2>
+        <p>
+          Virixoo may use site analytics or a visitor counter to understand general
+          traffic patterns and improve the website. Depending on the technology in
+          use, these tools may rely on cookies, local storage, server logs or
+          similar identifiers.
+        </p>
+      </section>
+
+      <section>
+        <h2>Cookies and Similar Technologies</h2>
+        <p>
+          Cookies or similar technologies may be used for essential site
+          functionality, analytics, preferences, security and—if advertising is
+          enabled—ad delivery and measurement.
+        </p>
+      </section>
+
+      <section>
+        <h2>Advertising</h2>
+        <p>
+          Virixoo may use third-party advertising services in the future, including
+          services such as Google AdSense. If advertising is enabled, advertising
+          providers may use cookies or similar technologies to serve, personalize
+          or measure ads in accordance with their own policies and applicable law.
+        </p>
+      </section>
+
+      <section>
+        <h2>Third-Party Links and Services</h2>
+        <p>
+          Virixoo may link to third-party websites or use third-party services.
+          Those services operate under their own privacy practices, and Virixoo
+          does not control their independent data handling.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact Form Data</h2>
+        <p>
+          If you submit information through the Virixoo contact form, the details
+          you provide may be processed for the purpose of responding to your
+          message, reviewing corrections or handling site-related inquiries.
+        </p>
+      </section>
+
+      <section>
+        <h2>Data Retention</h2>
+        <p>
+          Information should be kept only for as long as reasonably necessary for
+          the purpose for which it was collected, including security, site
+          operation, communication and legal obligations where applicable.
+        </p>
+      </section>
+
+      <section>
+        <h2>Your Choices</h2>
+        <p>
+          You can control cookies through your browser settings. If consent tools
+          are introduced for advertising or analytics, additional choices may be
+          presented directly on the website.
+        </p>
+      </section>
+
+      <section>
+        <h2>Policy Changes</h2>
+        <p>
+          This policy may be updated when Virixoo changes its technology,
+          analytics, advertising or data practices. The latest version will be
+          published on this page.
+        </p>
+      </section>
+
+      <section>
+        <h2>Questions About Privacy</h2>
+        <p>
+          For privacy questions or concerns, use the <a href="/contact/">Contact page</a>.
+        </p>
+      </section>
+    `
+  });
+
+  createInfoPage({
+    title: "Contact Virixoo",
+    description: "Contact Virixoo about corrections, editorial questions, privacy concerns, broken links or general site feedback.",
+    slug: "contact",
+    active: "contact",
+    schemaType: "ContactPage",
+    contentHtml: `
+      <header class="article-header">
+        <span class="hero-badge">Contact</span>
+        <h1>Contact Virixoo</h1>
+        <p class="article-summary">
+          Use this page for factual corrections, editorial questions, privacy
+          concerns, broken links or general feedback about Virixoo.
+        </p>
+      </header>
+
+      <section>
+        <h2>What You Can Contact Us About</h2>
+        <ul>
+          <li>Possible factual errors or unclear information</li>
+          <li>Broken links or technical problems</li>
+          <li>Privacy-related questions</li>
+          <li>Editorial feedback or content suggestions</li>
+          <li>General questions about Virixoo</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Send a Message</h2>
+        <form
+          class="contact-form"
+          name="virixoo-contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          action="/contact/?sent=1"
+        >
+          <input type="hidden" name="form-name" value="virixoo-contact">
+
+          <p hidden>
+            <label>
+              Do not fill this out:
+              <input name="bot-field">
+            </label>
+          </p>
+
+          <p>
+            <label for="contact-name">Name</label>
+            <input id="contact-name" name="name" type="text" autocomplete="name" required>
+          </p>
+
+          <p>
+            <label for="contact-email">Email</label>
+            <input id="contact-email" name="email" type="email" autocomplete="email" required>
+          </p>
+
+          <p>
+            <label for="contact-topic">Topic</label>
+            <select id="contact-topic" name="topic">
+              <option value="correction">Correction or factual concern</option>
+              <option value="privacy">Privacy question</option>
+              <option value="technical">Technical or broken link issue</option>
+              <option value="editorial">Editorial feedback</option>
+              <option value="general">General inquiry</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" rows="7" required></textarea>
+          </p>
+
+          <button class="primary-button" type="submit">Send message</button>
+        </form>
+
+        <p class="editorial-note">
+          Please do not use this form for veterinary emergencies. Contact a
+          veterinarian or local emergency veterinary service for urgent medical
+          concerns.
+        </p>
+      </section>
+    `
+  });
 
   createRobots();
   createSitemap(articles);
