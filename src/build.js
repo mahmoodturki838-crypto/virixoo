@@ -1342,9 +1342,7 @@ ${header(
           <strong>Quick answer</strong>
           <p class="article-summary">${escapeHtml(article.summary)}</p>
         </aside>`
-        : article.summary
-          ? `<p class="article-summary">${escapeHtml(article.summary)}</p>`
-          : ""
+        : ""
     }
   </header>
 
