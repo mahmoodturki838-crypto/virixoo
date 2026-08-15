@@ -150,11 +150,21 @@ function relatedArticles(article, allArticles, limit = 6) {
         String(candidate.category).toLowerCase() ===
         String(article.category).toLowerCase();
 
+      const sameTopic =
+        articleTopic(candidate) === articleTopic(article);
+
+      const samePrimaryKeyword =
+        String(candidate.primaryKeyword || "").trim().toLowerCase() &&
+        String(candidate.primaryKeyword || "").trim().toLowerCase() ===
+          String(article.primaryKeyword || "").trim().toLowerCase();
+
       return {
         candidate,
         score:
           overlap * 10 +
+          (sameTopic ? 8 : 0) +
           (sameCategory ? 5 : 0) +
+          (samePrimaryKeyword ? 12 : 0) +
           (Number(candidate.id) || 0) / 100000
       };
     })
@@ -175,12 +185,202 @@ function buildSearchText(article) {
     article.title,
     article.summary,
     article.category,
+    article.topic,
     article.primaryKeyword,
     ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
   ]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
+}
+
+function normalizeTopic(value = "") {
+  const topic = String(value || "").trim();
+  if (!topic) return "";
+  return topic
+    .split(/\s+/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function articleTopic(article) {
+  const explicit = normalizeTopic(article.topic || article.subcategory || "");
+  if (explicit) return explicit;
+
+  const haystack = [
+    article.title,
+    article.summary,
+    article.primaryKeyword,
+    ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (/vomit|diarrhea|cough|limp|itch|scratch|skin|appetite|eating|drinking|water|urine|poop|stool|constipation|pain|fever|breath|breathing|hair loss|weight loss|sick|illness|health|symptom|vet|veterinar/.test(haystack)) {
+    return "Health";
+  }
+
+  if (/train|training|leash|litter train|command|recall|bite inhibition/.test(haystack)) {
+    return "Training";
+  }
+
+  if (/food|feeding|diet|nutrition|treat|meal/.test(haystack)) {
+    return "Nutrition";
+  }
+
+  if (/groom|brush|nail|bath|coat|teeth|dental/.test(haystack)) {
+    return "Grooming";
+  }
+
+  return "Behavior";
+}
+
+function isHealthArticle(article) {
+  return articleTopic(article) === "Health";
+}
+
+function normalizeSources(sources) {
+  if (!Array.isArray(sources)) return [];
+
+  return sources
+    .map((source) => {
+      if (typeof source === "string") {
+        return { title: source.trim(), url: "" };
+      }
+
+      if (source && typeof source === "object") {
+        return {
+          title: String(source.title || source.name || "").trim(),
+          url: String(source.url || "").trim(),
+          publisher: String(source.publisher || source.organization || "").trim()
+        };
+      }
+
+      return null;
+    })
+    .filter((source) => source && source.title);
+}
+
+function renderSources(article) {
+  const sources = normalizeSources(article.sources);
+  if (!sources.length) return "";
+
+  return `
+  <section class="article-sources" aria-labelledby="article-sources-heading">
+    <h2 id="article-sources-heading">Sources &amp; References</h2>
+    <ul>
+      ${sources
+        .map((source) => {
+          const label = source.publisher
+            ? `${escapeHtml(source.title)} — ${escapeHtml(source.publisher)}`
+            : escapeHtml(source.title);
+
+          if (!source.url) return `<li>${label}</li>`;
+
+          return `<li><a href="${escapeAttribute(source.url)}" target="_blank" rel="noopener noreferrer">${label}</a></li>`;
+        })
+        .join("\n")}
+    </ul>
+  </section>`;
+}
+
+function normalizeFaq(faq) {
+  if (!Array.isArray(faq)) return [];
+
+  return faq
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const question = String(item.question || item.q || "").trim();
+      const answer = String(item.answer || item.a || "").trim();
+      if (!question || !answer) return null;
+      return { question, answer };
+    })
+    .filter(Boolean);
+}
+
+function createFaqSchema(article) {
+  const faq = normalizeFaq(article.faq);
+  if (!faq.length) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: stripHtml(item.answer)
+      }
+    }))
+  };
+}
+
+function renderFaq(article) {
+  const faq = normalizeFaq(article.faq);
+  if (!faq.length) return "";
+
+  return `
+  <section class="article-faq" aria-labelledby="article-faq-heading">
+    <h2 id="article-faq-heading">Frequently Asked Questions</h2>
+    ${faq
+      .map(
+        (item) => `
+      <details class="faq-item">
+        <summary>${escapeHtml(item.question)}</summary>
+        <div>${formatContent(item.answer)}</div>
+      </details>`
+      )
+      .join("\n")}
+  </section>`;
+}
+
+function renderArticleDates(article) {
+  const published = String(article.datePublished || "").trim();
+  const modified = String(article.dateModified || "").trim();
+
+  const parts = [];
+
+  if (published) {
+    parts.push(
+      `<span>Published <time datetime="${escapeAttribute(published)}">${escapeHtml(prettyDate(published))}</time></span>`
+    );
+  }
+
+  if (modified && modified !== published) {
+    parts.push(
+      `<span>Updated <time datetime="${escapeAttribute(modified)}">${escapeHtml(prettyDate(modified))}</time></span>`
+    );
+  }
+
+  return parts.join("\n      ");
+}
+
+function renderEditorialNote(article) {
+  if (isHealthArticle(article)) {
+    return `
+  <aside class="editorial-box editorial-box-health" aria-label="Health information note">
+    <strong>Virixoo Health Information Note</strong>
+    <p>
+      This guide is for general educational purposes and is not a diagnosis.
+      Symptoms can have different causes. Contact a veterinarian when signs are
+      severe, persistent, worsening, unusual, or whenever you are concerned about
+      your pet. <a href="/editorial-policy/">Read our editorial policy</a>.
+    </p>
+  </aside>`;
+  }
+
+  return `
+  <aside class="editorial-box" aria-label="Editorial note">
+    <strong>Virixoo Editorial Note</strong>
+    <p>
+      This guide provides general educational information for pet owners.
+      Individual pets can behave differently, so use the advice as practical
+      guidance rather than a one-size-fits-all rule.
+      <a href="/editorial-policy/">Read our editorial policy</a>.
+    </p>
+  </aside>`;
 }
 
 /* =========================================================
@@ -386,6 +586,13 @@ function createWebSiteSchema() {
 
 function createArticleSchema(article) {
   const canonical = articleUrl(article);
+  const keywords = [
+    article.primaryKeyword,
+    ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
+  ]
+    .filter(Boolean)
+    .map((item) => String(item).trim())
+    .filter(Boolean);
 
   const schema = {
     "@context": "https://schema.org",
@@ -400,17 +607,28 @@ function createArticleSchema(article) {
     image: [absoluteImageUrl(article.image || "")],
     author: {
       "@type": "Organization",
+      "@id": `${SITE_URL}/editorial-team/#organization`,
       name: article.author || EDITORIAL_TEAM_NAME,
       url: `${SITE_URL}/editorial-team/`
     },
     publisher: {
       "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
-      url: `${SITE_URL}/`
+      url: `${SITE_URL}/`,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}${BRAND_LOGO_PATH}`
+      }
     },
-    articleSection: article.category
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`
+    },
+    articleSection: articleTopic(article),
+    inLanguage: "en"
   };
 
+  if (keywords.length) schema.keywords = keywords.join(", ");
   if (article.datePublished) schema.datePublished = article.datePublished;
   if (article.dateModified || article.datePublished) {
     schema.dateModified = article.dateModified || article.datePublished;
@@ -813,10 +1031,10 @@ ${header(
   <div class="hero-decor hero-decor-right" aria-hidden="true">🐾</div>
 
   <div class="hero-copy">
-    <span class="hero-badge"><span aria-hidden="true">🐾</span> Practical Pet Care Guides</span>
+    <span class="hero-badge"><span aria-hidden="true">🐾</span> Trusted Pet Care Guides</span>
 
     <h1>
-      Clear guidance for happy
+      Expert care for happy
       <span class="hero-cat-word">cats</span>
       &amp;
       <span class="hero-dog-word">dogs</span>
@@ -1064,9 +1282,13 @@ function createArticlePage(article, allArticles) {
     ])
   ];
 
+  const faqSchema = createFaqSchema(article);
+  if (faqSchema) schemas.push(faqSchema);
+
   const image = displayImagePath(article.image || "");
   const pinterestUrl = pinterestShareUrl(article);
   const related = relatedArticles(article, allArticles, 6);
+  const topic = articleTopic(article);
 
   const html = `
 ${header(
@@ -1098,18 +1320,19 @@ ${header(
       </a>
       <span>By <a href="/editorial-team/">${escapeHtml(article.author || EDITORIAL_TEAM_NAME)}</a></span>
       <span>${readingTime(article.content)} min read</span>
-      ${
-        article.dateModified || article.datePublished
-          ? `<span>Updated ${escapeHtml(prettyDate(article.dateModified || article.datePublished))}</span>`
-          : ""
-      }
+      <span class="article-topic">${escapeHtml(topic)}</span>
+      ${renderArticleDates(article)}
     </div>
 
     <h1>${escapeHtml(article.title)}</h1>
 
     ${
       article.summary
-        ? `<p class="article-summary">${escapeHtml(article.summary)}</p>`
+        ? `
+        <aside class="quick-answer" aria-label="Quick answer">
+          <strong>Quick answer</strong>
+          <p class="article-summary">${escapeHtml(article.summary)}</p>
+        </aside>`
         : ""
     }
   </header>
@@ -1145,15 +1368,9 @@ ${header(
     ${formatContent(article.content)}
   </div>
 
-  <aside class="editorial-box" aria-label="Editorial note">
-    <strong>Virixoo Editorial Note</strong>
-    <p>
-      This guide is for general educational purposes. Pet symptoms can have
-      different causes, so contact a veterinarian when signs are severe,
-      persistent, worsening or otherwise concerning.
-      <a href="/editorial-policy/">Read our editorial policy</a>.
-    </p>
-  </aside>
+  ${renderSources(article)}
+  ${renderFaq(article)}
+  ${renderEditorialNote(article)}
 </article>
 
 ${
@@ -1440,6 +1657,7 @@ function createSearchPage(articles) {
     title: article.title,
     summary: article.summary || "",
     category: normalizeCategory(article.category),
+    topic: articleTopic(article),
     url: articlePath(article),
     image: displayImagePath(article.image || ""),
     readingTime: readingTime(article.content),
@@ -1849,6 +2067,9 @@ function validateArticles(articles) {
     }
 
     article.category = normalizeCategory(article.category);
+    if (article.topic || article.subcategory) {
+      article.topic = normalizeTopic(article.topic || article.subcategory);
+    }
 
     if (!["Cats", "Dogs"].includes(article.category)) {
       throw new Error(
@@ -1860,6 +2081,53 @@ function validateArticles(articles) {
       article.image = normalizeImagePath(article.image);
     }
   });
+}
+
+function validateArticleQuality(articles) {
+  const warnings = [];
+
+  for (const article of articles) {
+    const source = article.__sourceFile || article.slug || article.title;
+
+    const recommended = [
+      ["summary", article.summary],
+      ["author", article.author],
+      ["datePublished", article.datePublished],
+      ["dateModified", article.dateModified],
+      ["alt", article.alt || article.imageAlt],
+      ["primaryKeyword", article.primaryKeyword]
+    ];
+
+    for (const [field, value] of recommended) {
+      if (!String(value || "").trim()) {
+        warnings.push(`${source}: missing recommended field "${field}"`);
+      }
+    }
+
+    if (
+      !Array.isArray(article.secondaryKeywords) ||
+      article.secondaryKeywords.filter(Boolean).length === 0
+    ) {
+      warnings.push(`${source}: missing recommended secondaryKeywords`);
+    }
+
+    if (isHealthArticle(article) && normalizeSources(article.sources).length === 0) {
+      warnings.push(`${source}: health article has no sources array`);
+    }
+
+    const content = String(article.content || "");
+    const internalLinks =
+      content.match(/href\s*=\s*["']\/article\//gi) || [];
+
+    if (stripHtml(content).split(/\s+/).filter(Boolean).length >= 700 && internalLinks.length === 0) {
+      warnings.push(`${source}: long article has no contextual internal article link`);
+    }
+  }
+
+  if (warnings.length) {
+    console.warn(`ARTICLE QUALITY WARNINGS (${warnings.length}):`);
+    warnings.forEach((warning) => console.warn(`- ${warning}`));
+  }
 }
 
 function validateInternalLinks(articles) {
@@ -1918,6 +2186,7 @@ function createArticleIndex(articles) {
       title: article.title,
       slug: article.slug,
       category: article.category,
+      topic: articleTopic(article),
       image: displayImagePath(article.image || ""),
       url: articlePath(article),
       readingTime: readingTime(article.content),
@@ -2006,6 +2275,7 @@ function build() {
 
   validateArticles(articles);
   validateInternalLinks(articles);
+  validateArticleQuality(articles);
 
   if (fs.existsSync(DIST_DIR)) {
     fs.rmSync(
