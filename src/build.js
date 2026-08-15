@@ -336,6 +336,15 @@ function renderFaq(article) {
   </section>`;
 }
 
+function hasQuickAnswerInContent(article) {
+  const raw = String(article.content || "").toLowerCase();
+
+  return (
+    /(^|\n)\s*#{1,6}\s*quick\s+answer\b/m.test(raw) ||
+    /<h[1-6][^>]*>\s*quick\s+answer\s*<\/h[1-6]>/i.test(raw)
+  );
+}
+
 function renderArticleDates(article) {
   const published = String(article.datePublished || "").trim();
   const modified = String(article.dateModified || "").trim();
@@ -1327,13 +1336,15 @@ ${header(
     <h1>${escapeHtml(article.title)}</h1>
 
     ${
-      article.summary
+      article.summary && !hasQuickAnswerInContent(article)
         ? `
         <aside class="quick-answer" aria-label="Quick answer">
           <strong>Quick answer</strong>
           <p class="article-summary">${escapeHtml(article.summary)}</p>
         </aside>`
-        : ""
+        : article.summary
+          ? `<p class="article-summary">${escapeHtml(article.summary)}</p>`
+          : ""
     }
   </header>
 
