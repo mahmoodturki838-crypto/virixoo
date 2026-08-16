@@ -1870,6 +1870,110 @@ ${footer()}
 }
 
 /* =========================================================
+   Custom 404 Page
+   ========================================================= */
+
+function create404Page(articles) {
+  const popular = [...articles]
+    .sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
+    .slice(0, 3);
+
+  const html = `
+${header(
+  "Page Not Found | Virixoo",
+  "The page you requested could not be found. Browse Virixoo dog and cat care guides or search the site.",
+  `${SITE_URL}/404.html`,
+  {
+    robots: "noindex,follow",
+    schemas: []
+  }
+)}
+
+<section class="not-found-page" aria-labelledby="not-found-title">
+  <div class="not-found-visual" aria-hidden="true">
+    <span class="not-found-code">404</span>
+    <span class="not-found-paw">🐾</span>
+  </div>
+
+  <div class="not-found-copy">
+    <span class="hero-badge">Lost a paw print?</span>
+    <h1 id="not-found-title">We couldn't find that page</h1>
+    <p>
+      The link may be outdated, the page may have moved, or the address may have
+      been typed incorrectly. You can return home, browse our pet care guides,
+      or search Virixoo.
+    </p>
+
+    <div class="not-found-actions">
+      <a class="primary-button" href="/">Back to Home</a>
+      <a class="secondary-button" href="/search/">Search Virixoo</a>
+    </div>
+
+    <nav class="not-found-links" aria-label="Helpful links">
+      <a href="/dogs/">🐾 Dog Care Guides</a>
+      <a href="/cats/">🐾 Cat Care Guides</a>
+      <a href="/categories/">Browse All Categories</a>
+    </nav>
+  </div>
+</section>
+
+${popular.length ? `
+<section class="articles-section not-found-guides" aria-labelledby="not-found-guides-title">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Keep exploring</span>
+      <h2 id="not-found-guides-title">Helpful Pet Care Guides</h2>
+      <p>These recently added guides may help you find what you were looking for.</p>
+    </div>
+  </div>
+  <div class="articles-grid">
+    ${popular.map((article) => articleCard(article, {
+      compact: true,
+      headingTag: "h3",
+      showPinterest: false
+    })).join("\n")}
+  </div>
+</section>` : ""}
+
+<style>
+.not-found-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 56px auto 28px;
+  padding: 56px;
+  display: grid;
+  grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
+  gap: 56px;
+  align-items: center;
+  border-radius: 32px;
+  background: linear-gradient(135deg, #f7f5ff 0%, #fff8ef 100%);
+  box-shadow: 0 18px 60px rgba(17, 26, 68, .08);
+}
+.not-found-visual { position: relative; text-align: center; line-height: 1; }
+.not-found-code { display: block; font-size: clamp(6rem, 14vw, 11rem); font-weight: 900; letter-spacing: -.08em; color: #111a44; opacity: .10; }
+.not-found-paw { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); font-size: clamp(4rem, 8vw, 7rem); }
+.not-found-copy h1 { margin: 14px 0 16px; font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1.05; color: #111a44; }
+.not-found-copy > p { max-width: 680px; font-size: 1.08rem; line-height: 1.75; color: #5d647d; }
+.not-found-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 20px; }
+.not-found-links { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.not-found-links a { font-weight: 700; text-decoration: none; }
+.not-found-guides { margin-top: 24px; }
+@media (max-width: 760px) {
+  .not-found-page { margin-top: 28px; padding: 34px 22px; grid-template-columns: 1fr; gap: 22px; text-align: center; }
+  .not-found-copy > p { margin-inline: auto; }
+  .not-found-actions, .not-found-links { justify-content: center; }
+}
+</style>
+
+${footer()}`;
+
+  fs.writeFileSync(
+    path.join(DIST_DIR, "404.html"),
+    html,
+    "utf8"
+  );
+}
+
+/* =========================================================
    File Copying
    ========================================================= */
 
@@ -2349,6 +2453,7 @@ function build() {
 
   createCategoriesPage(articles);
   createSearchPage(articles);
+  create404Page(articles);
 
   createInfoPage({
     title: "About Virixoo",
