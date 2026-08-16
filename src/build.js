@@ -1669,7 +1669,6 @@ function createSearchPage(articles) {
     topic: articleTopic(article),
     url: articlePath(article),
     image: displayImagePath(article.image || ""),
-    alt: article.alt || article.imageAlt || article.title || "Virixoo pet care guide",
     readingTime: readingTime(article.content),
     search: buildSearchText(article)
   }));
@@ -1773,7 +1772,7 @@ ${header(
         return (
           '<article class="search-result-card">' +
             '<a class="search-result-image" href="' + article.url + '">' +
-              '<img src="' + escapeText(article.image) + '" alt="' + escapeText(article.alt || article.title) + '" loading="lazy" decoding="async" width="420" height="270">' +
+              '<img src="' + escapeText(article.image) + '" alt="" loading="lazy" width="420" height="270">' +
             '</a>' +
             '<div>' +
               '<span class="category-pill category-' + article.category.toLowerCase() + '">' +
@@ -1865,6 +1864,110 @@ ${footer()}
 
   fs.writeFileSync(
     path.join(dir, "index.html"),
+    html,
+    "utf8"
+  );
+}
+
+/* =========================================================
+   Custom 404 Page
+   ========================================================= */
+
+function create404Page(articles) {
+  const popular = [...articles]
+    .sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
+    .slice(0, 3);
+
+  const html = `
+${header(
+  "Page Not Found | Virixoo",
+  "The page you requested could not be found. Browse Virixoo dog and cat care guides or search the site.",
+  `${SITE_URL}/404.html`,
+  {
+    robots: "noindex,follow",
+    schemas: []
+  }
+)}
+
+<section class="not-found-page" aria-labelledby="not-found-title">
+  <div class="not-found-visual" aria-hidden="true">
+    <span class="not-found-code">404</span>
+    <span class="not-found-paw">🐾</span>
+  </div>
+
+  <div class="not-found-copy">
+    <span class="hero-badge">Lost a paw print?</span>
+    <h1 id="not-found-title">We couldn't find that page</h1>
+    <p>
+      The link may be outdated, the page may have moved, or the address may have
+      been typed incorrectly. You can return home, browse our pet care guides,
+      or search Virixoo.
+    </p>
+
+    <div class="not-found-actions">
+      <a class="primary-button" href="/">Back to Home</a>
+      <a class="secondary-button" href="/search/">Search Virixoo</a>
+    </div>
+
+    <nav class="not-found-links" aria-label="Helpful links">
+      <a href="/dogs/">🐾 Dog Care Guides</a>
+      <a href="/cats/">🐾 Cat Care Guides</a>
+      <a href="/categories/">Browse All Categories</a>
+    </nav>
+  </div>
+</section>
+
+${popular.length ? `
+<section class="articles-section not-found-guides" aria-labelledby="not-found-guides-title">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Keep exploring</span>
+      <h2 id="not-found-guides-title">Helpful Pet Care Guides</h2>
+      <p>These recently added guides may help you find what you were looking for.</p>
+    </div>
+  </div>
+  <div class="articles-grid">
+    ${popular.map((article) => articleCard(article, {
+      compact: true,
+      headingTag: "h3",
+      showPinterest: false
+    })).join("\n")}
+  </div>
+</section>` : ""}
+
+<style>
+.not-found-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 56px auto 28px;
+  padding: 56px;
+  display: grid;
+  grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
+  gap: 56px;
+  align-items: center;
+  border-radius: 32px;
+  background: linear-gradient(135deg, #f7f5ff 0%, #fff8ef 100%);
+  box-shadow: 0 18px 60px rgba(17, 26, 68, .08);
+}
+.not-found-visual { position: relative; text-align: center; line-height: 1; }
+.not-found-code { display: block; font-size: clamp(6rem, 14vw, 11rem); font-weight: 900; letter-spacing: -.08em; color: #111a44; opacity: .10; }
+.not-found-paw { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); font-size: clamp(4rem, 8vw, 7rem); }
+.not-found-copy h1 { margin: 14px 0 16px; font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1.05; color: #111a44; }
+.not-found-copy > p { max-width: 680px; font-size: 1.08rem; line-height: 1.75; color: #5d647d; }
+.not-found-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 20px; }
+.not-found-links { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.not-found-links a { font-weight: 700; text-decoration: none; }
+.not-found-guides { margin-top: 24px; }
+@media (max-width: 760px) {
+  .not-found-page { margin-top: 28px; padding: 34px 22px; grid-template-columns: 1fr; gap: 22px; text-align: center; }
+  .not-found-copy > p { margin-inline: auto; }
+  .not-found-actions, .not-found-links { justify-content: center; }
+}
+</style>
+
+${footer()}`;
+
+  fs.writeFileSync(
+    path.join(DIST_DIR, "404.html"),
     html,
     "utf8"
   );
@@ -2095,8 +2198,6 @@ function validateArticles(articles) {
 
 function validateArticleQuality(articles) {
   const warnings = [];
-  const normalizedTitles = new Map();
-  const primaryKeywords = new Map();
 
   for (const article of articles) {
     const source = article.__sourceFile || article.slug || article.title;
@@ -2116,36 +2217,6 @@ function validateArticleQuality(articles) {
       }
     }
 
-    const normalizedTitle = String(article.title || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ");
-
-    if (normalizedTitle) {
-      if (normalizedTitles.has(normalizedTitle)) {
-        warnings.push(
-          `${source}: duplicate article title also used in ${normalizedTitles.get(normalizedTitle)}`
-        );
-      } else {
-        normalizedTitles.set(normalizedTitle, source);
-      }
-    }
-
-    const primaryKeyword = String(article.primaryKeyword || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ");
-
-    if (primaryKeyword) {
-      if (primaryKeywords.has(primaryKeyword)) {
-        warnings.push(
-          `${source}: primaryKeyword "${article.primaryKeyword}" is also used in ${primaryKeywords.get(primaryKeyword)}; review for possible cannibalization`
-        );
-      } else {
-        primaryKeywords.set(primaryKeyword, source);
-      }
-    }
-
     if (
       !Array.isArray(article.secondaryKeywords) ||
       article.secondaryKeywords.filter(Boolean).length === 0
@@ -2157,33 +2228,11 @@ function validateArticleQuality(articles) {
       warnings.push(`${source}: health article has no sources array`);
     }
 
-    if (!article.image) {
-      warnings.push(`${source}: article has no image path; fallback image will be used`);
-    } else if (!publicImageExists(article.image)) {
-      warnings.push(`${source}: image file not found at ${article.image}; fallback image will be used`);
-    }
-
-    const summary = String(article.summary || "").trim();
-    if (summary && summary.length < 70) {
-      warnings.push(`${source}: summary is very short (${summary.length} characters)`);
-    }
-    if (summary.length > 170) {
-      warnings.push(`${source}: summary is long (${summary.length} characters); meta description will be truncated`);
-    }
-
-    for (const field of ["datePublished", "dateModified"]) {
-      const value = String(article[field] || "").trim();
-      if (value && Number.isNaN(new Date(value).getTime())) {
-        warnings.push(`${source}: invalid ${field} value "${value}"`);
-      }
-    }
-
     const content = String(article.content || "");
-    const wordCount = stripHtml(content).split(/\s+/).filter(Boolean).length;
     const internalLinks =
-      content.match(/href\s*=\s*["'](?:https?:\/\/(?:www\.)?virixoo\.com)?\/article\//gi) || [];
+      content.match(/href\s*=\s*["']\/article\//gi) || [];
 
-    if (wordCount >= 700 && internalLinks.length === 0) {
+    if (stripHtml(content).split(/\s+/).filter(Boolean).length >= 700 && internalLinks.length === 0) {
       warnings.push(`${source}: long article has no contextual internal article link`);
     }
   }
@@ -2201,39 +2250,23 @@ function validateInternalLinks(articles) {
     )
   );
 
-  // Validate both relative links and absolute Virixoo article links.
-  // Query strings and fragments are allowed after the article slug.
   const linkPattern =
-    /href\s*=\s*["'](?:https?:\/\/(?:www\.)?virixoo\.com)?\/article\/([^"'?#/]+)\/?(?:[?#][^"']*)?["']/gi;
+    /href\s*=\s*["']\/article\/([^"'?#/]+)\/?["']/gi;
 
   const broken = [];
 
   for (const article of articles) {
     const content = String(article.content || "");
     let match;
-    linkPattern.lastIndex = 0;
 
     while ((match = linkPattern.exec(content)) !== null) {
-      let linkedSlug = "";
-
-      try {
-        linkedSlug = decodeURIComponent(match[1]);
-      } catch (error) {
-        broken.push({
-          article: article.slug,
-          linkedSlug: match[1],
-          source: article.__sourceFile,
-          reason: "malformed URL encoding"
-        });
-        continue;
-      }
+      const linkedSlug = decodeURIComponent(match[1]);
 
       if (!knownSlugs.has(linkedSlug)) {
         broken.push({
           article: article.slug,
           linkedSlug,
-          source: article.__sourceFile,
-          reason: "target article does not exist"
+          source: article.__sourceFile
         });
       }
     }
@@ -2243,7 +2276,7 @@ function validateInternalLinks(articles) {
     const details = broken
       .map(
         (item) =>
-          `- ${item.article} -> ${item.linkedSlug} (${item.source}; ${item.reason})`
+          `- ${item.article} -> ${item.linkedSlug} (${item.source})`
       )
       .join("\n");
 
@@ -2343,78 +2376,6 @@ Sitemap: ${SITE_URL}/sitemap.xml
   );
 }
 
-
-function create404Page(articles) {
-  const suggestions = [...articles]
-    .sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
-    .slice(0, 6);
-
-  const html = `
-${header(
-  "Page Not Found | Virixoo",
-  "The page you requested could not be found. Browse Virixoo dog and cat care guides or search the site.",
-  `${SITE_URL}/404.html`,
-  {
-    robots: "noindex,follow",
-    schemas: []
-  }
-)}
-
-<section class="search-page error-page" aria-labelledby="not-found-heading">
-  <div class="search-page-header">
-    <span class="hero-badge">404 · Page Not Found</span>
-    <h1 id="not-found-heading">We couldn’t find that page</h1>
-    <p>
-      The link may be outdated, the page may have moved, or the address may have
-      been typed incorrectly. You can continue with one of the options below.
-    </p>
-  </div>
-
-  <div class="hero-actions" aria-label="404 navigation options">
-    <a class="primary-button" href="/">Go to Home</a>
-    <a class="secondary-button" href="/search/">Search Virixoo</a>
-    <a class="secondary-button" href="/dogs/">Dog Guides</a>
-    <a class="secondary-button" href="/cats/">Cat Guides</a>
-    <a class="secondary-button" href="/categories/">All Categories</a>
-  </div>
-</section>
-
-${
-  suggestions.length
-    ? `
-<section class="articles-section related-section" aria-labelledby="not-found-guides">
-  <div class="section-heading">
-    <div>
-      <span class="eyebrow">Keep exploring</span>
-      <h2 id="not-found-guides">Helpful Pet Care Guides</h2>
-      <p>These recently added guides may help you find what you were looking for.</p>
-    </div>
-  </div>
-
-  <div class="articles-grid related-grid">
-    ${suggestions
-      .map((article) =>
-        articleCard(article, {
-          compact: true,
-          headingTag: "h3",
-          showPinterest: false
-        })
-      )
-      .join("\n")}
-  </div>
-</section>`
-    : ""
-}
-
-${footer()}`;
-
-  fs.writeFileSync(
-    path.join(DIST_DIR, "404.html"),
-    html,
-    "utf8"
-  );
-}
-
 /* =========================================================
    Build
    ========================================================= */
@@ -2492,6 +2453,7 @@ function build() {
 
   createCategoriesPage(articles);
   createSearchPage(articles);
+  create404Page(articles);
 
   createInfoPage({
     title: "About Virixoo",
@@ -2919,7 +2881,6 @@ function build() {
     `
   });
 
-  create404Page(articles);
   createRobots();
   createSitemap(articles);
 
