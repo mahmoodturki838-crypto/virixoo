@@ -1,24 +1,147 @@
 [
   {
-    "id": "dog-013-01",
-    "title": "Why Won't My Dog Drink Water? Dehydration Risks and What to Check",
-    "slug": "why-wont-my-dog-drink-water",
-    "description": "A dog drinking less than usual may simply be taking in more moisture from food, but a sudden refusal to drink can become important when illness, pain, nausea, or dehydration is involved.",
-    "summary": "A dog drinking less than usual may simply be taking in more moisture from food, but a sudden refusal to drink can become important when illness, pain, nausea, or dehydration is involved.",
+    "id": "dog-014-01",
+    "title": "Why Does My Dog Have Hiccups? When They Are Normal and When to Check",
+    "slug": "why-does-my-dog-have-hiccups",
+    "description": "Brief hiccups are common in puppies and can occur after excitement, eating, or drinking, but persistent or unusual breathing episodes should not automatically be labeled hiccups.",
+    "summary": "Brief hiccups are common in puppies and can occur after excitement, eating, or drinking, but persistent or unusual breathing episodes should not automatically be labeled hiccups.",
     "category": "Dogs",
     "topic": "Health",
-    "primaryKeyword": "why won't my dog drink water",
+    "primaryKeyword": "why does my dog have hiccups",
     "secondaryKeywords": [
-      "dog not drinking water but eating",
-      "dog refusing water",
-      "how to get dog to drink water safely"
+      "puppy hiccups after eating",
+      "dog hiccups at night",
+      "dog hiccups frequently"
     ],
-    "image": "/images/dogs/why-wont-my-dog-drink-water.webp",
-    "alt": "Dog owner observing a dog for signs related to why won't my dog drink water",
+    "image": "/images/dogs/why-does-my-dog-have-hiccups.webp",
+    "alt": "Dog owner observing a dog for signs related to why does my dog have hiccups",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>A dog drinking less than usual may simply be taking in more moisture from food, but a sudden refusal to drink can become important when illness, pain, nausea, or dehydration is involved.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why won't my dog drink water</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Measure rather than guess when possible. Refresh the bowl, wash it, offer water in the dog's usual quiet location, and note urine output, appetite, vomiting, diarrhea, and energy.</p>\n<h2>What You Can Check Safely at Home</h2><p>Do not force large volumes of water into the mouth because aspiration is possible. A dog that feels nauseated may also refuse water or vomit after drinking.</p>\n<h2>What Not to Do</h2><p>Moist food can contribute to total water intake, so bowl drinking alone does not always show hydration status.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Contact a veterinarian promptly if reduced drinking accompanies vomiting, diarrhea, weakness, dry or tacky gums, very low urine output, pain, fever, or a clear change from normal.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>Brief hiccups are common in puppies and can occur after excitement, eating, or drinking, but persistent or unusual breathing episodes should not automatically be labeled hiccups.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog have hiccups</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Typical hiccups are brief rhythmic contractions and the dog otherwise appears comfortable. Record a video if you are unsure what you are seeing.</p>\n<h2>What You Can Check Safely at Home</h2><p>Slow down very rapid eating, keep play calmer immediately after meals, and allow the dog to settle. Do not use human hiccup remedies that involve startling or forcing food or water.</p>\n<h2>What Not to Do</h2><p>Coughing, gagging, reverse sneezing, and breathing difficulty can be mistaken for hiccups, so the pattern matters more than the label.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Contact a veterinarian if episodes are prolonged, very frequent, new in an adult dog, or associated with cough, vomiting, weakness, exercise intolerance, or difficult breathing.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "faq": [
+      {
+        "question": "Can this be normal sometimes?",
+        "answer": "Sometimes a mild, occasional episode can be normal depending on context. A new, frequent, intense, painful, or difficult-to-interrupt pattern deserves closer attention."
+      },
+      {
+        "question": "What details should I track?",
+        "answer": "Record when it started, frequency, triggers, duration, body language, appetite, drinking, toilet habits, activity, and other physical or behavioral changes. A short video can help when safe."
+      },
+      {
+        "question": "When should I get professional help?",
+        "answer": "Get help when the change is sudden, persistent, worsening, painful, creates a safety risk, or occurs with breathing difficulty, collapse, severe weakness, repeated vomiting, significant swelling, bleeding, or other concerning signs."
+      }
+    ],
+    "sources": [
+      {
+        "title": "Cornell Riney Canine Health Center",
+        "url": "https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/reverse-sneezing"
+      }
+    ]
+  },
+  {
+    "id": "dog-014-02",
+    "title": "Why Is My Dog's Nose Running? Clear Discharge vs. Warning Signs",
+    "slug": "why-is-my-dogs-nose-running",
+    "description": "A small amount of clear nasal moisture can be normal, but persistent discharge, especially from one nostril or with blood, deserves closer attention.",
+    "summary": "A small amount of clear nasal moisture can be normal, but persistent discharge, especially from one nostril or with blood, deserves closer attention.",
+    "category": "Dogs",
+    "topic": "Health",
+    "primaryKeyword": "why is my dog's nose running",
+    "secondaryKeywords": [
+      "dog runny nose clear discharge",
+      "dog nasal discharge one nostril",
+      "dog nose dripping"
+    ],
+    "image": "/images/dogs/why-is-my-dogs-nose-running.webp",
+    "alt": "Dog owner observing a dog for signs related to why is my dog's nose running",
+    "author": "Virixoo Editorial Team",
+    "datePublished": "2026-08-26",
+    "dateModified": "2026-08-26",
+    "content": "<p>A small amount of clear nasal moisture can be normal, but persistent discharge, especially from one nostril or with blood, deserves closer attention.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why is my dog's nose running</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Note the color, thickness, amount, and whether discharge comes from one nostril or both. Also track sneezing, noisy breathing, appetite, and facial rubbing.</p>\n<h2>What You Can Check Safely at Home</h2><p>Irritants and mild upper-airway problems can cause discharge, but foreign material, infection, dental disease, inflammation, and other nasal conditions may produce persistent signs.</p>\n<h2>What Not to Do</h2><p>Keep the nose gently clean with a soft damp cloth and avoid putting human decongestants or essential oils near the nostrils.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Veterinary evaluation is appropriate for bloody, thick, foul-smelling, one-sided, or persistent discharge, facial swelling, reduced airflow, fever, appetite loss, or breathing difficulty.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "faq": [
+      {
+        "question": "Can this be normal sometimes?",
+        "answer": "Sometimes a mild, occasional episode can be normal depending on context. A new, frequent, intense, painful, or difficult-to-interrupt pattern deserves closer attention."
+      },
+      {
+        "question": "What details should I track?",
+        "answer": "Record when it started, frequency, triggers, duration, body language, appetite, drinking, toilet habits, activity, and other physical or behavioral changes. A short video can help when safe."
+      },
+      {
+        "question": "When should I get professional help?",
+        "answer": "Get help when the change is sudden, persistent, worsening, painful, creates a safety risk, or occurs with breathing difficulty, collapse, severe weakness, repeated vomiting, significant swelling, bleeding, or other concerning signs."
+      }
+    ],
+    "sources": [
+      {
+        "title": "Cornell Riney Canine Health Center",
+        "url": "https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/reverse-sneezing"
+      }
+    ]
+  },
+  {
+    "id": "dog-014-03",
+    "title": "Why Does My Dog Keep Shaking After a Bath? Cold, Stress and Ear Clues",
+    "slug": "why-does-my-dog-keep-shaking-after-a-bath",
+    "description": "Shaking after a bath may simply help a dog dry off or warm up, but persistent trembling or repeated head shaking can point to stress, chilling, or ear irritation.",
+    "summary": "Shaking after a bath may simply help a dog dry off or warm up, but persistent trembling or repeated head shaking can point to stress, chilling, or ear irritation.",
+    "category": "Dogs",
+    "topic": "Grooming",
+    "primaryKeyword": "why does my dog shake after a bath",
+    "secondaryKeywords": [
+      "dog trembling after bath",
+      "dog shaking after grooming",
+      "dog head shaking after bath"
+    ],
+    "image": "/images/dogs/why-does-my-dog-keep-shaking-after-a-bath.webp",
+    "alt": "Dog owner observing a dog for signs related to why does my dog shake after a bath",
+    "author": "Virixoo Editorial Team",
+    "datePublished": "2026-08-26",
+    "dateModified": "2026-08-26",
+    "content": "<p>Shaking after a bath may simply help a dog dry off or warm up, but persistent trembling or repeated head shaking can point to stress, chilling, or ear irritation.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog shake after a bath</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Dry the coat thoroughly with towels and keep the dog in a comfortably warm, draft-free room. Use a dryer only at a safe temperature and noise level the dog tolerates.</p>\n<h2>What You Can Check Safely at Home</h2><p>Distinguish whole-body trembling from repeated head shaking. Water or irritation around the ears can make a dog shake the head, while whole-body trembling may reflect cold or stress.</p>\n<h2>What Not to Do</h2><p>Avoid pouring water directly into the ear canals and do not insert cotton swabs deep into the ears.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Contact a veterinarian for persistent head shaking, ear pain, odor or discharge, loss of balance, severe trembling, weakness, or a dog that does not return to normal after warming and calming.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "faq": [
+      {
+        "question": "Can this be normal sometimes?",
+        "answer": "Sometimes a mild, occasional episode can be normal depending on context. A new, frequent, intense, painful, or difficult-to-interrupt pattern deserves closer attention."
+      },
+      {
+        "question": "What details should I track?",
+        "answer": "Record when it started, frequency, triggers, duration, body language, appetite, drinking, toilet habits, activity, and other physical or behavioral changes. A short video can help when safe."
+      },
+      {
+        "question": "When should I get professional help?",
+        "answer": "Get help when the change is sudden, persistent, worsening, painful, creates a safety risk, or occurs with breathing difficulty, collapse, severe weakness, repeated vomiting, significant swelling, bleeding, or other concerning signs."
+      }
+    ],
+    "sources": [
+      {
+        "title": "Cornell Riney Canine Health Center",
+        "url": "https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-topics/reverse-sneezing"
+      }
+    ]
+  },
+  {
+    "id": "dog-014-04",
+    "title": "Why Is My Dog's Nail Bleeding? First Aid for a Torn or Cut Nail",
+    "slug": "why-is-my-dogs-nail-bleeding",
+    "description": "A nail can bleed after the quick is cut during trimming or when a nail cracks or tears, and the amount of pain and structural damage determines the next step.",
+    "summary": "A nail can bleed after the quick is cut during trimming or when a nail cracks or tears, and the amount of pain and structural damage determines the next step.",
+    "category": "Dogs",
+    "topic": "Grooming",
+    "primaryKeyword": "why is my dog's nail bleeding",
+    "secondaryKeywords": [
+      "dog nail bleeding after trimming",
+      "dog torn nail bleeding",
+      "how to stop dog nail bleeding"
+    ],
+    "image": "/images/dogs/why-is-my-dogs-nail-bleeding.webp",
+    "alt": "Dog owner observing a dog for signs related to why is my dog's nail bleeding",
+    "author": "Virixoo Editorial Team",
+    "datePublished": "2026-08-26",
+    "dateModified": "2026-08-26",
+    "content": "<p>A nail can bleed after the quick is cut during trimming or when a nail cracks or tears, and the amount of pain and structural damage determines the next step.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why is my dog's nail bleeding</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Keep the dog still and apply gentle direct pressure with clean gauze. A pet-safe styptic product can help with minor bleeding from an accidentally clipped quick.</p>\n<h2>What You Can Check Safely at Home</h2><p>A torn nail that remains partly attached can be very painful. Do not pull or twist it off at home if the dog is resisting or the tear extends toward the nail base.</p>\n<h2>What Not to Do</h2><p>Protect the paw from licking and dirt while arranging care. Avoid tight home bandages that can impair circulation.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Seek veterinary care when bleeding does not stop with steady pressure, the nail is split near the base, the toe is swollen, the dog is very painful, or limping persists.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
@@ -36,30 +159,30 @@
     "sources": [
       {
         "title": "VCA Animal Hospitals",
-        "url": "https://vcahospitals.com/sunrise-veterinary-group/know-your-pet/vomiting-in-dogs"
+        "url": "https://vcahospitals.com/animal-medical-dental-group/know-your-pet/first-aid-for-limping-dogs"
       }
     ]
   },
   {
-    "id": "dog-013-02",
-    "title": "Why Is My Dog Restless at Night? Pain, Anxiety and Routine Clues",
-    "slug": "why-is-my-dog-restless-at-night",
-    "description": "Nighttime pacing and inability to settle can reflect routine problems, unmet needs, anxiety, discomfort, pain, digestive upset, or age-related changes.",
-    "summary": "Nighttime pacing and inability to settle can reflect routine problems, unmet needs, anxiety, discomfort, pain, digestive upset, or age-related changes.",
+    "id": "dog-014-05",
+    "title": "Why Does My Dog Have a Bump Between His Toes? Interdigital Cysts Explained",
+    "slug": "why-does-my-dog-have-a-bump-between-his-toes",
+    "description": "A red or swollen bump between a dog's toes may be an interdigital furuncle or another lesion, and squeezing it can worsen pain and inflammation.",
+    "summary": "A red or swollen bump between a dog's toes may be an interdigital furuncle or another lesion, and squeezing it can worsen pain and inflammation.",
     "category": "Dogs",
-    "topic": "Behavior",
-    "primaryKeyword": "why is my dog restless at night",
+    "topic": "Health",
+    "primaryKeyword": "why does my dog have a bump between his toes",
     "secondaryKeywords": [
-      "dog pacing at night won't settle",
-      "dog restless at night suddenly",
-      "old dog pacing at night"
+      "dog cyst between toes",
+      "red bump between dog toes",
+      "interdigital cyst dog paw"
     ],
-    "image": "/images/dogs/why-is-my-dog-restless-at-night.webp",
-    "alt": "Dog owner observing a dog for signs related to why is my dog restless at night",
+    "image": "/images/dogs/why-does-my-dog-have-a-bump-between-his-toes.webp",
+    "alt": "Dog owner observing a dog for signs related to why does my dog have a bump between his toes",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>Nighttime pacing and inability to settle can reflect routine problems, unmet needs, anxiety, discomfort, pain, digestive upset, or age-related changes.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why is my dog restless at night</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Start with a simple log: bedtime, last toilet break, exercise, meals, medications, room temperature, noises, and exactly what the dog does when awake.</p>\n<h2>What You Can Check Safely at Home</h2><p>A sudden change deserves more attention than a lifelong light-sleeping pattern. Panting, repeated position changes, vocalizing, stiffness, or reluctance to lie down can suggest discomfort.</p>\n<h2>What Not to Do</h2><p>Keep evenings predictable and calm. Avoid turning every wake-up into exciting play, but do not ignore signs that the dog needs to toilet or is physically uncomfortable.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Veterinary assessment is appropriate for new persistent restlessness, especially in an older dog or when it occurs with pain, panting at rest, confusion, appetite change, vomiting, urinary changes, or weakness.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>A red or swollen bump between a dog's toes may be an interdigital furuncle or another lesion, and squeezing it can worsen pain and inflammation.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog have a bump between his toes</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Check whether the bump is single or multiple and whether there is limping, licking, blood, pus, or a foreign body such as a grass awn.</p>\n<h2>What You Can Check Safely at Home</h2><p>Interdigital furuncles involve deep inflammation around hair follicles and can be painful. Allergy, mechanical factors, infection, mites, and foreign material may contribute.</p>\n<h2>What Not to Do</h2><p>Prevent persistent licking and keep the paw reasonably clean and dry. Avoid popping, lancing, or repeatedly applying random creams.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Veterinary diagnosis is important for recurrent, draining, painful, or multiple lesions because treatment depends on the underlying cause and may require testing.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
@@ -76,31 +199,35 @@
     ],
     "sources": [
       {
-        "title": "American Veterinary Society of Animal Behavior",
-        "url": "https://avsab.org/wp-content/uploads/2024/12/AVSAB-Humane-Dog-Training-Position-Statement-2021.pdf"
+        "title": "Merck Veterinary Manual",
+        "url": "https://www.merckvetmanual.com/dog-owners/skin-disorders-of-dogs/abscesses-between-the-toes-interdigital-furunculosis-in-dogs"
+      },
+      {
+        "title": "VCA Animal Hospitals",
+        "url": "https://vcahospitals.com/know-your-pet/interdigital-cysts-in-dogs"
       }
     ]
   },
   {
-    "id": "dog-013-03",
-    "title": "Why Is My Dog Suddenly Hiding? Stress, Pain and Illness Clues",
-    "slug": "why-is-my-dog-suddenly-hiding",
-    "description": "A dog that suddenly begins hiding may be seeking quiet after stress, but abrupt withdrawal can also accompany pain, illness, fear, or a major environmental change.",
-    "summary": "A dog that suddenly begins hiding may be seeking quiet after stress, but abrupt withdrawal can also accompany pain, illness, fear, or a major environmental change.",
+    "id": "dog-014-06",
+    "title": "Why Is My Dog Licking One Paw? Injury, Foreign Body and Pain Clues",
+    "slug": "why-is-my-dog-licking-one-paw",
+    "description": "Focused licking of one paw is more suggestive of a local problem than occasional grooming of all four feet and deserves a careful check for injury or irritation.",
+    "summary": "Focused licking of one paw is more suggestive of a local problem than occasional grooming of all four feet and deserves a careful check for injury or irritation.",
     "category": "Dogs",
-    "topic": "Behavior",
-    "primaryKeyword": "why is my dog suddenly hiding",
+    "topic": "Health",
+    "primaryKeyword": "why is my dog licking one paw",
     "secondaryKeywords": [
-      "dog hiding suddenly and acting strange",
-      "dog hiding under bed suddenly",
-      "why is my dog isolating himself"
+      "dog licking one paw constantly",
+      "dog chewing one foot",
+      "dog suddenly licking front paw"
     ],
-    "image": "/images/dogs/why-is-my-dog-suddenly-hiding.webp",
-    "alt": "Dog owner observing a dog for signs related to why is my dog suddenly hiding",
+    "image": "/images/dogs/why-is-my-dog-licking-one-paw.webp",
+    "alt": "Dog owner observing a dog for signs related to why is my dog licking one paw",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>A dog that suddenly begins hiding may be seeking quiet after stress, but abrupt withdrawal can also accompany pain, illness, fear, or a major environmental change.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why is my dog suddenly hiding</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Give the dog a safe, quiet space and observe rather than dragging them out. Note appetite, drinking, toilet habits, movement, breathing, and reactions to touch.</p>\n<h2>What You Can Check Safely at Home</h2><p>Look for a recent trigger such as visitors, construction noise, storms, conflict with another pet, travel, or a changed household routine.</p>\n<h2>What Not to Do</h2><p>Behavior change can be an early clue to physical discomfort. A normally social dog that becomes withdrawn without an obvious trigger deserves closer attention.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Seek veterinary advice for sudden hiding that persists or occurs with pain, vomiting, diarrhea, breathing changes, weakness, shaking, appetite loss, urinary difficulty, or other physical signs.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>Focused licking of one paw is more suggestive of a local problem than occasional grooming of all four feet and deserves a careful check for injury or irritation.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why is my dog licking one paw</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Inspect pads, nails, and spaces between the toes for a cut, thorn, grass awn, broken nail, swelling, redness, or a painful bump.</p>\n<h2>What You Can Check Safely at Home</h2><p>One-paw licking can also occur with infection or pain higher in the limb, so a normal-looking paw does not completely rule out a physical problem.</p>\n<h2>What Not to Do</h2><p>Interrupt destructive licking with supervision or a veterinary-approved barrier while the cause is investigated. Avoid harsh sprays on inflamed skin.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Arrange veterinary care if the dog is limping, the paw is swollen, there is discharge or bleeding, a foreign body is embedded, or focused licking continues despite no obvious surface problem.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
@@ -117,113 +244,35 @@
     ],
     "sources": [
       {
-        "title": "American Veterinary Society of Animal Behavior",
-        "url": "https://avsab.org/wp-content/uploads/2024/12/AVSAB-Humane-Dog-Training-Position-Statement-2021.pdf"
+        "title": "American Kennel Club",
+        "url": "https://www.akc.org/expert-advice/health/why-does-my-dog-lick-chew-paws/"
+      },
+      {
+        "title": "VCA Animal Hospitals",
+        "url": "https://vcahospitals.com/animal-medical-dental-group/know-your-pet/first-aid-for-limping-dogs"
       }
     ]
   },
   {
-    "id": "dog-013-04",
-    "title": "Why Does My Dog Bark at Other Dogs on Walks? A Safer Training Plan",
-    "slug": "why-does-my-dog-bark-at-other-dogs-on-walks",
-    "description": "Barking at dogs on walks can be driven by fear, frustration, excitement, or learned expectations, and successful training begins below the dog's reaction threshold.",
-    "summary": "Barking at dogs on walks can be driven by fear, frustration, excitement, or learned expectations, and successful training begins below the dog's reaction threshold.",
+    "id": "dog-014-07",
+    "title": "Why Does My Dog Suddenly Refuse to Jump? Pain and Mobility Clues",
+    "slug": "why-does-my-dog-suddenly-refuse-to-jump",
+    "description": "A dog that suddenly stops jumping onto furniture or into the car may be protecting a painful joint, muscle, paw, back, or other body area.",
+    "summary": "A dog that suddenly stops jumping onto furniture or into the car may be protecting a painful joint, muscle, paw, back, or other body area.",
     "category": "Dogs",
-    "topic": "Training",
-    "primaryKeyword": "why does my dog bark at other dogs on walks",
+    "topic": "Health",
+    "primaryKeyword": "why does my dog suddenly refuse to jump",
     "secondaryKeywords": [
-      "dog barks and lunges at other dogs",
-      "dog reactive to dogs on leash",
-      "stop dog barking at dogs on walks"
+      "dog won't jump on couch suddenly",
+      "dog refuses to jump into car",
+      "dog suddenly can't jump"
     ],
-    "image": "/images/dogs/why-does-my-dog-bark-at-other-dogs-on-walks.webp",
-    "alt": "Dog owner observing a dog for signs related to why does my dog bark at other dogs on walks",
+    "image": "/images/dogs/why-does-my-dog-suddenly-refuse-to-jump.webp",
+    "alt": "Dog owner observing a dog for signs related to why does my dog suddenly refuse to jump",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>Barking at dogs on walks can be driven by fear, frustration, excitement, or learned expectations, and successful training begins below the dog's reaction threshold.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog bark at other dogs on walks</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Create enough distance that your dog can notice another dog without exploding into barking or lunging. Distance is a training tool, not a failure.</p>\n<h2>What You Can Check Safely at Home</h2><p>Reward calm observation, checking in with you, and moving away. Practice with predictable setups before expecting success on crowded sidewalks.</p>\n<h2>What Not to Do</h2><p>Avoid leash jerks, intimidation, or deliberately forcing close greetings. A dog that is already over threshold is not in a good state for learning a new response.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Professional reward-based help is valuable when reactions are intense, worsening, difficult to manage physically, or involve a bite risk. A veterinarian should also assess sudden behavior change.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
-    "faq": [
-      {
-        "question": "Can this be normal sometimes?",
-        "answer": "Sometimes a mild, occasional episode can be normal depending on context. A new, frequent, intense, painful, or difficult-to-interrupt pattern deserves closer attention."
-      },
-      {
-        "question": "What details should I track?",
-        "answer": "Record when it started, frequency, triggers, duration, body language, appetite, drinking, toilet habits, activity, and other physical or behavioral changes. A short video can help when safe."
-      },
-      {
-        "question": "When should I get professional help?",
-        "answer": "Get help when the change is sudden, persistent, worsening, painful, creates a safety risk, or occurs with breathing difficulty, collapse, severe weakness, repeated vomiting, significant swelling, bleeding, or other concerning signs."
-      }
-    ],
-    "sources": [
-      {
-        "title": "American Veterinary Society of Animal Behavior",
-        "url": "https://avsab.org/wp-content/uploads/2024/12/AVSAB-Humane-Dog-Training-Position-Statement-2021.pdf"
-      }
-    ]
-  },
-  {
-    "id": "dog-013-05",
-    "title": "Why Does My Dog Growl at Me? What the Warning Is Telling You",
-    "slug": "why-does-my-dog-growl-at-me",
-    "description": "Growling is communication that can signal fear, discomfort, guarding, pain, or a need for distance; punishing the warning can make a situation less predictable.",
-    "summary": "Growling is communication that can signal fear, discomfort, guarding, pain, or a need for distance; punishing the warning can make a situation less predictable.",
-    "category": "Dogs",
-    "topic": "Behavior",
-    "primaryKeyword": "why does my dog growl at me",
-    "secondaryKeywords": [
-      "dog growls at owner suddenly",
-      "dog growling when touched",
-      "why is my dog growling at me"
-    ],
-    "image": "/images/dogs/why-does-my-dog-growl-at-me.webp",
-    "alt": "Dog owner observing a dog for signs related to why does my dog growl at me",
-    "author": "Virixoo Editorial Team",
-    "datePublished": "2026-08-26",
-    "dateModified": "2026-08-26",
-    "content": "<p>Growling is communication that can signal fear, discomfort, guarding, pain, or a need for distance; punishing the warning can make a situation less predictable.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog growl at me</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Stop the immediate pressure and identify what happened just before the growl: touching a painful area, approaching food, moving the dog, hugging, grooming, or taking an object.</p>\n<h2>What You Can Check Safely at Home</h2><p>Do not test the dog by repeating the trigger to see whether the growl happens again. Prevent access to high-risk situations while you investigate the cause.</p>\n<h2>What Not to Do</h2><p>Reward-based behavior work focuses on changing the underlying emotional response and teaching safer alternatives rather than suppressing warning signals.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>A veterinarian should evaluate sudden new growling, especially around handling or movement, because pain can change behavior. Seek qualified behavior help when there is snapping, biting, escalating guarding, or household safety risk.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
-    "faq": [
-      {
-        "question": "Can this be normal sometimes?",
-        "answer": "Sometimes a mild, occasional episode can be normal depending on context. A new, frequent, intense, painful, or difficult-to-interrupt pattern deserves closer attention."
-      },
-      {
-        "question": "What details should I track?",
-        "answer": "Record when it started, frequency, triggers, duration, body language, appetite, drinking, toilet habits, activity, and other physical or behavioral changes. A short video can help when safe."
-      },
-      {
-        "question": "When should I get professional help?",
-        "answer": "Get help when the change is sudden, persistent, worsening, painful, creates a safety risk, or occurs with breathing difficulty, collapse, severe weakness, repeated vomiting, significant swelling, bleeding, or other concerning signs."
-      }
-    ],
-    "sources": [
-      {
-        "title": "American Veterinary Society of Animal Behavior",
-        "url": "https://avsab.org/wp-content/uploads/2024/12/AVSAB-Humane-Dog-Training-Position-Statement-2021.pdf"
-      }
-    ]
-  },
-  {
-    "id": "dog-013-06",
-    "title": "Why Is My Dog Afraid of Stairs? Confidence, Pain and Safe Training",
-    "slug": "why-is-my-dog-afraid-of-stairs",
-    "description": "Fear of stairs can come from limited experience, a previous slip, poor traction, visual difficulty, or pain, so forcing a dog up or down can make the problem worse.",
-    "summary": "Fear of stairs can come from limited experience, a previous slip, poor traction, visual difficulty, or pain, so forcing a dog up or down can make the problem worse.",
-    "category": "Dogs",
-    "topic": "Training",
-    "primaryKeyword": "why is my dog afraid of stairs",
-    "secondaryKeywords": [
-      "dog won't go up stairs",
-      "dog suddenly afraid of stairs",
-      "teach dog to use stairs"
-    ],
-    "image": "/images/dogs/why-is-my-dog-afraid-of-stairs.webp",
-    "alt": "Dog owner observing a dog for signs related to why is my dog afraid of stairs",
-    "author": "Virixoo Editorial Team",
-    "datePublished": "2026-08-26",
-    "dateModified": "2026-08-26",
-    "content": "<p>Fear of stairs can come from limited experience, a previous slip, poor traction, visual difficulty, or pain, so forcing a dog up or down can make the problem worse.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why is my dog afraid of stairs</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>First check the surface. Slippery steps, open-backed stairs, steep angles, or poor lighting can make stairs genuinely difficult.</p>\n<h2>What You Can Check Safely at Home</h2><p>Train in tiny pieces: approach the first step, reward calm investigation, and let the dog retreat. Use high-value rewards and stable footing rather than pulling on the leash.</p>\n<h2>What Not to Do</h2><p>A dog that used stairs comfortably and suddenly refuses them may be experiencing orthopedic, neurologic, vision, or pain-related difficulty.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Stop training and arrange veterinary assessment if refusal is sudden, the dog slips, limps, cries out, hesitates to jump, appears weak, or has trouble rising.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>A dog that suddenly stops jumping onto furniture or into the car may be protecting a painful joint, muscle, paw, back, or other body area.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog suddenly refuse to jump</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Do not repeatedly ask the dog to jump as a test. Use a ramp or controlled assistance if it can be done safely and restrict strenuous activity until the cause is clearer.</p>\n<h2>What You Can Check Safely at Home</h2><p>Watch the dog rise, walk, turn, use stairs, and lie down. Subtle stiffness or a shortened stride may be easier to see during transitions than during straight walking.</p>\n<h2>What Not to Do</h2><p>Check the paws and nails for obvious injuries, but remember that back, hip, knee, shoulder, and other problems may not produce visible swelling.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Veterinary assessment is appropriate for a sudden mobility change, persistent reluctance, pain, limping, weakness, dragging a limb, or difficulty standing.</p><h2>Details worth recording</h2>\n<p>Write down when the problem started, how often it happens, whether it is getting better or worse, and any changes in appetite, thirst, urination, stool, sleep, activity, medications, grooming products, diet, or environment. Photos or a short video can be useful when the sign is intermittent.</p>\n<h2>Why the whole dog matters</h2>\n<p>Many symptoms overlap across different conditions. One sign alone cannot diagnose a dog. Age, medical history, duration, severity, pain, hydration, breathing, appetite, and energy all change how urgently a problem should be evaluated.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
@@ -246,25 +295,25 @@
     ]
   },
   {
-    "id": "dog-013-07",
-    "title": "Why Does My Dog Freeze on Walks? Fear, Pain and What to Do",
-    "slug": "why-does-my-dog-freeze-on-walks",
-    "description": "A dog that suddenly stops and refuses to move may be afraid, overwhelmed, physically uncomfortable, or trying to process something in the environment.",
-    "summary": "A dog that suddenly stops and refuses to move may be afraid, overwhelmed, physically uncomfortable, or trying to process something in the environment.",
+    "id": "dog-014-08",
+    "title": "Why Does My Dog Yawn So Much? Tiredness, Stress and Medical Clues",
+    "slug": "why-does-my-dog-yawn-so-much",
+    "description": "Yawning can reflect sleepiness, but dogs may also yawn during stress, anticipation, or social situations, so context matters more than the behavior alone.",
+    "summary": "Yawning can reflect sleepiness, but dogs may also yawn during stress, anticipation, or social situations, so context matters more than the behavior alone.",
     "category": "Dogs",
     "topic": "Behavior",
-    "primaryKeyword": "why does my dog freeze on walks",
+    "primaryKeyword": "why does my dog yawn so much",
     "secondaryKeywords": [
-      "dog stops walking and won't move",
-      "dog freezes on leash",
-      "dog suddenly refuses to walk"
+      "dog yawning repeatedly",
+      "dog yawning when not tired",
+      "dog yawning and licking lips"
     ],
-    "image": "/images/dogs/why-does-my-dog-freeze-on-walks.webp",
-    "alt": "Dog owner observing a dog for signs related to why does my dog freeze on walks",
+    "image": "/images/dogs/why-does-my-dog-yawn-so-much.webp",
+    "alt": "Dog owner observing a dog for signs related to why does my dog yawn so much",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>A dog that suddenly stops and refuses to move may be afraid, overwhelmed, physically uncomfortable, or trying to process something in the environment.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog freeze on walks</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Look at the dog's body language and surroundings. A tucked posture, scanning, trembling, or refusal of food can indicate fear, while limping, stiffness, or repeated stopping may suggest discomfort.</p>\n<h2>What You Can Check Safely at Home</h2><p>Do not drag the dog forward. Create distance from the trigger, choose an easier route, or calmly return home if necessary.</p>\n<h2>What Not to Do</h2><p>For confidence-related freezing, work at quieter times and reward voluntary movement. Increase difficulty gradually rather than flooding the dog with busy environments.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>A veterinarian should assess sudden refusal to walk, pain, weakness, limping, breathing difficulty, heat stress signs, or a major unexplained change in exercise tolerance.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>Yawning can reflect sleepiness, but dogs may also yawn during stress, anticipation, or social situations, so context matters more than the behavior alone.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog yawn so much</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Notice when yawning happens: before sleep, during training, at the veterinarian, around unfamiliar people, or together with pacing and lip licking.</p>\n<h2>What You Can Check Safely at Home</h2><p>A stress-related yawn is best treated as information. Reduce pressure, add distance, and make the situation easier rather than correcting the dog.</p>\n<h2>What Not to Do</h2><p>Repeated yawning paired with lip licking, drooling, swallowing, or appetite changes may overlap with nausea or discomfort and deserves attention to physical signs.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Discuss persistent unexplained yawning with a veterinarian when it appears with lethargy, pain, digestive signs, breathing changes, or a broader sudden behavior change.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
@@ -281,50 +330,9 @@
     ],
     "sources": [
       {
-        "title": "American Veterinary Society of Animal Behavior",
-        "url": "https://avsab.org/wp-content/uploads/2024/12/AVSAB-Humane-Dog-Training-Position-Statement-2021.pdf"
+        "title": "Merck Veterinary Manual",
+        "url": "https://www.merckvetmanual.com/nervous-system/motion-sickness/motion-sickness-in-animals"
       },
-      {
-        "title": "Cornell Riney Canine Health Center",
-        "url": "https://www.vet.cornell.edu/departments-centers-and-institutes/riney-canine-health-center/canine-health-information/what-to-expect-when-taking-your-limping-dog-to-the-veterinarian"
-      }
-    ]
-  },
-  {
-    "id": "dog-013-08",
-    "title": "How to Stop a Dog From Rushing the Front Door: A Safety-First Plan",
-    "slug": "how-to-stop-a-dog-from-rushing-the-front-door",
-    "description": "Door rushing is a safety problem that improves when management prevents escapes and the dog learns a reinforced station behavior away from the doorway.",
-    "summary": "Door rushing is a safety problem that improves when management prevents escapes and the dog learns a reinforced station behavior away from the doorway.",
-    "category": "Dogs",
-    "topic": "Training",
-    "primaryKeyword": "how to stop a dog from rushing the front door",
-    "secondaryKeywords": [
-      "dog runs out front door",
-      "teach dog not to bolt out door",
-      "dog door dashing training"
-    ],
-    "image": "/images/dogs/how-to-stop-a-dog-from-rushing-the-front-door.webp",
-    "alt": "Dog owner observing a dog for signs related to how to stop a dog from rushing the front door",
-    "author": "Virixoo Editorial Team",
-    "datePublished": "2026-08-26",
-    "dateModified": "2026-08-26",
-    "content": "<p>Door rushing is a safety problem that improves when management prevents escapes and the dog learns a reinforced station behavior away from the doorway.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>how to stop a dog from rushing the front door</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Use a physical backup such as a gate, closed interior door, leash, or exercise pen while training. Management prevents a single mistake from becoming an escape.</p>\n<h2>What You Can Check Safely at Home</h2><p>Teach a mat or station several feet from the door before adding door movement. Reward the dog for staying there while you touch the handle, crack the door, and gradually create realistic setups.</p>\n<h2>What Not to Do</h2><p>If the dog leaves the station, simply make the exercise easier. Avoid turning the doorway into a confrontation or relying on shouting.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Practice with household members so the rule is consistent. For dogs with a history of escaping, maintain a management layer even after training improves.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
-    "faq": [
-      {
-        "question": "Can this be normal sometimes?",
-        "answer": "Sometimes a mild, occasional episode can be normal depending on context. A new, frequent, intense, painful, or difficult-to-interrupt pattern deserves closer attention."
-      },
-      {
-        "question": "What details should I track?",
-        "answer": "Record when it started, frequency, triggers, duration, body language, appetite, drinking, toilet habits, activity, and other physical or behavioral changes. A short video can help when safe."
-      },
-      {
-        "question": "When should I get professional help?",
-        "answer": "Get help when the change is sudden, persistent, worsening, painful, creates a safety risk, or occurs with breathing difficulty, collapse, severe weakness, repeated vomiting, significant swelling, bleeding, or other concerning signs."
-      }
-    ],
-    "sources": [
       {
         "title": "American Veterinary Society of Animal Behavior",
         "url": "https://avsab.org/wp-content/uploads/2024/12/AVSAB-Humane-Dog-Training-Position-Statement-2021.pdf"
@@ -332,25 +340,25 @@
     ]
   },
   {
-    "id": "dog-013-09",
-    "title": "How to Teach a Dog to Settle on a Mat: A Calm Behavior Skill",
-    "slug": "how-to-teach-a-dog-to-settle-on-a-mat",
-    "description": "Mat training gives a dog a clear, portable place to relax during meals, visitors, travel, and everyday household activity.",
-    "summary": "Mat training gives a dog a clear, portable place to relax during meals, visitors, travel, and everyday household activity.",
+    "id": "dog-014-09",
+    "title": "Why Does My Dog Shake Off When Not Wet? Stress Reset and Body Language",
+    "slug": "why-does-my-dog-shake-off-when-not-wet",
+    "description": "A full-body shake when a dog is dry can occur after tension, handling, play, or a stressful interaction and may function as part of a transition back toward a calmer state.",
+    "summary": "A full-body shake when a dog is dry can occur after tension, handling, play, or a stressful interaction and may function as part of a transition back toward a calmer state.",
     "category": "Dogs",
-    "topic": "Training",
-    "primaryKeyword": "how to teach a dog to settle on a mat",
+    "topic": "Behavior",
+    "primaryKeyword": "why does my dog shake off when not wet",
     "secondaryKeywords": [
-      "dog place training mat",
-      "teach dog to relax on mat",
-      "dog settle command training"
+      "dog shakes body when dry",
+      "dog shake off behavior meaning",
+      "dog shakes after being petted"
     ],
-    "image": "/images/dogs/how-to-teach-a-dog-to-settle-on-a-mat.webp",
-    "alt": "Dog owner observing a dog for signs related to how to teach a dog to settle on a mat",
+    "image": "/images/dogs/why-does-my-dog-shake-off-when-not-wet.webp",
+    "alt": "Dog owner observing a dog for signs related to why does my dog shake off when not wet",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>Mat training gives a dog a clear, portable place to relax during meals, visitors, travel, and everyday household activity.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>how to teach a dog to settle on a mat</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Start in a quiet room. Reward any voluntary interaction with the mat, then reinforce four paws on it, sitting, and eventually lying down.</p>\n<h2>What You Can Check Safely at Home</h2><p>Build duration before distraction. Feed several small rewards calmly between the dog's paws so the mat predicts quiet staying rather than high excitement.</p>\n<h2>What Not to Do</h2><p>Add a release cue so the dog learns when the exercise ends. Gradually practice while you move around, sit down, open a door, or have a familiar person enter.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>If the dog repeatedly gets up, reduce duration or distraction. Mat work should create clarity and relaxation, not physical restraint.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>A full-body shake when a dog is dry can occur after tension, handling, play, or a stressful interaction and may function as part of a transition back toward a calmer state.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>why does my dog shake off when not wet</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Look at what happened immediately before the shake. Grooming, a greeting, restraint, rough play, or an uncomfortable social interaction can all provide useful context.</p>\n<h2>What You Can Check Safely at Home</h2><p>One shake-off in an otherwise relaxed dog is different from persistent trembling, repeated head shaking, or shaking accompanied by pain or weakness.</p>\n<h2>What Not to Do</h2><p>Use the behavior as a cue to review whether the interaction was too intense. Give the dog space and watch for other stress signals rather than forcing more contact.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>Veterinary evaluation is warranted when shaking is persistent, involuntary, associated with pain, loss of balance, weakness, fever, toxin exposure, or other physical abnormalities.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
@@ -373,25 +381,25 @@
     ]
   },
   {
-    "id": "dog-013-10",
-    "title": "How to Stop a Dog From Stealing Food From Counters",
-    "slug": "how-to-stop-a-dog-from-stealing-food-from-counters",
-    "description": "Counter surfing persists because occasional success is highly rewarding, so prevention plus reinforcement of an incompatible behavior is more effective than punishment after the fact.",
-    "summary": "Counter surfing persists because occasional success is highly rewarding, so prevention plus reinforcement of an incompatible behavior is more effective than punishment after the fact.",
+    "id": "dog-014-10",
+    "title": "How to Teach a Dog to Drop It Without Chasing or Fighting",
+    "slug": "how-to-teach-a-dog-to-drop-it",
+    "description": "A reliable drop-it cue improves safety around toys and found objects and is best taught as a voluntary trade rather than a contest over possession.",
+    "summary": "A reliable drop-it cue improves safety around toys and found objects and is best taught as a voluntary trade rather than a contest over possession.",
     "category": "Dogs",
     "topic": "Training",
-    "primaryKeyword": "how to stop a dog from stealing food from counters",
+    "primaryKeyword": "how to teach a dog to drop it",
     "secondaryKeywords": [
-      "dog counter surfing training",
-      "dog steals food from kitchen counter",
-      "keep dog off counters"
+      "teach dog drop it command",
+      "dog won't drop toy",
+      "how to get dog to release object"
     ],
-    "image": "/images/dogs/how-to-stop-a-dog-from-stealing-food-from-counters.webp",
-    "alt": "Dog owner observing a dog for signs related to how to stop a dog from stealing food from counters",
+    "image": "/images/dogs/how-to-teach-a-dog-to-drop-it.webp",
+    "alt": "Dog owner observing a dog for signs related to how to teach a dog to drop it",
     "author": "Virixoo Editorial Team",
     "datePublished": "2026-08-26",
     "dateModified": "2026-08-26",
-    "content": "<p>Counter surfing persists because occasional success is highly rewarding, so prevention plus reinforcement of an incompatible behavior is more effective than punishment after the fact.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>how to stop a dog from stealing food from counters</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Remove food from reachable edges and use gates or supervision during meal preparation. Every successful theft strengthens the habit.</p>\n<h2>What You Can Check Safely at Home</h2><p>Teach a station behavior such as settling on a mat outside the cooking area and reinforce it generously while food is being handled.</p>\n<h2>What Not to Do</h2><p>Avoid leaving tempting food as a test. Training progresses faster when the dog rehearses the correct behavior far more often than the unwanted one.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>If scavenging becomes suddenly intense together with unusual hunger, weight change, thirst, or other physical signs, discuss the change with a veterinarian.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
+    "content": "<p>A reliable drop-it cue improves safety around toys and found objects and is best taught as a voluntary trade rather than a contest over possession.</p>\n<h2>Quick answer</h2>\n<p>If you are searching for <strong>how to teach a dog to drop it</strong>, focus first on what changed, what happens immediately before the sign or behavior, and whether your dog is otherwise acting normally. A single mild episode can have a very different meaning from a sudden, repeated, painful, or escalating pattern.</p><h2>Start With the Pattern, Not a Guess</h2><p>Begin with a low-value toy. Present a valuable treat near the dog's nose, mark the moment the mouth opens, give the treat, and then often return the toy.</p>\n<h2>What You Can Check Safely at Home</h2><p>Add the verbal cue only after the dog is predictably releasing. Returning safe items teaches the dog that giving something up does not always end the fun.</p>\n<h2>What Not to Do</h2><p>Do not chase a dog carrying an object because the chase itself can become rewarding. Avoid prying the mouth open unless there is an immediate emergency and you can do so safely.</p>\n<h2>When Veterinary or Professional Help Matters</h2><p>If the dog stiffens, growls, snaps, or guards objects, prioritize safety and seek qualified reward-based behavior help rather than practicing confrontational exchanges.</p><h2>Build a practical plan</h2>\n<p>Change one variable at a time so you can tell what helps. Prevent repeated failure, make the situation easier, and reward the behavior you want to see. Short successful repetitions are more useful than long sessions that push a dog past the point where it can respond calmly.</p>\n<h2>Track progress for several days</h2>\n<p>Write down the time, location, trigger, body language, intensity, duration, and what happened afterward. This record can reveal patterns and gives a veterinarian or qualified behavior professional better information if outside help becomes necessary.</p><h2>Bottom line</h2>\n<p>Use calm observation, avoid risky home remedies or punishment, and escalate to professional care when the problem is sudden, severe, persistent, painful, or accompanied by other concerning signs.</p>",
     "faq": [
       {
         "question": "Can this be normal sometimes?",
