@@ -702,14 +702,19 @@ ${safeJsonLd(schema)}
 
 function logoMarkup() {
   if (publicImageExists(BRAND_LOGO_PATH)) {
+    const logoSrc = netlifyImageUrl(BRAND_LOGO_PATH, 320, 82);
+    const logoSrcset = responsiveImageSrcset(BRAND_LOGO_PATH, [160, 240, 320, 520], 82);
+
     return `
       <img
         class="brand-logo-image brand-logo-final"
-        src="${escapeHtml(BRAND_LOGO_PATH)}"
+        src="${escapeHtml(logoSrc)}"
+        ${logoSrcset ? `srcset="${escapeAttribute(logoSrcset)}" sizes="(max-width: 700px) 150px, 190px"` : ""}
         alt="Virixoo - Happy Pets, Happy Life"
         width="520"
         height="170"
         decoding="async"
+        fetchpriority="high"
       >`;
   }
 
@@ -761,6 +766,9 @@ function header(
   content="${escapeHtml(robots)}"
 >
 <meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
 
 <title>${escapeHtml(truncateText(title, 70))}</title>
 
@@ -962,6 +970,9 @@ function footer() {
 function articleCard(article, options = {}) {
   const url = articlePath(article);
   const image = displayImagePath(article.image || "");
+  const cardImageSrc = netlifyImageUrl(image, 720, 70);
+  const cardImageSrcset = responsiveImageSrcset(image, [360, 480, 720, 960], 70);
+  const cardImageSizes = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw";
   const alt =
     article.alt ||
     article.imageAlt ||
@@ -987,12 +998,13 @@ function articleCard(article, options = {}) {
   >
     <img
       class="article-card-image"
-      src="${escapeHtml(image)}"
+      src="${escapeHtml(cardImageSrc)}"
+      ${cardImageSrcset ? `srcset="${escapeAttribute(cardImageSrcset)}" sizes="${escapeAttribute(cardImageSizes)}"` : ""}
       alt="${escapeHtml(alt)}"
       loading="lazy"
       decoding="async"
       width="800"
-      height="500"
+      height="450"
     >
   </a>
 
@@ -1063,6 +1075,14 @@ function createHomePage(articles) {
     ? CAT_CARE_IMAGE_PATH
     : pickExistingArticleImage(cats);
 
+  const heroPetsSrc = netlifyImageUrl(heroPetsImage, 960, 74);
+  const heroPetsSrcset = responsiveImageSrcset(heroPetsImage, [480, 720, 960, 1280], 74);
+  const careImageSizes = "(max-width: 800px) 100vw, 50vw";
+  const dogCareSrc = netlifyImageUrl(dogCareImage, 720, 72);
+  const dogCareSrcset = responsiveImageSrcset(dogCareImage, [360, 520, 720, 960], 72);
+  const catCareSrc = netlifyImageUrl(catCareImage, 720, 72);
+  const catCareSrcset = responsiveImageSrcset(catCareImage, [360, 520, 720, 960], 72);
+
   const html = `
 ${header(
   "Virixoo | Practical Dog & Cat Care Guides",
@@ -1106,7 +1126,8 @@ ${header(
   <div class="hero-pets hero-pets-feature" aria-label="Happy dog and cat">
     <img
       class="hero-pets-feature-image"
-      src="${escapeHtml(heroPetsImage)}"
+      src="${escapeHtml(heroPetsSrc)}"
+      ${heroPetsSrcset ? `srcset="${escapeAttribute(heroPetsSrcset)}" sizes="(max-width: 900px) 100vw, 50vw"` : ""}
       alt="Happy golden retriever and tabby cat representing Virixoo pet care guides"
       width="1536"
       height="1024"
@@ -1140,7 +1161,8 @@ ${header(
 <section class="care-switchboard" aria-label="Browse care guides by pet">
   <a class="care-panel dog-care-panel" href="/dogs/">
     <img
-      src="${escapeHtml(dogCareImage)}"
+      src="${escapeHtml(dogCareSrc)}"
+      ${dogCareSrcset ? `srcset="${escapeAttribute(dogCareSrcset)}" sizes="${escapeAttribute(careImageSizes)}"` : ""}
       alt="Dog care guides"
       width="520"
       height="300"
@@ -1167,7 +1189,8 @@ ${header(
       </div>
     </div>
     <img
-      src="${escapeHtml(catCareImage)}"
+      src="${escapeHtml(catCareSrc)}"
+      ${catCareSrcset ? `srcset="${escapeAttribute(catCareSrcset)}" sizes="${escapeAttribute(careImageSizes)}"` : ""}
       alt="Cat care guides"
       width="520"
       height="300"
@@ -1334,9 +1357,12 @@ function createArticlePage(article, allArticles) {
   if (faqSchema) schemas.push(faqSchema);
 
   const image = displayImagePath(article.image || "");
-  // Article hero images use the original file so the browser preserves
-  // the image's natural aspect ratio and never crops text at the edges.
-  const articleHeroSrc = image;
+  // Serve responsive, width-limited hero images through Netlify Image CDN.
+  // The 16:9 frame reserves layout space up front; object-fit: contain preserves
+  // the full editorial image without cropping text at the edges.
+  const articleHeroSrc = netlifyImageUrl(image, 1280, 78);
+  const articleHeroSrcset = responsiveImageSrcset(image, [640, 960, 1280, 1600], 78);
+  const articleHeroSizes = "(max-width: 900px) 100vw, 1200px";
   const pinterestUrl = pinterestShareUrl(article);
   const related = relatedArticles(article, allArticles, 6);
   const topic = articleTopic(article);
@@ -1352,7 +1378,9 @@ ${header(
     active: category === "Dogs" ? "dogs" : "cats",
     schemas,
     preloadImage: {
-      href: articleHeroSrc
+      href: articleHeroSrc,
+      srcset: articleHeroSrcset,
+      sizes: articleHeroSizes
     }
   }
 )}
@@ -1391,19 +1419,27 @@ ${header(
     }
   </header>
 
-  <img
-    class="article-hero"
-    src="${escapeHtml(articleHeroSrc)}"
-    alt="${escapeHtml(
-      article.alt ||
-      article.imageAlt ||
-      article.title
-    )}"
-    loading="eager"
-    fetchpriority="high"
-    decoding="async"
-    style="width:100%;height:auto;max-width:100%;aspect-ratio:auto;object-fit:contain;"
+  <div
+    class="article-hero-frame"
+    style="width:100%;max-width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden;"
   >
+    <img
+      class="article-hero"
+      src="${escapeHtml(articleHeroSrc)}"
+      ${articleHeroSrcset ? `srcset="${escapeAttribute(articleHeroSrcset)}" sizes="${escapeAttribute(articleHeroSizes)}"` : ""}
+      alt="${escapeHtml(
+        article.alt ||
+        article.imageAlt ||
+        article.title
+      )}"
+      width="1200"
+      height="675"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      style="width:100%;height:100%;max-width:100%;object-fit:contain;"
+    >
+  </div>
 
   <div class="article-share">
     <a
@@ -1712,7 +1748,7 @@ function createSearchPage(articles) {
     category: normalizeCategory(article.category),
     topic: articleTopic(article),
     url: articlePath(article),
-    image: displayImagePath(article.image || ""),
+    image: netlifyImageUrl(displayImagePath(article.image || ""), 480, 70),
     alt: article.alt || article.imageAlt || article.title || "Virixoo pet care guide",
     readingTime: readingTime(article.content),
     search: buildSearchText(article)
