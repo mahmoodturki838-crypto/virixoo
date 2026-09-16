@@ -755,8 +755,6 @@ function header(
 <head>
 <meta charset="utf-8">
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7655069833953238"
-     crossorigin="anonymous"></script>
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1"
@@ -767,8 +765,6 @@ function header(
 >
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
-<link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
 
 <title>${escapeHtml(truncateText(title, 70))}</title>
 
