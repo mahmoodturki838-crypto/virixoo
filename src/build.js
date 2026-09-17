@@ -14,6 +14,11 @@ const EDITORIAL_TEAM_NAME = "Virixoo Editorial Team";
 const DEFAULT_IMAGE_PATH = "/images/virixoo-default.svg";
 const DEFAULT_IMAGE_URL = `${SITE_URL}${DEFAULT_IMAGE_PATH}`;
 
+// Archive rendering limits: keep HTML/DOM intentionally small.
+const HOME_FEATURED_COUNT = 6;
+const HOME_DISCOVERY_COUNT = 9;
+const CATEGORY_PAGE_SIZE = 30;
+
 const BRAND_LOGO_PATH = "/images/virixoo-logo.webp";
 const HERO_PETS_PATH = "/images/virixoo-hero-dog-cat.webp";
 const DOG_CARE_IMAGE_PATH = "/images/home/dog-care.webp";
@@ -1058,6 +1063,9 @@ function createHomePage(articles) {
 
   const featuredSlugs = new Set(seedFeatured.map((a) => a.slug));
   const discoveryPool = ordered.filter((a) => !featuredSlugs.has(a.slug));
+  // Render only the cards that are actually visible. Do not put the full
+  // article library into the homepage DOM and hide it with JavaScript.
+  const discoveryGuides = discoveryPool.slice(0, HOME_DISCOVERY_COUNT);
 
   const heroPetsImage = publicImageExists(HERO_PETS_PATH)
     ? HERO_PETS_PATH
@@ -1211,7 +1219,7 @@ ${header(
   <div
     class="articles-grid featured-grid home-featured-grid"
     id="featured-grid"
-    data-display-count="6"
+    data-display-count="${HOME_FEATURED_COUNT}"
   >
     ${seedFeatured
       .map((article) =>
@@ -1230,20 +1238,20 @@ ${header(
     <div>
       <span class="eyebrow">Explore more</span>
       <h2 id="discover-guides">More Helpful Pet Guides</h2>
-      <p>A fresh selection from Virixoo each time you visit.</p>
+      <p>More practical guides from the Virixoo library.</p>
     </div>
 
-    <button class="shuffle-button" id="shuffle-guides" type="button">
-      Show different guides
-    </button>
+    <a class="shuffle-button" href="/categories/">
+      View all guides
+    </a>
   </div>
 
   <div
     class="articles-grid"
     id="dynamic-article-grid"
-    data-display-count="9"
+    data-display-count="${HOME_DISCOVERY_COUNT}"
   >
-    ${discoveryPool
+    ${discoveryGuides
       .map((article) =>
         articleCard(article, {
           headingTag: "h3",
@@ -1266,45 +1274,6 @@ ${header(
   <a href="/about/">About our approach <span>&rarr;</span></a>
 </section>
 
-<script>
-(function () {
-  const grid = document.getElementById("dynamic-article-grid");
-  if (!grid) return;
-
-  const cards = Array.from(grid.querySelectorAll("[data-article-card]"));
-  const count = Math.min(
-    Number(grid.dataset.displayCount || 9),
-    cards.length
-  );
-
-  function randomScore() {
-    if (window.crypto && window.crypto.getRandomValues) {
-      const array = new Uint32Array(1);
-      window.crypto.getRandomValues(array);
-      return array[0] / 4294967295;
-    }
-    return Math.random();
-  }
-
-  function shuffleAndShow() {
-    const shuffled = cards
-      .map((card) => ({ card, sort: randomScore() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map((item) => item.card);
-
-    shuffled.forEach((card, index) => {
-      card.hidden = index >= count;
-      grid.appendChild(card);
-    });
-  }
-
-  shuffleAndShow();
-
-  const button = document.getElementById("shuffle-guides");
-  if (button) button.addEventListener("click", shuffleAndShow);
-})();
-</script>
-
 ${footer()}`;
 
   fs.writeFileSync(
@@ -1312,6 +1281,8 @@ ${footer()}`;
     html,
     "utf8"
   );
+
+  return seedFeatured.length + discoveryGuides.length;
 }
 
 /* =========================================================
@@ -1518,35 +1489,104 @@ function createCategoryPage(articles, category, slug) {
       ? "Browse practical dog care guides covering health, behavior, training, nutrition, grooming and everyday questions."
       : "Browse practical cat care guides covering health, behavior, nutrition, grooming, litter box issues and everyday questions.";
 
-  const html = `
+  const totalPages = Math.max(1, Math.ceil(filtered.length / CATEGORY_PAGE_SIZE));
+
+  function archivePath(pageNumber) {
+    return pageNumber <= 1
+      ? `/${slug}/`
+      : `/${slug}/page/${pageNumber}/`;
+  }
+
+  function paginationMarkup(currentPage) {
+    if (totalPages <= 1) return "";
+
+    const links = [];
+
+    if (currentPage > 1) {
+      links.push(
+        `<a class="archive-page-link archive-page-prev" href="${archivePath(currentPage - 1)}" rel="prev">&larr; Previous</a>`
+      );
+    }
+
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
+      if (pageNumber === currentPage) {
+        links.push(
+          `<span class="archive-page-link is-current" aria-current="page">${pageNumber}</span>`
+        );
+      } else {
+        links.push(
+          `<a class="archive-page-link" href="${archivePath(pageNumber)}">${pageNumber}</a>`
+        );
+      }
+    }
+
+    if (currentPage < totalPages) {
+      links.push(
+        `<a class="archive-page-link archive-page-next" href="${archivePath(currentPage + 1)}" rel="next">Next &rarr;</a>`
+      );
+    }
+
+    return `
+      <nav class="archive-pagination" aria-label="${escapeHtml(normalizedCategory)} article pages">
+        ${links.join("\n        ")}
+      </nav>`;
+  }
+
+  for (let currentPage = 1; currentPage <= totalPages; currentPage += 1) {
+    const startIndex = (currentPage - 1) * CATEGORY_PAGE_SIZE;
+    const pageArticles = filtered.slice(startIndex, startIndex + CATEGORY_PAGE_SIZE);
+    const canonicalPath = archivePath(currentPage);
+    const canonical = `${SITE_URL}${canonicalPath}`;
+    const pageSuffix = currentPage > 1 ? ` - Page ${currentPage}` : "";
+    const pageTitle = `${normalizedCategory} Care Guides${pageSuffix} | Virixoo`;
+    const pageDescription = currentPage > 1
+      ? `${description} Page ${currentPage} of ${totalPages}.`
+      : description;
+
+    const breadcrumbItems = [
+      { name: "Home", url: `${SITE_URL}/` },
+      {
+        name: `${normalizedCategory} Care Guides`,
+        url: `${SITE_URL}/${slug}/`
+      }
+    ];
+
+    if (currentPage > 1) {
+      breadcrumbItems.push({
+        name: `Page ${currentPage}`,
+        url: canonical
+      });
+    }
+
+    const html = `
 ${header(
-  `${normalizedCategory} Care Guides | Virixoo`,
-  description,
-  `${SITE_URL}/${slug}/`,
+  pageTitle,
+  pageDescription,
+  canonical,
   {
     active: slug === "dogs" ? "dogs" : "cats",
-    schemas: [
-      createBreadcrumbSchema([
-        { name: "Home", url: `${SITE_URL}/` },
-        {
-          name: `${normalizedCategory} Care Guides`,
-          url: `${SITE_URL}/${slug}/`
-        }
-      ])
-    ]
+    schemas: [createBreadcrumbSchema(breadcrumbItems)]
   }
 )}
+
+<style>
+.archive-pagination{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;justify-content:center;margin:2rem auto 0;padding:0 1rem}
+.archive-page-link{display:inline-flex;align-items:center;justify-content:center;min-width:2.65rem;min-height:2.65rem;padding:.55rem .8rem;border:1px solid #dfe3ef;border-radius:999px;text-decoration:none;font-weight:700;background:#fff}
+.archive-page-link.is-current{background:#111a44;color:#fff;border-color:#111a44}
+.archive-page-prev,.archive-page-next{padding-left:1rem;padding-right:1rem}
+@media(max-width:600px){.archive-pagination{gap:.4rem}.archive-page-link{min-width:2.4rem;min-height:2.4rem;padding:.45rem .65rem}}
+</style>
 
 <nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
   <a href="/">Home</a>
   <span>&rsaquo;</span>
-  <span>${escapeHtml(normalizedCategory)} Care Guides</span>
+  ${currentPage > 1 ? `<a href="/${slug}/">${escapeHtml(normalizedCategory)} Care Guides</a><span>&rsaquo;</span><span>Page ${currentPage}</span>` : `<span>${escapeHtml(normalizedCategory)} Care Guides</span>`}
 </nav>
 
 <section class="category-header category-${slug}-header">
   <div>
     <span class="hero-badge">&#128062; ${escapeHtml(normalizedCategory)} Care</span>
-    <h1>${escapeHtml(normalizedCategory)} Care Guides</h1>
+    <h1>${escapeHtml(normalizedCategory)} Care Guides${currentPage > 1 ? ` - Page ${currentPage}` : ""}</h1>
     <p>${escapeHtml(description)}</p>
   </div>
 
@@ -1561,22 +1601,23 @@ ${header(
     <div>
       <span class="eyebrow">Browse library</span>
       <h2>All ${escapeHtml(normalizedCategory)} Articles</h2>
+      <p>Page ${currentPage} of ${totalPages} &middot; ${pageArticles.length} guides on this page</p>
     </div>
 
     <div class="article-filter">
-      <label for="${slug}-filter">Filter articles</label>
+      <label for="${slug}-filter-page-${currentPage}">Filter this page</label>
       <input
-        id="${slug}-filter"
+        id="${slug}-filter-page-${currentPage}"
         class="article-filter-input"
         type="search"
-        placeholder="Search ${escapeHtml(normalizedCategory.toLowerCase())} guides"
+        placeholder="Filter these ${pageArticles.length} guides"
         autocomplete="off"
       >
     </div>
   </div>
 
-  <div class="articles-grid filterable-grid" id="${slug}-grid">
-    ${filtered
+  <div class="articles-grid filterable-grid" id="${slug}-grid-page-${currentPage}">
+    ${pageArticles
       .map((article) =>
         articleCard(article, {
           headingTag: "h3",
@@ -1586,9 +1627,11 @@ ${header(
       .join("\n")}
   </div>
 
-  <p class="no-results-message" id="${slug}-no-results" hidden>
-    No matching guides found.
+  <p class="no-results-message" id="${slug}-no-results-page-${currentPage}" hidden>
+    No matching guides found on this page. Use <a href="/search/">site search</a> to search the full Virixoo library.
   </p>
+
+  ${paginationMarkup(currentPage)}
 </section>
 
 <section class="editorial-note category-editorial-note">
@@ -1602,9 +1645,9 @@ ${header(
 
 <script>
 (function () {
-  const input = document.getElementById("${slug}-filter");
-  const grid = document.getElementById("${slug}-grid");
-  const empty = document.getElementById("${slug}-no-results");
+  const input = document.getElementById("${slug}-filter-page-${currentPage}");
+  const grid = document.getElementById("${slug}-grid-page-${currentPage}");
+  const empty = document.getElementById("${slug}-no-results-page-${currentPage}");
 
   if (!input || !grid) return;
 
@@ -1628,14 +1671,18 @@ ${header(
 
 ${footer()}`;
 
-  const dir = path.join(DIST_DIR, slug);
-  ensureDir(dir);
+    const dir = currentPage === 1
+      ? path.join(DIST_DIR, slug)
+      : path.join(DIST_DIR, slug, "page", String(currentPage));
 
-  fs.writeFileSync(
-    path.join(dir, "index.html"),
-    html,
-    "utf8"
-  );
+    ensureDir(dir);
+    fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
+  }
+
+  return {
+    totalArticles: filtered.length,
+    totalPages
+  };
 }
 
 /* =========================================================
@@ -2370,6 +2417,20 @@ function createSitemap(articles) {
     { loc: `${SITE_URL}/contact/` }
   ];
 
+  // Include static archive pagination pages so crawlers can discover every
+  // paginated category page directly. Page 1 is already included above.
+  for (const category of ["Cats", "Dogs"]) {
+    const slug = category.toLowerCase();
+    const count = articles.filter(
+      (article) => normalizeCategory(article.category) === category
+    ).length;
+    const totalPages = Math.max(1, Math.ceil(count / CATEGORY_PAGE_SIZE));
+
+    for (let pageNumber = 2; pageNumber <= totalPages; pageNumber += 1) {
+      urls.push({ loc: `${SITE_URL}/${slug}/page/${pageNumber}/` });
+    }
+  }
+
   for (const article of articles) {
     urls.push({
       loc: articleUrl(article),
@@ -2548,19 +2609,19 @@ function build() {
     }
   }
 
-  createHomePage(articles);
+  const homeCardCount = createHomePage(articles);
 
   for (const article of articles) {
     createArticlePage(article, articles);
   }
 
-  createCategoryPage(
+  const catsArchive = createCategoryPage(
     articles,
     "Cats",
     "cats"
   );
 
-  createCategoryPage(
+  const dogsArchive = createCategoryPage(
     articles,
     "Dogs",
     "dogs"
@@ -3001,6 +3062,9 @@ function build() {
 
   console.log("Virixoo build completed successfully.");
   console.log(`Generated ${articles.length} article pages.`);
+  console.log(`Homepage article cards rendered: ${homeCardCount}`);
+  console.log(`Cats archive: ${catsArchive.totalArticles} articles across ${catsArchive.totalPages} page(s).`);
+  console.log(`Dogs archive: ${dogsArchive.totalArticles} articles across ${dogsArchive.totalPages} page(s).`);
 }
 
 try {
