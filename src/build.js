@@ -758,6 +758,14 @@ function header(
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ5SS8NDPT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PQ5SS8NDPT');
+</script>
 <meta charset="utf-8">
 
 <meta
