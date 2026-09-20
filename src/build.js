@@ -24,6 +24,11 @@ const HERO_PETS_PATH = "/images/virixoo-hero-dog-cat.webp";
 const DOG_CARE_IMAGE_PATH = "/images/home/dog-care.webp";
 const CAT_CARE_IMAGE_PATH = "/images/home/cat-care.webp";
 
+// MyBid advertising configuration.
+// Keep the publisher script loaded once globally; individual placements use the banner ID.
+const MYBID_PUBLISHER_ID = "465186";
+const MYBID_BANNER_ID = "2028517";
+
 /* =========================================================
    Basic Helpers
    ========================================================= */
@@ -702,6 +707,21 @@ ${safeJsonLd(schema)}
 }
 
 /* =========================================================
+   Advertising
+   ========================================================= */
+
+function renderMyBidTopBanner(placement = "top") {
+  return `
+  <aside
+    class="mybid-ad-slot mybid-ad-${escapeAttribute(placement)}"
+    aria-label="Advertisement"
+    style="width:100%;min-height:90px;display:flex;align-items:center;justify-content:center;margin:18px auto;overflow:hidden;"
+  >
+    <div data-banner-id="${MYBID_BANNER_ID}"></div>
+  </aside>`;
+}
+
+/* =========================================================
    Shared Layout
    ========================================================= */
 
@@ -766,6 +786,10 @@ function header(
   gtag('js', new Date());
   gtag('config', 'G-PQ5SS8NDPT');
 </script>
+
+<!-- MyBid publisher script: load once per page -->
+<script async src="https://js.mbidadm.com/static/scripts.js" data-admpid="${MYBID_PUBLISHER_ID}"></script>
+
 <meta charset="utf-8">
 
 <meta
@@ -1106,6 +1130,8 @@ ${header(
   }
 )}
 
+${renderMyBidTopBanner("home-top")}
+
 <section class="home-hero hero-reference-layout">
   <div class="hero-decor hero-decor-left" aria-hidden="true">&#128062;</div>
   <div class="hero-decor hero-decor-right" aria-hidden="true">&#128062;</div>
@@ -1393,6 +1419,8 @@ ${header(
         : ""
     }
   </header>
+
+  ${renderMyBidTopBanner("article-top")}
 
   <div
     class="article-hero-frame"
