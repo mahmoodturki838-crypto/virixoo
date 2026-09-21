@@ -768,6 +768,9 @@ function header(
 </script>
 <meta charset="utf-8">
 
+<!-- Mondiad site verification -->
+<meta name="mnd-ver" content="lxmsptma4kgu4u29smdlfw" />
+
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1"
