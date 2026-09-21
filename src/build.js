@@ -1115,6 +1115,10 @@ ${header(
   }
 )}
 
+<div class="mondiad-banner-slot" style="width:100%;min-height:90px;display:flex;align-items:center;justify-content:center;margin:18px auto;overflow:hidden;">
+  <div data-mndbanid="ff1f399f-5766-4eca-8d31-95475c430bdb"></div>
+</div>
+
 <section class="home-hero hero-reference-layout">
   <div class="hero-decor hero-decor-left" aria-hidden="true">&#128062;</div>
   <div class="hero-decor hero-decor-right" aria-hidden="true">&#128062;</div>
@@ -1368,6 +1372,10 @@ ${header(
     }
   }
 )}
+
+<div class="mondiad-banner-slot" style="width:100%;min-height:90px;display:flex;align-items:center;justify-content:center;margin:18px auto;overflow:hidden;">
+  <div data-mndbanid="ff1f399f-5766-4eca-8d31-95475c430bdb"></div>
+</div>
 
 <article class="single-article">
 
