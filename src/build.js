@@ -814,8 +814,6 @@ ${imagePreloadMarkup}
 <!-- Mondiad banner ad -->
 <script async src="https://ss.mrmnd.com/banner.js"></script>
 
-<!-- Mondiad interstitial ad -->
-<script async src="https://ss.mrmnd.com/interstitial.js" data-mndintid="bd540c1f-802a-480c-a08a-8d25d8cec3e1"></script>
 </head>
 
 <body>
