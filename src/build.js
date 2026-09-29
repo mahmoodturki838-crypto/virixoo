@@ -1343,7 +1343,7 @@ function createArticlePage(article, allArticles) {
   const articleHeroSrcset = responsiveImageSrcset(image, [640, 960, 1280, 1600], 78);
   const articleHeroSizes = "(max-width: 900px) 100vw, 1200px";
   const pinterestUrl = pinterestShareUrl(article);
-  const related = relatedArticles(article, allArticles, 8); // Increased internal links per article
+  const related = relatedArticles(article, allArticles, 8);
   const topic = articleTopic(article);
 
   const html = `
@@ -1596,7 +1596,7 @@ ${header(
 <nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
   <a href="/">Home</a>
   <span>&rsaquo;</span>
-  ${currentPage > 1 ? `<a href="/${slug}/">${escapeHtml(normalizedCategory)} Care Guides</a><span>&rsaquo;</span><span>Page ${currentPage}</span>` : `<span>${escapeHtml(normalizedCategory)} Care Guides</span>`}
+  ${currentPage > 1 ? `<a href="/${slug}/">${escapeHtml(normalizedCategory)} Care Guides</a><span>&rsaquo;</span><span>Page${currentPage}</span>` : `<span>${escapeHtml(normalizedCategory)} Care Guides</span>`}
 </nav>
 
 <section class="category-header category-${slug}-header">
@@ -3078,8 +3078,8 @@ function build() {
   console.log("Virixoo build completed successfully.");
   console.log(`Generated ${articles.length} article pages.`);
   console.log(`Homepage article cards rendered: ${homeCardCount}`);
-  console.log(`Cats archive: ${catsArchive.totalArticles} articles across ${catsArchive.totalPages} page(s).`;
-  console.log(`Dogs archive: ${dogsArchive.totalArticles} articles across ${dogsArchive.totalPages} page(s).`;
+  console.log(`Cats archive: ${catsArchive.totalArticles} articles across ${catsArchive.totalPages} page(s).`);
+  console.log(`Dogs archive: ${dogsArchive.totalArticles} articles across ${dogsArchive.totalPages} page(s).`);
 }
 
 try {
