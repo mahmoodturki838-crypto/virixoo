@@ -974,7 +974,6 @@ function footer() {
 })();
 </script>
 
-<script src="/js/visitor-counter.js" defer></script>
 
 </body>
 </html>`;
@@ -2905,12 +2904,11 @@ function build() {
       </section>
 
       <section>
-        <h2>Visitor Counter and Analytics</h2>
+        <h2>Analytics</h2>
         <p>
-          Virixoo may use site analytics or a visitor counter to understand general
-          traffic patterns and improve the website. Depending on the technology in
-          use, these tools may rely on cookies, local storage, server logs or
-          similar identifiers.
+          Virixoo may use site analytics to understand general traffic patterns and
+          improve the website. Depending on the technology in use, analytics tools
+          may rely on cookies, local storage, server logs or similar identifiers.
         </p>
       </section>
 
