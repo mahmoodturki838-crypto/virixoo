@@ -19,6 +19,14 @@ const HOME_FEATURED_COUNT = 6;
 const HOME_DISCOVERY_COUNT = 12; // Increased to surface more pages to crawlers
 const CATEGORY_PAGE_SIZE = 30;
 
+// Virixoo Growth Engine V1
+const RELATED_ARTICLE_LIMIT = 6;
+const RELATED_MIN_SCORE = 0.30;
+const MIN_TOPIC_HUB_ARTICLES = 4;
+const TOPIC_PAGE_SIZE = 24;
+const RECENTLY_UPDATED_COUNT = 36;
+const CANNIBALIZATION_WARNING_SCORE = 0.56;
+
 const BRAND_LOGO_PATH = "/images/virixoo-logo.webp";
 const HERO_PETS_PATH = "/images/virixoo-hero-dog-cat.webp";
 const DOG_CARE_IMAGE_PATH = "/images/home/dog-care.webp";
@@ -114,67 +122,151 @@ function prettyDate(value = "") {
   }).format(date);
 }
 
-function topicTokens(article) {
-  const raw = [
-    article.title,
-    article.primaryKeyword,
-    ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
+function articleFreshnessTimestamp(article) {
+  const candidates = [article.dateModified, article.datePublished];
 
+  for (const value of candidates) {
+    const raw = String(value || "").trim();
+    if (!raw) continue;
+    const timestamp = new Date(raw).getTime();
+    if (!Number.isNaN(timestamp)) return timestamp;
+  }
+
+  const numericId = Number(article.id);
+  return Number.isFinite(numericId) ? numericId : 0;
+}
+
+function compareArticlesByFreshness(a, b) {
+  const dateDelta = articleFreshnessTimestamp(b) - articleFreshnessTimestamp(a);
+  if (dateDelta !== 0) return dateDelta;
+  return String(b.slug || "").localeCompare(String(a.slug || ""));
+}
+
+function sortArticlesByFreshness(articles = []) {
+  return [...articles].sort(compareArticlesByFreshness);
+}
+
+function normalizedSitemapDate(value = "") {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
+function latestArticleDate(articles = []) {
+  let latest = 0;
+  let latestValue = "";
+
+  for (const article of articles) {
+    const raw = String(article.dateModified || article.datePublished || "").trim();
+    if (!raw) continue;
+    const timestamp = new Date(raw).getTime();
+    if (!Number.isNaN(timestamp) && timestamp > latest) {
+      latest = timestamp;
+      latestValue = raw;
+    }
+  }
+
+  return normalizedSitemapDate(latestValue);
+}
+
+function topicHubPath(category, topic, pageNumber = 1) {
+  const base = `/${slugify(normalizeCategory(category))}/${slugify(normalizeTopic(topic))}/`;
+  return pageNumber <= 1 ? base : `${base}page/${pageNumber}/`;
+}
+
+function topicHubArticleCount(article, allArticles = []) {
+  const category = normalizeCategory(article.category);
+  const topic = articleTopic(article);
+
+  return allArticles.filter(
+    (candidate) =>
+      normalizeCategory(candidate.category) === category &&
+      articleTopic(candidate) === topic
+  ).length;
+}
+
+function hasTopicHub(article, allArticles = []) {
+  return topicHubArticleCount(article, allArticles) >= MIN_TOPIC_HUB_ARTICLES;
+}
+
+function keywordTokens(value = "") {
   const stop = new Set([
     "the","and","for","with","your","you","how","why","what","when","from",
     "this","that","dog","dogs","cat","cats","my","is","are","a","an","to",
-    "of","in","on","at","so","much","common","guide","safe","signs","causes"
+    "of","in","on","at","so","much","common","guide","guides","safe","signs",
+    "causes","cause","help","tips","explained","understanding","pet","pets","does",
+    "can","should","its","it","more","about","after","before","into","without"
   ]);
 
   return new Set(
-    raw
+    String(value || "")
+      .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, " ")
       .split(/\s+/)
+      .map((word) => word.replace(/^-+|-+$/g, ""))
       .filter((word) => word.length > 2 && !stop.has(word))
   );
 }
 
-// Enhanced related articles algorithm to maximize internal linking coverage for all 440+ pages
-function relatedArticles(article, allArticles, limit = 8) {
-  const baseTokens = topicTokens(article);
+function topicTokens(article) {
+  return keywordTokens([
+    article.title,
+    article.primaryKeyword,
+    ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : []),
+    article.summary
+  ]
+    .filter(Boolean)
+    .join(" "));
+}
+
+function tokenSimilarity(setA, setB) {
+  if (!setA.size || !setB.size) return 0;
+  let intersection = 0;
+  for (const token of setA) {
+    if (setB.has(token)) intersection += 1;
+  }
+  const union = new Set([...setA, ...setB]).size;
+  return union ? intersection / union : 0;
+}
+
+function articleIntentSimilarity(articleA, articleB) {
+  const allA = topicTokens(articleA);
+  const allB = topicTokens(articleB);
+  const primaryA = keywordTokens(articleA.primaryKeyword || articleA.title || "");
+  const primaryB = keywordTokens(articleB.primaryKeyword || articleB.title || "");
+  const titleA = keywordTokens(articleA.title || "");
+  const titleB = keywordTokens(articleB.title || "");
+
+  const overall = tokenSimilarity(allA, allB);
+  const primary = tokenSimilarity(primaryA, primaryB);
+  const title = tokenSimilarity(titleA, titleB);
+  const sameTopic = articleTopic(articleA) === articleTopic(articleB) ? 1 : 0;
+
+  return Math.min(1, overall * 0.42 + primary * 0.33 + title * 0.17 + sameTopic * 0.08);
+}
+
+// Intent-aware related articles: same pet category, strong topical overlap, no random filler.
+function relatedArticles(article, allArticles, limit = RELATED_ARTICLE_LIMIT) {
+  const category = normalizeCategory(article.category);
 
   return allArticles
-    .filter((candidate) => candidate.slug !== article.slug)
-    .map((candidate) => {
-      const candidateTokens = topicTokens(candidate);
-      let overlap = 0;
-
-      for (const token of baseTokens) {
-        if (candidateTokens.has(token)) overlap += 1;
-      }
-
-      const sameCategory =
-        String(candidate.category).toLowerCase() ===
-        String(article.category).toLowerCase();
-
-      const sameTopic =
-        articleTopic(candidate) === articleTopic(article);
-
-      const samePrimaryKeyword =
-        String(candidate.primaryKeyword || "").trim().toLowerCase() &&
-        String(candidate.primaryKeyword || "").trim().toLowerCase() ===
-          String(article.primaryKeyword || "").trim().toLowerCase();
-
-      return {
-        candidate,
-        score:
-          overlap * 10 +
-          (sameTopic ? 8 : 0) +
-          (sameCategory ? 6 : 0) +
-          (samePrimaryKeyword ? 15 : 0) +
-          (Number(candidate.id) || 0) / 100000
-      };
+    .filter(
+      (candidate) =>
+        candidate.slug !== article.slug &&
+        normalizeCategory(candidate.category) === category
+    )
+    .map((candidate) => ({
+      candidate,
+      score: articleIntentSimilarity(article, candidate),
+      sameTopic: articleTopic(candidate) === articleTopic(article)
+    }))
+    .filter((item) => item.score >= RELATED_MIN_SCORE || (item.sameTopic && item.score >= 0.22))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return compareArticlesByFreshness(a.candidate, b.candidate);
     })
-    .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((item) => item.candidate);
 }
@@ -863,6 +955,7 @@ ${imagePreloadMarkup}
           <a href="/dogs/">Dog Care</a>
           <a href="/cats/">Cat Care</a>
           <a href="/categories/">All Categories</a>
+          <a href="/recently-updated/">Recently Updated</a>
         </div>
       </div>
 
@@ -929,6 +1022,7 @@ function footer() {
       <a href="/about/">About</a>
       <a href="/editorial-policy/">Editorial Policy</a>
       <a href="/editorial-team/">Editorial Team</a>
+      <a href="/recently-updated/">Recently Updated</a>
       <a href="/privacy-policy/">Privacy</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -1058,9 +1152,7 @@ function articleCard(article, options = {}) {
    ========================================================= */
 
 function createHomePage(articles) {
-  const ordered = [...articles].sort(
-    (a, b) => Number(b.id || 0) - Number(a.id || 0)
-  );
+  const ordered = sortArticlesByFreshness(articles);
 
   const dogs = ordered.filter((a) => normalizeCategory(a.category) === "Dogs");
   const cats = ordered.filter((a) => normalizeCategory(a.category) === "Cats");
@@ -1255,8 +1347,8 @@ ${header(
       <p>More practical guides from the Virixoo library.</p>
     </div>
 
-    <a class="shuffle-button" href="/categories/">
-      View all guides
+    <a class="shuffle-button" href="/recently-updated/">
+      Recently updated guides
     </a>
   </div>
 
@@ -1316,34 +1408,35 @@ function createArticlePage(article, allArticles) {
   const category = normalizeCategory(article.category);
   const categorySlug = slugify(category);
 
-  const schemas = [
-    createArticleSchema(article),
-    createBreadcrumbSchema([
-      {
-        name: "Home",
-        url: `${SITE_URL}/`
-      },
-      {
-        name: category,
-        url: `${SITE_URL}/${categorySlug}/`
-      },
-      {
-        name: article.title,
-        url: canonical
-      }
-    ])
+  const topic = articleTopic(article);
+  const topicHubAvailable = hasTopicHub(article, allArticles);
+  const breadcrumbItems = [
+    { name: "Home", url: `${SITE_URL}/` },
+    { name: category, url: `${SITE_URL}/${categorySlug}/` }
   ];
 
-  const faqSchema = createFaqSchema(article);
-  if (faqSchema) schemas.push(faqSchema);
+  if (topicHubAvailable) {
+    breadcrumbItems.push({
+      name: `${category} ${topic}`,
+      url: `${SITE_URL}${topicHubPath(category, topic)}`
+    });
+  }
+
+  breadcrumbItems.push({ name: article.title, url: canonical });
+
+  const schemas = [
+    createArticleSchema(article),
+    createBreadcrumbSchema(breadcrumbItems)
+  ];
+
+  // FAQ content remains useful to readers, but FAQPage schema is intentionally not emitted.
 
   const image = displayImagePath(article.image || "");
   const articleHeroSrc = netlifyImageUrl(image, 1280, 78);
   const articleHeroSrcset = responsiveImageSrcset(image, [640, 960, 1280, 1600], 78);
   const articleHeroSizes = "(max-width: 900px) 100vw, 1200px";
   const pinterestUrl = pinterestShareUrl(article);
-  const related = relatedArticles(article, allArticles, 8);
-  const topic = articleTopic(article);
+  const related = relatedArticles(article, allArticles, RELATED_ARTICLE_LIMIT);
 
   const html = `
 ${header(
@@ -1374,6 +1467,7 @@ ${header(
     <span>&rsaquo;</span>
     <a href="/${categorySlug}/">${escapeHtml(category)}</a>
     <span>&rsaquo;</span>
+    ${topicHubAvailable ? `<a href="${topicHubPath(category, topic)}">${escapeHtml(topic)}</a><span>&rsaquo;</span>` : ""}
     <span>${escapeHtml(article.title)}</span>
   </nav>
 
@@ -1384,21 +1478,15 @@ ${header(
       </a>
       <span>By <a href="/editorial-team/">${escapeHtml(article.author || EDITORIAL_TEAM_NAME)}</a></span>
       <span>${readingTime(article.content)} min read</span>
-      <span class="article-topic">${escapeHtml(topic)}</span>
+      ${topicHubAvailable
+        ? `<a class="article-topic" href="${topicHubPath(category, topic)}">${escapeHtml(topic)}</a>`
+        : `<span class="article-topic">${escapeHtml(topic)}</span>`}
       ${renderArticleDates(article)}
     </div>
 
     <h1>${escapeHtml(article.title)}</h1>
 
-    ${
-      article.summary && !hasQuickAnswerInContent(article)
-        ? `
-        <aside class="quick-answer" aria-label="Quick answer">
-          <strong>Quick answer</strong>
-          <p class="article-summary">${escapeHtml(article.summary)}</p>
-        </aside>`
-        : ""
-    }
+    ${article.summary ? `<p class="article-summary">${escapeHtml(article.summary)}</p>` : ""}
   </header>
 
   <div
@@ -1490,14 +1578,23 @@ ${footer()}
 function createCategoryPage(articles, category, slug) {
   const normalizedCategory = normalizeCategory(category);
 
-  const filtered = articles
-    .filter(
+  const filtered = sortArticlesByFreshness(
+    articles.filter(
       (article) =>
         normalizeCategory(article.category) === normalizedCategory
     )
-    .sort(
-      (a, b) => Number(b.id || 0) - Number(a.id || 0)
-    );
+  );
+
+  const topicGroups = Array.from(
+    filtered.reduce((map, article) => {
+      const topic = articleTopic(article);
+      if (!map.has(topic)) map.set(topic, []);
+      map.get(topic).push(article);
+      return map;
+    }, new Map()).entries()
+  )
+    .filter(([, group]) => group.length >= MIN_TOPIC_HUB_ARTICLES)
+    .sort((a, b) => b[1].length - a[1].length);
 
   const description =
     normalizedCategory === "Dogs"
@@ -1611,6 +1708,27 @@ ${header(
   </div>
 </section>
 
+${currentPage === 1 && topicGroups.length ? `
+<section class="articles-section topic-hub-directory" aria-labelledby="${slug}-topic-hubs">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Browse by topic</span>
+      <h2 id="${slug}-topic-hubs">${escapeHtml(normalizedCategory)} Topic Hubs</h2>
+      <p>Use focused topic pages to move between closely related guides.</p>
+    </div>
+  </div>
+  <div class="category-overview-grid">
+    ${topicGroups.map(([topic, group]) => `
+      <a class="category-overview-card" href="${topicHubPath(normalizedCategory, topic)}">
+        <div>
+          <h3>${escapeHtml(topic)}</h3>
+          <p>${group.length} guides</p>
+          <span>Browse ${escapeHtml(topic)} &rarr;</span>
+        </div>
+      </a>`).join("\n")}
+  </div>
+</section>` : ""}
+
 <section class="articles-section">
   <div class="section-heading">
     <div>
@@ -1701,6 +1819,202 @@ ${footer()}`;
 }
 
 /* =========================================================
+   Topic Hubs / Recently Updated
+   ========================================================= */
+
+function buildTopicGroups(articles) {
+  const map = new Map();
+
+  for (const article of articles) {
+    const category = normalizeCategory(article.category);
+    const topic = articleTopic(article);
+    const key = `${category}::${topic}`;
+    if (!map.has(key)) map.set(key, { category, topic, articles: [] });
+    map.get(key).articles.push(article);
+  }
+
+  return Array.from(map.values())
+    .filter((group) => group.articles.length >= MIN_TOPIC_HUB_ARTICLES)
+    .map((group) => ({
+      ...group,
+      articles: sortArticlesByFreshness(group.articles)
+    }))
+    .sort((a, b) => {
+      const categoryOrder = a.category.localeCompare(b.category);
+      if (categoryOrder !== 0) return categoryOrder;
+      return b.articles.length - a.articles.length || a.topic.localeCompare(b.topic);
+    });
+}
+
+function topicHubDescription(category, topic, count) {
+  const pet = normalizeCategory(category) === "Cats" ? "cat" : "dog";
+  const topicLower = String(topic || "pet care").toLowerCase();
+  return `Browse ${count} Virixoo ${pet} ${topicLower} guides, organized to help you move between closely related questions without repeating the same search.`;
+}
+
+function createTopicHubPages(articles) {
+  const groups = buildTopicGroups(articles);
+  const generatedPages = [];
+
+  for (const group of groups) {
+    const categorySlug = slugify(group.category);
+    const topicSlug = slugify(group.topic);
+    const totalPages = Math.max(1, Math.ceil(group.articles.length / TOPIC_PAGE_SIZE));
+    const description = topicHubDescription(group.category, group.topic, group.articles.length);
+
+    function hubPagePath(pageNumber) {
+      return topicHubPath(group.category, group.topic, pageNumber);
+    }
+
+    function paginationMarkup(currentPage) {
+      if (totalPages <= 1) return "";
+      const links = [];
+      if (currentPage > 1) {
+        links.push(`<a class="archive-page-link archive-page-prev" href="${hubPagePath(currentPage - 1)}" rel="prev">&larr; Previous</a>`);
+      }
+      for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
+        links.push(
+          pageNumber === currentPage
+            ? `<span class="archive-page-link is-current" aria-current="page">${pageNumber}</span>`
+            : `<a class="archive-page-link" href="${hubPagePath(pageNumber)}">${pageNumber}</a>`
+        );
+      }
+      if (currentPage < totalPages) {
+        links.push(`<a class="archive-page-link archive-page-next" href="${hubPagePath(currentPage + 1)}" rel="next">Next &rarr;</a>`);
+      }
+      return `<nav class="archive-pagination" aria-label="${escapeHtml(group.category)} ${escapeHtml(group.topic)} pages">${links.join("\n")}</nav>`;
+    }
+
+    for (let currentPage = 1; currentPage <= totalPages; currentPage += 1) {
+      const startIndex = (currentPage - 1) * TOPIC_PAGE_SIZE;
+      const pageArticles = group.articles.slice(startIndex, startIndex + TOPIC_PAGE_SIZE);
+      const canonicalPath = hubPagePath(currentPage);
+      const canonical = `${SITE_URL}${canonicalPath}`;
+      const titleSuffix = currentPage > 1 ? ` - Page ${currentPage}` : "";
+      const pageTitle = `${group.category} ${group.topic} Guides${titleSuffix} | Virixoo`;
+      const pageDescription = currentPage > 1
+        ? `${description} Page ${currentPage} of ${totalPages}.`
+        : description;
+      const breadcrumbs = [
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: group.category, url: `${SITE_URL}/${categorySlug}/` },
+        { name: `${group.category} ${group.topic}`, url: `${SITE_URL}${hubPagePath(1)}` }
+      ];
+      if (currentPage > 1) breadcrumbs.push({ name: `Page ${currentPage}`, url: canonical });
+
+      const html = `
+${header(pageTitle, pageDescription, canonical, {
+  active: categorySlug === "dogs" ? "dogs" : "cats",
+  schemas: [createWebPageSchema(pageTitle, pageDescription, canonical), createBreadcrumbSchema(breadcrumbs)]
+})}
+
+<style>
+.archive-pagination{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;justify-content:center;margin:2rem auto 0;padding:0 1rem}
+.archive-page-link{display:inline-flex;align-items:center;justify-content:center;min-width:2.65rem;min-height:2.65rem;padding:.55rem .8rem;border:1px solid #dfe3ef;border-radius:999px;text-decoration:none;font-weight:700;background:#fff}
+.archive-page-link.is-current{background:#111a44;color:#fff;border-color:#111a44}
+</style>
+
+<nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
+  <a href="/">Home</a><span>&rsaquo;</span>
+  <a href="/${categorySlug}/">${escapeHtml(group.category)}</a><span>&rsaquo;</span>
+  ${currentPage > 1 ? `<a href="${hubPagePath(1)}">${escapeHtml(group.topic)}</a><span>&rsaquo;</span><span>Page ${currentPage}</span>` : `<span>${escapeHtml(group.topic)}</span>`}
+</nav>
+
+<section class="category-header category-${categorySlug}-header">
+  <div>
+    <span class="hero-badge">Focused ${escapeHtml(group.category)} Library</span>
+    <h1>${escapeHtml(group.category)} ${escapeHtml(group.topic)} Guides${titleSuffix}</h1>
+    <p>${escapeHtml(description)}</p>
+  </div>
+  <div class="category-count-card"><strong>${group.articles.length}</strong><span>Related guides</span></div>
+</section>
+
+<section class="articles-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Topic cluster</span>
+      <h2>${escapeHtml(group.topic)} questions and practical next steps</h2>
+      <p>Page ${currentPage} of ${totalPages}. Choose the guide that most closely matches the situation you are trying to understand.</p>
+    </div>
+  </div>
+  <div class="articles-grid">
+    ${pageArticles.map((article) => articleCard(article, { headingTag: "h3", showPinterest: true })).join("\n")}
+  </div>
+  ${paginationMarkup(currentPage)}
+</section>
+
+<section class="editorial-note category-editorial-note">
+  <h2>Why this topic page exists</h2>
+  <p>This hub groups genuinely related ${escapeHtml(group.topic.toLowerCase())} guides so readers can move between connected questions without wading through unrelated pages. Each article should still answer a distinct question rather than repeat another page.</p>
+</section>
+
+${footer()}`;
+
+      const dir = currentPage === 1
+        ? path.join(DIST_DIR, categorySlug, topicSlug)
+        : path.join(DIST_DIR, categorySlug, topicSlug, "page", String(currentPage));
+      ensureDir(dir);
+      fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
+
+      generatedPages.push({
+        category: group.category,
+        topic: group.topic,
+        path: canonicalPath,
+        loc: canonical,
+        pageNumber: currentPage,
+        totalPages,
+        totalArticles: group.articles.length,
+        lastmod: latestArticleDate(group.articles)
+      });
+    }
+  }
+
+  return generatedPages;
+}
+
+function createRecentlyUpdatedPage(articles) {
+  const ordered = sortArticlesByFreshness(articles).slice(0, RECENTLY_UPDATED_COUNT);
+  const canonical = `${SITE_URL}/recently-updated/`;
+  const description = "Browse recently updated and newly published Virixoo dog and cat care guides, ordered by their latest meaningful editorial date.";
+
+  const html = `
+${header("Recently Updated Pet Care Guides | Virixoo", description, canonical, {
+  schemas: [
+    createWebPageSchema("Recently Updated Pet Care Guides", description, canonical),
+    createBreadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}/` },
+      { name: "Recently Updated", url: canonical }
+    ])
+  ]
+})}
+
+<nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
+  <a href="/">Home</a><span>&rsaquo;</span><span>Recently Updated</span>
+</nav>
+
+<section class="category-header categories-overview-header">
+  <div>
+    <span class="hero-badge">Fresh from the Virixoo library</span>
+    <h1>Recently Updated Pet Care Guides</h1>
+    <p>${escapeHtml(description)}</p>
+  </div>
+</section>
+
+<section class="articles-section">
+  <div class="section-heading"><div><span class="eyebrow">Latest editorial activity</span><h2>Updated and newly published guides</h2></div></div>
+  <div class="articles-grid">
+    ${ordered.map((article) => articleCard(article, { headingTag: "h3", showPinterest: true })).join("\n")}
+  </div>
+</section>
+
+${footer()}`;
+
+  const dir = path.join(DIST_DIR, "recently-updated");
+  ensureDir(dir);
+  fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
+}
+
+/* =========================================================
    Categories Page
    ========================================================= */
 
@@ -1770,13 +2084,12 @@ ${header(
   <div class="section-heading">
     <div>
       <span class="eyebrow">Latest guides</span>
-      <h2>Recently Added Pet Care Articles</h2>
+      <h2>Recently Updated Pet Care Articles</h2>
     </div>
   </div>
 
   <div class="articles-grid">
-    ${[...articles]
-      .sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
+    ${sortArticlesByFreshness(articles)
       .slice(0, 9)
       .map((article) =>
         articleCard(article, {
@@ -2316,6 +2629,12 @@ function validateArticleQuality(articles) {
       }
     }
 
+    const publishedTs = new Date(String(article.datePublished || "")).getTime();
+    const modifiedTs = new Date(String(article.dateModified || "")).getTime();
+    if (!Number.isNaN(publishedTs) && !Number.isNaN(modifiedTs) && modifiedTs < publishedTs) {
+      warnings.push(`${source}: dateModified is earlier than datePublished`);
+    }
+
     const content = String(article.content || "");
     const wordCount = stripHtml(content).split(/\s+/).filter(Boolean).length;
     const internalLinks =
@@ -2393,19 +2712,146 @@ function validateInternalLinks(articles) {
    Index / Sitemap / Robots
    ========================================================= */
 
+function extractInternalArticleSlugs(content = "") {
+  const slugs = [];
+  const pattern = /href\s*=\s*["'](?:https?:\/\/(?:www\.)?virixoo\.com)?\/article\/([^"'?#/]+)\/?(?:[?#][^"']*)?["']/gi;
+  let match;
+  while ((match = pattern.exec(String(content || ""))) !== null) {
+    try {
+      slugs.push(decodeURIComponent(match[1]));
+    } catch (error) {
+      // validateInternalLinks reports malformed URLs separately.
+    }
+  }
+  return slugs;
+}
+
+function createGrowthReport(articles, topicHubPages = []) {
+  const bySlug = new Map(articles.map((article) => [article.slug, article]));
+  const manualInbound = new Map(articles.map((article) => [article.slug, 0]));
+  const relatedInbound = new Map(articles.map((article) => [article.slug, 0]));
+
+  for (const article of articles) {
+    for (const slug of extractInternalArticleSlugs(article.content)) {
+      if (manualInbound.has(slug) && slug !== article.slug) {
+        manualInbound.set(slug, manualInbound.get(slug) + 1);
+      }
+    }
+
+    for (const related of relatedArticles(article, articles, RELATED_ARTICLE_LIMIT)) {
+      if (relatedInbound.has(related.slug)) {
+        relatedInbound.set(related.slug, relatedInbound.get(related.slug) + 1);
+      }
+    }
+  }
+
+  const contextualIsolation = articles
+    .map((article) => ({
+      slug: article.slug,
+      title: article.title,
+      category: normalizeCategory(article.category),
+      topic: articleTopic(article),
+      manualInbound: manualInbound.get(article.slug) || 0,
+      relatedInbound: relatedInbound.get(article.slug) || 0,
+      totalContextualInbound: (manualInbound.get(article.slug) || 0) + (relatedInbound.get(article.slug) || 0),
+      topicHub: hasTopicHub(article, articles) ? topicHubPath(article.category, articleTopic(article)) : ""
+    }))
+    .filter((item) => item.totalContextualInbound === 0)
+    .sort((a, b) => a.category.localeCompare(b.category) || a.topic.localeCompare(b.topic));
+
+  const cannibalization = [];
+  for (let i = 0; i < articles.length; i += 1) {
+    for (let j = i + 1; j < articles.length; j += 1) {
+      const a = articles[i];
+      const b = articles[j];
+      if (normalizeCategory(a.category) !== normalizeCategory(b.category)) continue;
+      const score = articleIntentSimilarity(a, b);
+      if (score < CANNIBALIZATION_WARNING_SCORE) continue;
+      cannibalization.push({
+        score: Number(score.toFixed(3)),
+        category: normalizeCategory(a.category),
+        topicA: articleTopic(a),
+        topicB: articleTopic(b),
+        slugA: a.slug,
+        titleA: a.title,
+        slugB: b.slug,
+        titleB: b.title
+      });
+    }
+  }
+  cannibalization.sort((a, b) => b.score - a.score);
+
+  const topicHubs = buildTopicGroups(articles).map((group) => ({
+    category: group.category,
+    topic: group.topic,
+    articles: group.articles.length,
+    path: topicHubPath(group.category, group.topic),
+    pages: topicHubPages.filter((page) => page.category === group.category && page.topic === group.topic).length
+  }));
+
+  const report = {
+    generatedAt: new Date().toISOString(),
+    engine: "Virixoo Growth Engine V1",
+    articleCount: articles.length,
+    topicHubs,
+    contextuallyIsolatedPages: contextualIsolation,
+    possibleIntentOverlap: cannibalization,
+    notes: [
+      "Contextually isolated means no inbound link from article body content or the generated related-article blocks. Category archives and topic hubs may still link to the page.",
+      "Possible intent overlap is a review signal, not an instruction to merge or delete a page. Confirm with Search Console query and impression data before changing URLs."
+    ]
+  };
+
+  fs.writeFileSync(
+    path.join(DIST_DIR, "seo-growth-report.json"),
+    JSON.stringify(report, null, 2),
+    "utf8"
+  );
+
+  const lines = [
+    "VIRIXOO GROWTH ENGINE V1 - BUILD REPORT",
+    `Generated: ${report.generatedAt}`,
+    `Articles: ${report.articleCount}`,
+    `Topic hubs: ${topicHubs.length}`,
+    `Contextually isolated pages: ${contextualIsolation.length}`,
+    `Possible intent-overlap pairs: ${cannibalization.length}`,
+    "",
+    "CONTEXTUALLY ISOLATED PAGES"
+  ];
+  for (const item of contextualIsolation) {
+    lines.push(`- ${item.slug} | ${item.category} / ${item.topic}`);
+  }
+  lines.push("", "POSSIBLE INTENT OVERLAP");
+  for (const item of cannibalization.slice(0, 100)) {
+    lines.push(`- ${item.score} | ${item.slugA} <-> ${item.slugB}`);
+  }
+  lines.push("", ...report.notes.map((note) => `NOTE: ${note}`));
+
+  fs.writeFileSync(
+    path.join(DIST_DIR, "seo-growth-report.txt"),
+    lines.join("\n") + "\n",
+    "utf8"
+  );
+
+  return report;
+}
+
 function createArticleIndex(articles) {
   const index = {
     generatedAt: new Date().toISOString(),
     totalArticles: articles.length,
-    articles: articles.map((article) => ({
+    articles: sortArticlesByFreshness(articles).map((article) => ({
       id: article.id,
       title: article.title,
       slug: article.slug,
       category: article.category,
       topic: articleTopic(article),
+      topicHub: hasTopicHub(article, articles) ? topicHubPath(article.category, articleTopic(article)) : "",
       image: displayImagePath(article.image || ""),
       url: articlePath(article),
       readingTime: readingTime(article.content),
+      datePublished: article.datePublished || "",
+      dateModified: article.dateModified || "",
       source: article.__sourceFile || ""
     }))
   };
@@ -2417,71 +2863,66 @@ function createArticleIndex(articles) {
   );
 }
 
-function createSitemap(articles) {
-  const urls = [
-    { loc: `${SITE_URL}/`, priority: "1.0", changefreq: "daily" },
-    { loc: `${SITE_URL}/cats/`, priority: "0.9", changefreq: "daily" },
-    { loc: `${SITE_URL}/dogs/`, priority: "0.9", changefreq: "daily" },
-    { loc: `${SITE_URL}/categories/`, priority: "0.8", changefreq: "weekly" },
-    { loc: `${SITE_URL}/about/`, priority: "0.5", changefreq: "monthly" },
-    { loc: `${SITE_URL}/editorial-policy/`, priority: "0.5", changefreq: "monthly" },
-    { loc: `${SITE_URL}/editorial-team/`, priority: "0.5", changefreq: "monthly" },
-    { loc: `${SITE_URL}/privacy-policy/`, priority: "0.3", changefreq: "monthly" },
-    { loc: `${SITE_URL}/contact/`, priority: "0.5", changefreq: "monthly" }
+function createSitemap(articles, topicHubPages = []) {
+  const siteLastmod = latestArticleDate(articles);
+  const staticUrls = [
+    { loc: `${SITE_URL}/`, lastmod: siteLastmod },
+    { loc: `${SITE_URL}/cats/`, lastmod: latestArticleDate(articles.filter((a) => normalizeCategory(a.category) === "Cats")) },
+    { loc: `${SITE_URL}/dogs/`, lastmod: latestArticleDate(articles.filter((a) => normalizeCategory(a.category) === "Dogs")) },
+    { loc: `${SITE_URL}/categories/`, lastmod: siteLastmod },
+    { loc: `${SITE_URL}/recently-updated/`, lastmod: siteLastmod },
+    { loc: `${SITE_URL}/about/` },
+    { loc: `${SITE_URL}/editorial-policy/` },
+    { loc: `${SITE_URL}/editorial-team/` },
+    { loc: `${SITE_URL}/privacy-policy/` },
+    { loc: `${SITE_URL}/contact/` }
   ];
+
+  const urls = [...staticUrls];
 
   for (const category of ["Cats", "Dogs"]) {
     const slug = category.toLowerCase();
-    const count = articles.filter(
+    const categoryArticles = articles.filter(
       (article) => normalizeCategory(article.category) === category
-    ).length;
+    );
+    const count = categoryArticles.length;
     const totalPages = Math.max(1, Math.ceil(count / CATEGORY_PAGE_SIZE));
+    const categoryLastmod = latestArticleDate(categoryArticles);
 
     for (let pageNumber = 2; pageNumber <= totalPages; pageNumber += 1) {
-      urls.push({ loc: `${SITE_URL}/${slug}/page/${pageNumber}/`, priority: "0.7", changefreq: "weekly" });
+      urls.push({ loc: `${SITE_URL}/${slug}/page/${pageNumber}/`, lastmod: categoryLastmod });
     }
+  }
+
+  for (const hubPage of topicHubPages) {
+    urls.push({ loc: hubPage.loc, lastmod: hubPage.lastmod || "" });
   }
 
   for (const article of articles) {
     urls.push({
       loc: articleUrl(article),
-      lastmod:
-        article.dateModified ||
-        article.datePublished ||
-        "",
-      priority: "0.8",
-      changefreq: "weekly"
+      lastmod: normalizedSitemapDate(article.dateModified || article.datePublished || "")
     });
   }
 
+  const seen = new Set();
   const body = urls
+    .filter((item) => {
+      if (!item.loc || seen.has(item.loc)) return false;
+      seen.add(item.loc);
+      return true;
+    })
     .map((item) => {
       const lastmod = item.lastmod
-        ? `<lastmod>${escapeHtml(item.lastmod)}</lastmod>`
+        ? `\n  <lastmod>${escapeHtml(item.lastmod)}</lastmod>`
         : "";
-
-      return `
-<url>
-  <loc>${escapeHtml(item.loc)}</loc>
-  ${lastmod}
-  <changefreq>${item.changefreq || "weekly"}</changefreq>
-  <priority>${item.priority || "0.8"}</priority>
-</url>`;
+      return `<url>\n  <loc>${escapeHtml(item.loc)}</loc>${lastmod}\n</url>`;
     })
     .join("\n");
 
-  const xml = `
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${body}
-</urlset>
-`.trim();
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>`;
 
-  fs.writeFileSync(
-    path.join(DIST_DIR, "sitemap.xml"),
-    xml,
-    "utf8"
-  );
+  fs.writeFileSync(path.join(DIST_DIR, "sitemap.xml"), xml, "utf8");
 }
 
 function createRobots() {
@@ -2496,9 +2937,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
 }
 
 function create404Page(articles) {
-  const suggestions = [...articles]
-    .sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
-    .slice(0, 6);
+  const suggestions = sortArticlesByFreshness(articles).slice(0, 6);
 
   const html = `
 ${header(
@@ -2624,6 +3063,8 @@ function build() {
   }
 
   const homeCardCount = createHomePage(articles);
+  const topicHubPages = createTopicHubPages(articles);
+  createRecentlyUpdatedPage(articles);
 
   for (const article of articles) {
     createArticlePage(article, articles);
@@ -2906,9 +3347,9 @@ function build() {
       <section>
         <h2>Analytics</h2>
         <p>
-          Virixoo may use site analytics to understand general traffic patterns and
-          improve the website. Depending on the technology in use, analytics tools
-          may rely on cookies, local storage, server logs or similar identifiers.
+          Virixoo uses site analytics, including Google Analytics where enabled, to
+          understand general traffic patterns and improve the website. Analytics
+          tools may rely on cookies, local storage, server logs or similar identifiers.
         </p>
       </section>
 
@@ -2924,10 +3365,11 @@ function build() {
       <section>
         <h2>Advertising</h2>
         <p>
-          Virixoo may use third-party advertising services in the future, including
-          services such as Google AdSense. If advertising is enabled, advertising
-          providers may use cookies or similar technologies to serve, personalize
-          or measure ads in accordance with their own policies and applicable law.
+          Virixoo uses third-party advertising technologies on pages where ads are
+          active, including Mondiad, and may use additional services such as Google
+          AdSense. Advertising providers may use cookies or similar technologies to
+          serve, personalize or measure ads in accordance with their own policies and
+          applicable law.
         </p>
       </section>
 
@@ -3070,14 +3512,18 @@ function build() {
   });
 
   create404Page(articles);
+  const growthReport = createGrowthReport(articles, topicHubPages);
   createRobots();
-  createSitemap(articles);
+  createSitemap(articles, topicHubPages);
 
   console.log("Virixoo build completed successfully.");
   console.log(`Generated ${articles.length} article pages.`);
   console.log(`Homepage article cards rendered: ${homeCardCount}`);
   console.log(`Cats archive: ${catsArchive.totalArticles} articles across ${catsArchive.totalPages} page(s).`);
   console.log(`Dogs archive: ${dogsArchive.totalArticles} articles across ${dogsArchive.totalPages} page(s).`);
+  console.log(`Topic hub pages generated: ${topicHubPages.length}.`);
+  console.log(`Contextually isolated pages flagged: ${growthReport.contextuallyIsolatedPages.length}.`);
+  console.log(`Possible intent-overlap pairs flagged: ${growthReport.possibleIntentOverlap.length}.`);
 }
 
 try {
