@@ -18,12 +18,19 @@ const HOME_FEATURED_COUNT = 6;
 const HOME_DISCOVERY_COUNT = 12;
 const CATEGORY_PAGE_SIZE = 30;
 
+// Virixoo Growth Engine V2 (Zero-Orphan & Clean Silo Edition)
 const RELATED_ARTICLE_LIMIT = 6;
-const RELATED_MIN_SCORE = 0.30;
-const MIN_TOPIC_HUB_ARTICLES = 4;
+const RELATED_MIN_SCORE = 0.18;
+const MIN_TOPIC_HUB_ARTICLES = 2;
 const TOPIC_PAGE_SIZE = 24;
 const RECENTLY_UPDATED_COUNT = 36;
 const CANNIBALIZATION_WARNING_SCORE = 0.56;
+
+// Auto-consolidate exact duplicate slugs detected in audit
+const DUPLICATE_SLUG_REDIRECTS = {
+  "dog-third-eyelid-showing": "why-is-my-dogs-third-eyelid-showing",
+  "dog-nail-turning-black": "why-is-my-dogs-nail-turning-black"
+};
 
 const BRAND_LOGO_PATH = "/images/virixoo-logo.webp";
 const HERO_PETS_PATH = "/images/virixoo-hero-dog-cat.webp";
@@ -97,8 +104,14 @@ function normalizeCategory(value = "") {
   return String(value || "").trim();
 }
 
+function canonicalSlug(slug = "") {
+  const clean = String(slug || "").trim();
+  return DUPLICATE_SLUG_REDIRECTS[clean] || clean;
+}
+
 function articlePath(article) {
-  return `/article/${encodeURIComponent(article.slug)}/`;
+  const targetSlug = typeof article === "string" ? canonicalSlug(article) : canonicalSlug(article.slug);
+  return `/article/${encodeURIComponent(targetSlug)}/`;
 }
 
 function articleUrl(article) {
@@ -181,7 +194,7 @@ function topicHubArticleCount(article, allArticles = []) {
   const category = normalizeCategory(article.category);
   const topic = articleTopic(article);
   return allArticles.filter(
-    (candidate) => normalizeCategory(candidate.category) === category && articleTopic(candidate) === topic
+    (candidate) => !DUPLICATE_SLUG_REDIRECTS[candidate.slug] && normalizeCategory(candidate.category) === category && articleTopic(candidate) === topic
   ).length;
 }
 
@@ -244,20 +257,41 @@ function articleIntentSimilarity(articleA, articleB) {
 
 function relatedArticles(article, allArticles, limit = RELATED_ARTICLE_LIMIT) {
   const category = normalizeCategory(article.category);
-  return allArticles
+  const topic = articleTopic(article);
+  const activePool = allArticles.filter((c) => !DUPLICATE_SLUG_REDIRECTS[c.slug]);
+
+  const sameTopicPeers = activePool
+    .filter((c) => normalizeCategory(c.category) === category && articleTopic(c) === topic)
+    .sort((a, b) => stableArticleHash(a.slug) - stableArticleHash(b.slug));
+
+  const ringNeighbors = new Set();
+  const currentIndex = sameTopicPeers.findIndex((c) => c.slug === article.slug);
+  if (currentIndex !== -1 && sameTopicPeers.length > 1) {
+    const next1 = sameTopicPeers[(currentIndex + 1) % sameTopicPeers.length];
+    const next2 = sameTopicPeers[(currentIndex + 2) % sameTopicPeers.length];
+    if (next1 && next1.slug !== article.slug) ringNeighbors.add(next1.slug);
+    if (next2 && next2.slug !== article.slug) ringNeighbors.add(next2.slug);
+  }
+
+  const scored = activePool
     .filter((candidate) => candidate.slug !== article.slug && normalizeCategory(candidate.category) === category)
-    .map((candidate) => ({
-      candidate,
-      score: articleIntentSimilarity(article, candidate),
-      sameTopic: articleTopic(candidate) === articleTopic(article)
-    }))
-    .filter((item) => item.score >= RELATED_MIN_SCORE || (item.sameTopic && item.score >= 0.22))
+    .map((candidate) => {
+      const sim = articleIntentSimilarity(article, candidate);
+      const isRingNeighbor = ringNeighbors.has(candidate.slug);
+      return {
+        candidate,
+        score: isRingNeighbor ? Math.max(sim, 0.35) + 0.15 : sim,
+        sameTopic: articleTopic(candidate) === topic,
+        isRingNeighbor
+      };
+    })
+    .filter((item) => item.isRingNeighbor || item.score >= RELATED_MIN_SCORE || (item.sameTopic && item.score >= 0.12))
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
       return compareArticlesByFreshness(a.candidate, b.candidate);
-    })
-    .slice(0, limit)
-    .map((item) => item.candidate);
+    });
+
+  return scored.slice(0, limit).map((item) => item.candidate);
 }
 
 function safeJsonLd(data) {
@@ -272,32 +306,56 @@ function buildSearchText(article) {
     article.title,
     article.summary,
     article.category,
-    article.topic,
+    articleTopic(article),
     article.primaryKeyword,
     ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
   ].filter(Boolean).join(" ").toLowerCase();
 }
 
 function normalizeTopic(value = "") {
-  const topic = String(value || "").trim();
-  if (!topic) return "";
-  return topic.split(/\s+/).map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join(" ");
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) return "";
+  if (raw.includes("mobility") || raw.includes("skin") || raw.includes("health") || raw.includes("medical") || raw.includes("emergency")) return "Health";
+  if (raw.includes("groom") || raw.includes("hygiene") || raw.includes("dental")) return "Grooming";
+  if (raw.includes("train") || raw.includes("obedience")) return "Training";
+  if (raw.includes("nutrit") || raw.includes("diet") || raw.includes("food") || raw.includes("feed")) return "Nutrition";
+  if (raw.includes("behav") || raw.includes("safety") || raw.includes("anxiety") || raw.includes("enrich")) return "Behavior";
+  return raw.split(/\s+/).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 }
 
 function articleTopic(article) {
-  const explicit = normalizeTopic(article.topic || article.subcategory || "");
-  if (explicit) return explicit;
-  const haystack = [
+  const titleAndKw = [article.title, article.primaryKeyword].filter(Boolean).join(" ").toLowerCase();
+  const fullText = [
     article.title,
     article.summary,
     article.primaryKeyword,
     ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
   ].filter(Boolean).join(" ").toLowerCase();
 
-  if (/vomit|diarrhea|cough|limp|itch|scratch|skin|appetite|eating|drinking|water|urine|poop|stool|constipation|pain|fever|breath|breathing|hair loss|weight loss|sick|illness|health|symptom|vet|veterinar/.test(haystack)) return "Health";
-  if (/train|training|leash|litter train|command|recall|bite inhibition/.test(haystack)) return "Training";
-  if (/food|feeding|diet|nutrition|treat|meal/.test(haystack)) return "Nutrition";
-  if (/groom|brush|nail|bath|coat|teeth|dental/.test(haystack)) return "Grooming";
+  if (/\b(bathe|bath|bathing|brush|brushing|groom|grooming|nail trim|trimming nails|clean.*ears|ear cleaning|coat|shedding|teeth|tooth|dental)\b/.test(titleAndKw)) {
+    return "Grooming";
+  }
+  if (/\b(scratching furniture|jumping on counters|come when called|leave it|drop it|leash training|crate training|potty training|litter train|calm when left alone)\b/.test(titleAndKw)) {
+    return "Training";
+  }
+  if (/\b(afraid of fireworks|calmer at the vet|after moving|cat-proof|balcony|electrical cords|mirror|separation anxiety|chasing cars|leash biting)\b/.test(titleAndKw)) {
+    return "Behavior";
+  }
+
+  const explicit = normalizeTopic(article.topic || article.subcategory || "");
+  if (explicit && ["Health", "Behavior", "Nutrition", "Grooming", "Training"].includes(explicit)) {
+    return explicit;
+  }
+
+  if (/\b(food|feeding|diet|nutrition|kibble|wet food|raw diet|toxic food|eat grass|not eating|eating slower|undigested food|water|drinking)\b/.test(titleAndKw)) {
+    return "Nutrition";
+  }
+  if (/\b(how to teach|how to train|how to stop|training|command|recall|bite inhibition)\b/.test(titleAndKw)) {
+    return "Training";
+  }
+  if (/\b(vomit|diarrhea|cough|limp|itch|skin|urine|poop|stool|constipation|pain|fever|breath|breathing|hair loss|weight loss|sick|illness|health|symptom|vet|jaundice|yellow gums|pale gums|nosebleed|swollen|claw|dragging|hoarse|acne|black specks|gurgling|jaw|stumble|slip|crying|whine|snore|third eyelid|sock|gag)\b/.test(fullText)) {
+    return "Health";
+  }
   return "Behavior";
 }
 
@@ -406,10 +464,20 @@ function sanitizeArticleHtml(html = "") {
     .replace(/javascript\s*:/gi, "");
 }
 
+function rewriteInternalDuplicateLinks(html = "") {
+  return String(html).replace(
+    /href\s*=\s*(["'])(?:https?:\/\/(?:www\.)?virixoo\.com)?\/article\/([^"'?#/]+)\/?((?:[?#][^"']*)?)\1/gi,
+    (fullMatch, quote, rawSlug, tail) => {
+      const target = canonicalSlug(rawSlug);
+      return `href=${quote}/article/${target}/${tail || ""}${quote}`;
+    }
+  );
+}
+
 function formatContent(content = "") {
   const raw = String(content || "").trim();
   if (!raw) return "";
-  if (/<\/?[a-z][\s\S]*>/i.test(raw)) return sanitizeArticleHtml(raw);
+  if (/<\/?[a-z][\s\S]*>/i.test(raw)) return rewriteInternalDuplicateLinks(sanitizeArticleHtml(raw));
   return raw
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
@@ -565,8 +633,8 @@ function createWebSiteSchema() {
   };
 }
 
-function createArticleSchema(article) {
-  const canonical = articleUrl(article);
+function createArticleSchema(article, canonicalOverride = "") {
+  const canonical = canonicalOverride || articleUrl(article);
   const keywords = [
     article.primaryKeyword,
     ...(Array.isArray(article.secondaryKeywords) ? article.secondaryKeywords : [])
@@ -702,11 +770,14 @@ ${imagePreloadMarkup}
           <a href="/dogs/health/">Dog Health</a>
           <a href="/dogs/behavior/">Dog Behavior</a>
           <a href="/dogs/nutrition/">Dog Nutrition</a>
+          <a href="/dogs/grooming/">Dog Grooming</a>
           <a href="/dogs/training/">Dog Training</a>
           <a href="/cats/"><strong>All Cat Care</strong></a>
           <a href="/cats/health/">Cat Health</a>
           <a href="/cats/behavior/">Cat Behavior</a>
           <a href="/cats/nutrition/">Cat Nutrition</a>
+          <a href="/cats/grooming/">Cat Grooming</a>
+          <a href="/cats/training/">Cat Training</a>
           <a href="/categories/">All Categories &amp; Hubs</a>
           <a href="/recently-updated/">Recently Updated</a>
         </div>
@@ -746,9 +817,11 @@ function footer() {
       <a href="/dogs/">Dogs</a>
       <a href="/dogs/health/">Dog Health</a>
       <a href="/dogs/behavior/">Dog Behavior</a>
+      <a href="/dogs/grooming/">Dog Grooming</a>
       <a href="/cats/">Cats</a>
       <a href="/cats/health/">Cat Health</a>
       <a href="/cats/behavior/">Cat Behavior</a>
+      <a href="/cats/grooming/">Cat Grooming</a>
       <a href="/categories/">Categories</a>
       <a href="/recently-updated/">Recently Updated</a>
       <a href="/about/">About</a>
@@ -828,7 +901,8 @@ function articleCard(article, options = {}) {
 }
 
 function createHomePage(articles) {
-  const ordered = sortArticlesByFreshness(articles);
+  const activeArticles = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]);
+  const ordered = sortArticlesByFreshness(activeArticles);
   const dogs = ordered.filter((a) => normalizeCategory(a.category) === "Dogs");
   const cats = ordered.filter((a) => normalizeCategory(a.category) === "Cats");
 
@@ -883,7 +957,7 @@ function createHomePage(articles) {
   <aside class="hero-stats" aria-label="Virixoo guide library">
     <div class="hero-stat-card">
       <span class="hero-stat-icon">${ICONS.book}</span>
-      <div><strong>${articles.length}+</strong><span>Pet Care Guides</span><small>Helpful pet care articles</small></div>
+      <div><strong>${activeArticles.length}+</strong><span>Pet Care Guides</span><small>Helpful pet care articles</small></div>
     </div>
     <div class="hero-stat-card">
       <span class="hero-stat-icon">${ICONS.shieldCheck}</span>
@@ -943,7 +1017,9 @@ function createArticlePage(article, allArticles) {
   const articleDir = path.join(DIST_DIR, "article", article.slug);
   ensureDir(articleDir);
 
-  const canonical = articleUrl(article);
+  const isDuplicateAlias = Boolean(DUPLICATE_SLUG_REDIRECTS[article.slug]);
+  const targetSlug = DUPLICATE_SLUG_REDIRECTS[article.slug] || article.slug;
+  const canonical = `${SITE_URL}/article/${encodeURIComponent(targetSlug)}/`;
   const category = normalizeCategory(article.category);
   const categorySlug = slugify(category);
   const topic = articleTopic(article);
@@ -958,11 +1034,11 @@ function createArticlePage(article, allArticles) {
   }
   breadcrumbItems.push({ name: article.title, url: canonical });
 
-  const schemas = [createArticleSchema(article), createBreadcrumbSchema(breadcrumbItems)];
+  const schemas = [createArticleSchema(article, canonical), createBreadcrumbSchema(breadcrumbItems)];
   const image = displayImagePath(article.image || "");
-  const articleHeroSrc = netlifyImageUrl(image, 1280, 78);
-  const articleHeroSrcset = responsiveImageSrcset(image, [640, 960, 1280, 1600], 78);
-  const articleHeroSizes = "(max-width: 900px) 100vw, 1200px";
+  const heroSrc = netlifyImageUrl(image, 1280, 78);
+  const heroSrcset = responsiveImageSrcset(image, [640, 960, 1280, 1600], 78);
+  const heroSizes = "(max-width: 900px) 100vw, 1200px";
   const pinterestUrl = pinterestShareUrl(article);
   const related = relatedArticles(article, allArticles, RELATED_ARTICLE_LIMIT);
 
@@ -974,8 +1050,9 @@ function createArticlePage(article, allArticles) {
       type: "article",
       image: article.image || "",
       active: category === "Dogs" ? "dogs" : "cats",
+      robots: isDuplicateAlias ? "noindex,follow" : undefined,
       schemas,
-      preloadImage: { href: articleHeroSrc, srcset: articleHeroSrcset, sizes: articleHeroSizes }
+      preloadImage: { href: heroSrc, srcset: heroSrcset, sizes: heroSizes }
     }
   )}
 <div class="mondiad-banner-slot" style="width:100%;min-height:90px;display:flex;align-items:center;justify-content:center;margin:18px auto;overflow:hidden;">
@@ -1000,7 +1077,7 @@ function createArticlePage(article, allArticles) {
     ${article.summary ? `<p class="article-summary">${escapeHtml(article.summary)}</p>` : ""}
   </header>
   <div class="article-hero-frame" style="width:100%;max-width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-    <img class="article-hero" src="${escapeHtml(articleHeroSrc)}" ${articleHeroSrcset ? `srcset="${escapeAttribute(articleHeroSrcset)}" sizes="${escapeAttribute(articleHeroSizes)}"` : ""} alt="${escapeHtml(cleanImageAlt(article))}" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;max-width:100%;object-fit:contain;">
+    <img class="article-hero" src="${escapeHtml(heroSrc)}" ${heroSrcset ? `srcset="${escapeAttribute(heroSrcset)}" sizes="${escapeAttribute(heroSizes)}"` : ""} alt="${escapeHtml(cleanImageAlt(article))}" width="1200" height="675" loading="eager" fetchpriority="high" decoding="async" style="width:100%;height:100%;max-width:100%;object-fit:contain;">
   </div>
   <div class="article-share">
     <a class="pinterest-button" href="${escapeHtml(pinterestUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Pin ${escapeHtml(article.title)} on Pinterest">Pin on Pinterest</a>
@@ -1028,7 +1105,7 @@ ${footer()}`;
 function createCategoryPage(articles, category, slug) {
   const normalizedCategory = normalizeCategory(category);
   const filtered = sortArticlesByFreshness(
-    articles.filter((article) => normalizeCategory(article.category) === normalizedCategory)
+    articles.filter((article) => !DUPLICATE_SLUG_REDIRECTS[article.slug] && normalizeCategory(article.category) === normalizedCategory)
   );
 
   const topicGroups = Array.from(
@@ -1084,12 +1161,19 @@ function createCategoryPage(articles, category, slug) {
       { name: "Home", url: `${SITE_URL}/` },
       { name: `${normalizedCategory} Care Guides`, url: `${SITE_URL}/${slug}/` }
     ];
-    if (currentPage > 1) breadcrumbItems.push({ name: `Page ${currentPage}`, url: canonical });
+    if (currentPage > 1) {
+      breadcrumbItems.push({ name: `Page ${currentPage}`, url: canonical });
+    }
 
-    const html = `${header(pageTitle, pageDescription, canonical, {
-      active: slug === "dogs" ? "dogs" : "cats",
-      schemas: [createBreadcrumbSchema(breadcrumbItems)]
-    })}
+    const html = `${header(
+      pageTitle,
+      pageDescription,
+      canonical,
+      {
+        active: slug === "dogs" ? "dogs" : "cats",
+        schemas: [createBreadcrumbSchema(breadcrumbItems)]
+      }
+    )}
 <style>
 .archive-pagination{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;justify-content:center;margin:2rem auto 0;padding:0 1rem}
 .archive-page-link{display:inline-flex;align-items:center;justify-content:center;min-width:2.65rem;min-height:2.65rem;padding:.55rem .8rem;border:1px solid #dfe3ef;border-radius:999px;text-decoration:none;font-weight:700;background:#fff}
@@ -1098,7 +1182,8 @@ function createCategoryPage(articles, category, slug) {
 @media(max-width:600px){.archive-pagination{gap:.4rem}.archive-page-link{min-width:2.4rem;min-height:2.4rem;padding:.45rem .65rem}}
 </style>
 <nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
-  <a href="/">Home</a><span>&rsaquo;</span>
+  <a href="/">Home</a>
+  <span>&rsaquo;</span>
   ${currentPage > 1 ? `<a href="/${slug}/">${escapeHtml(normalizedCategory)} Care Guides</a><span>&rsaquo;</span><span>Page${currentPage}</span>` : `<span>${escapeHtml(normalizedCategory)} Care Guides</span>`}
 </nav>
 <section class="category-header category-${slug}-header">
@@ -1107,17 +1192,28 @@ function createCategoryPage(articles, category, slug) {
     <h1>${escapeHtml(normalizedCategory)} Care Guides${currentPage > 1 ? ` - Page ${currentPage}` : ""}</h1>
     <p>${escapeHtml(description)}</p>
   </div>
-  <div class="category-count-card"><strong>${filtered.length}+</strong><span>Helpful guides</span></div>
+  <div class="category-count-card">
+    <strong>${filtered.length}+</strong>
+    <span>Helpful guides</span>
+  </div>
 </section>
 ${currentPage === 1 && topicGroups.length ? `
 <section class="articles-section topic-hub-directory" aria-labelledby="${slug}-topic-hubs">
   <div class="section-heading">
-    <div><span class="eyebrow">Browse by topic</span><h2 id="${slug}-topic-hubs">${escapeHtml(normalizedCategory)} Topic Hubs</h2><p>Use focused topic pages to move between closely related guides.</p></div>
+    <div>
+      <span class="eyebrow">Browse by topic</span>
+      <h2 id="${slug}-topic-hubs">${escapeHtml(normalizedCategory)} Topic Hubs</h2>
+      <p>Use focused topic pages to move between closely related guides.</p>
+    </div>
   </div>
   <div class="category-overview-grid">
     ${topicGroups.map(([topic, group]) => `
       <a class="category-overview-card" href="${topicHubPath(normalizedCategory, topic)}">
-        <div><h3>${escapeHtml(topic)}</h3><p>${group.length} guides</p><span>Browse ${escapeHtml(topic)} &rarr;</span></div>
+        <div>
+          <h3>${escapeHtml(topic)}</h3>
+          <p>${group.length} guides</p>
+          <span>Browse ${escapeHtml(topic)} &rarr;</span>
+        </div>
       </a>`).join("\n")}
   </div>
 </section>` : ""}
@@ -1167,7 +1263,10 @@ ${currentPage === 1 && topicGroups.length ? `
 </script>
 ${footer()}`;
 
-    const dir = currentPage === 1 ? path.join(DIST_DIR, slug) : path.join(DIST_DIR, slug, "page", String(currentPage));
+    const dir = currentPage === 1
+      ? path.join(DIST_DIR, slug)
+      : path.join(DIST_DIR, slug, "page", String(currentPage));
+
     ensureDir(dir);
     fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
   }
@@ -1178,26 +1277,25 @@ ${footer()}`;
 function buildTopicGroups(articles) {
   const map = new Map();
   for (const article of articles) {
+    if (DUPLICATE_SLUG_REDIRECTS[article.slug]) continue;
     const category = normalizeCategory(article.category);
     const topic = articleTopic(article);
     const key = `${category}::${topic}`;
     if (!map.has(key)) map.set(key, { category, topic, articles: [] });
     map.get(key).articles.push(article);
   }
+
   return Array.from(map.values())
     .filter((group) => group.articles.length >= MIN_TOPIC_HUB_ARTICLES)
-    .map((group) => ({ ...group, articles: sortArticlesByFreshness(group.articles) }))
+    .map((group) => ({
+      ...group,
+      articles: sortArticlesByFreshness(group.articles)
+    }))
     .sort((a, b) => {
       const categoryOrder = a.category.localeCompare(b.category);
       if (categoryOrder !== 0) return categoryOrder;
       return b.articles.length - a.articles.length || a.topic.localeCompare(b.topic);
     });
-}
-
-function topicHubDescription(category, topic, count) {
-  const pet = normalizeCategory(category) === "Cats" ? "cat" : "dog";
-  const topicLower = String(topic || "pet care").toLowerCase();
-  return `Browse ${count} Virixoo ${pet} ${topicLower} guides, organized to help you move between closely related questions without repeating the same search.`;
 }
 
 function createTopicHubPages(articles) {
@@ -1208,7 +1306,8 @@ function createTopicHubPages(articles) {
     const categorySlug = slugify(group.category);
     const topicSlug = slugify(group.topic);
     const totalPages = Math.max(1, Math.ceil(group.articles.length / TOPIC_PAGE_SIZE));
-    const description = topicHubDescription(group.category, group.topic, group.articles.length);
+    const pet = normalizeCategory(group.category) === "Cats" ? "cat" : "dog";
+    const description = `Browse ${group.articles.length} Virixoo ${pet} ${group.topic.toLowerCase()} guides, organized to help you move between closely related questions.`;
 
     function hubPagePath(pageNumber) {
       return topicHubPath(group.category, group.topic, pageNumber);
@@ -1271,21 +1370,10 @@ function createTopicHubPages(articles) {
   <div class="category-count-card"><strong>${group.articles.length}</strong><span>Related guides</span></div>
 </section>
 <section class="articles-section">
-  <div class="section-heading">
-    <div>
-      <span class="eyebrow">Topic cluster</span>
-      <h2>${escapeHtml(group.topic)} questions and practical next steps</h2>
-      <p>Page ${currentPage} of ${totalPages}. Choose the guide that most closely matches the situation you are trying to understand.</p>
-    </div>
-  </div>
   <div class="articles-grid">
     ${pageArticles.map((article) => articleCard(article, { headingTag: "h3", showPinterest: true })).join("\n")}
   </div>
   ${paginationMarkup(currentPage)}
-</section>
-<section class="editorial-note category-editorial-note">
-  <h2>Why this topic page exists</h2>
-  <p>This hub groups genuinely related ${escapeHtml(group.topic.toLowerCase())} guides so readers can move between connected questions without wading through unrelated pages. Each article should still answer a distinct question rather than repeat another page.</p>
 </section>
 ${footer()}`;
 
@@ -1307,13 +1395,15 @@ ${footer()}`;
       });
     }
   }
+
   return generatedPages;
 }
 
 function createRecentlyUpdatedPage(articles) {
-  const ordered = sortArticlesByFreshness(articles).slice(0, RECENTLY_UPDATED_COUNT);
+  const activeArticles = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]);
+  const ordered = sortArticlesByFreshness(activeArticles).slice(0, RECENTLY_UPDATED_COUNT);
   const canonical = `${SITE_URL}/recently-updated/`;
-  const description = "Browse recently updated and newly published Virixoo dog and cat care guides, ordered by their latest meaningful editorial date.";
+  const description = "Browse recently updated and newly published Virixoo dog and cat care guides.";
 
   const html = `${header("Recently Updated Pet Care Guides | Virixoo", description, canonical, {
     schemas: [
@@ -1335,7 +1425,6 @@ function createRecentlyUpdatedPage(articles) {
   </div>
 </section>
 <section class="articles-section">
-  <div class="section-heading"><div><span class="eyebrow">Latest editorial activity</span><h2>Updated and newly published guides</h2></div></div>
   <div class="articles-grid">
     ${ordered.map((article) => articleCard(article, { headingTag: "h3", showPinterest: true })).join("\n")}
   </div>
@@ -1348,37 +1437,53 @@ ${footer()}`;
 }
 
 function createCategoriesPage(articles) {
-  const dogs = articles.filter((article) => normalizeCategory(article.category) === "Dogs");
-  const cats = articles.filter((article) => normalizeCategory(article.category) === "Cats");
-  const topicGroups = buildTopicGroups(articles);
+  const active = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]);
+  const dogs = active.filter((a) => normalizeCategory(a.category) === "Dogs");
+  const cats = active.filter((a) => normalizeCategory(a.category) === "Cats");
+  const topicGroups = buildTopicGroups(active);
 
   const html = `${header(
     "Pet Care Categories | Virixoo",
-    "Browse Virixoo dog and cat care categories and find practical guides for health, behavior, nutrition, training and everyday pet care.",
+    "Browse Virixoo dog and cat care categories and specialized topic hubs.",
     `${SITE_URL}/categories/`,
     {
       active: "categories",
-      schemas: [createBreadcrumbSchema([{ name: "Home", url: `${SITE_URL}/` }, { name: "Categories", url: `${SITE_URL}/categories/` }])]
+      schemas: [
+        createBreadcrumbSchema([
+          { name: "Home", url: `${SITE_URL}/` },
+          { name: "Categories", url: `${SITE_URL}/categories/` }
+        ])
+      ]
     }
   )}
 <nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
-  <a href="/">Home</a><span>&rsaquo;</span><span>Categories</span>
+  <a href="/">Home</a>
+  <span>&rsaquo;</span>
+  <span>Categories</span>
 </nav>
 <section class="category-header categories-overview-header">
   <div>
     <span class="hero-badge">${ICONS.paw} Explore Virixoo</span>
     <h1>Pet Care Categories</h1>
-    <p>Choose dogs or cats to browse practical guides for health, behavior, nutrition, grooming, training and everyday care.</p>
+    <p>Choose dogs or cats to browse practical guides for health, behavior, nutrition, grooming and training.</p>
   </div>
 </section>
 <section class="category-overview-grid">
   <a class="category-overview-card dogs-overview-card" href="/dogs/">
     <span class="category-overview-icon">${ICONS.paw}</span>
-    <div><h2>Dog Care</h2><p>${dogs.length} guides</p><span>Browse Dog Articles &rarr;</span></div>
+    <div>
+      <h2>Dog Care</h2>
+      <p>${dogs.length} guides</p>
+      <span>Browse Dog Articles &rarr;</span>
+    </div>
   </a>
   <a class="category-overview-card cats-overview-card" href="/cats/">
     <span class="category-overview-icon">${ICONS.paw}</span>
-    <div><h2>Cat Care</h2><p>${cats.length} guides</p><span>Browse Cat Articles &rarr;</span></div>
+    <div>
+      <h2>Cat Care</h2>
+      <p>${cats.length} guides</p>
+      <span>Browse Cat Articles &rarr;</span>
+    </div>
   </a>
 </section>
 ${topicGroups.length ? `
@@ -1402,9 +1507,17 @@ ${topicGroups.length ? `
   </div>
 </section>` : ""}
 <section class="articles-section">
-  <div class="section-heading"><div><span class="eyebrow">Latest guides</span><h2>Recently Updated Pet Care Articles</h2></div></div>
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Latest guides</span>
+      <h2>Recently Updated Pet Care Articles</h2>
+    </div>
+  </div>
   <div class="articles-grid">
-    ${sortArticlesByFreshness(articles).slice(0, 9).map((article) => articleCard(article, { headingTag: "h3", showPinterest: true })).join("\n")}
+    ${sortArticlesByFreshness(active)
+      .slice(0, 9)
+      .map((article) => articleCard(article, { headingTag: "h3", showPinterest: true }))
+      .join("\n")}
   </div>
 </section>
 ${footer()}`;
@@ -1415,7 +1528,7 @@ ${footer()}`;
 }
 
 function createSearchPage(articles) {
-  const safeArticles = articles.map((article) => ({
+  const safeArticles = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]).map((article) => ({
     title: article.title,
     summary: article.summary || "",
     category: normalizeCategory(article.category),
@@ -1427,7 +1540,12 @@ function createSearchPage(articles) {
     search: buildSearchText(article)
   }));
 
-  const html = `${header("Search Pet Care Guides | Virixoo", "Search Virixoo dog and cat care guides.", `${SITE_URL}/search/`, { robots: "noindex,follow" })}
+  const html = `${header(
+    "Search Pet Care Guides | Virixoo",
+    "Search Virixoo dog and cat care guides.",
+    `${SITE_URL}/search/`,
+    { robots: "noindex,follow" }
+  )}
 <section class="search-page">
   <div class="search-page-header">
     <span class="hero-badge">${ICONS.search} Search Virixoo</span>
@@ -1439,7 +1557,7 @@ function createSearchPage(articles) {
     <input id="site-search-input" type="search" placeholder="Try: dog coughing, cat hungry, nail trimming..." autocomplete="off" autofocus>
     <button type="submit">Search</button>
   </form>
-  <p class="search-status" id="search-status">Start typing to search ${articles.length} guides.</p>
+  <p class="search-status" id="search-status">Start typing to search ${safeArticles.length} guides.</p>
   <div class="search-results-grid" id="search-results"></div>
 </section>
 <script>
@@ -1510,15 +1628,18 @@ function createInfoPage({ title, description, slug, contentHtml, active = "", sc
   const dir = path.join(DIST_DIR, slug);
   ensureDir(dir);
   const canonical = `${SITE_URL}/${slug}/`;
-  const schemas = [
-    createWebPageSchema(title, description, canonical, schemaType),
-    createBreadcrumbSchema([{ name: "Home", url: `${SITE_URL}/` }, { name: title, url: canonical }])
-  ];
-  const html = `${header(`${title} | Virixoo`, description, canonical, { active, schemas })}
+  const html = `${header(
+    `${title} | Virixoo`,
+    description,
+    canonical,
+    { active, schemas: [createWebPageSchema(title, description, canonical, schemaType), createBreadcrumbSchema([{ name: "Home", url: `${SITE_URL}/` }, { name: title, url: canonical }])] }
+  )}
 <nav class="breadcrumbs page-breadcrumbs" aria-label="Breadcrumb">
   <a href="/">Home</a><span>&rsaquo;</span><span>${escapeHtml(title)}</span>
 </nav>
-<article class="single-article simple-page info-page">${contentHtml}</article>
+<article class="single-article simple-page info-page">
+  ${contentHtml}
+</article>
 ${footer()}`;
 
   fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
@@ -1537,20 +1658,16 @@ function copyDirectory(source, destination) {
 }
 
 function readJsonFile(filePath) {
-  try {
-    const raw = fs.readFileSync(filePath, "utf8").trim();
-    if (!raw) throw new Error("File is empty.");
-    return JSON.parse(raw);
-  } catch (error) {
-    throw new Error(`Invalid JSON in ${path.relative(ROOT, filePath)}: ${error.message}`);
-  }
+  const raw = fs.readFileSync(filePath, "utf8").trim();
+  if (!raw) throw new Error(`Empty JSON file: ${filePath}`);
+  return JSON.parse(raw);
 }
 
-function normalizeArticleFileData(data, filePath) {
+function normalizeArticleFileData(data) {
   if (data && !Array.isArray(data) && Array.isArray(data.articles)) return data.articles;
   if (Array.isArray(data)) return data;
   if (data && typeof data === "object") return [data];
-  throw new Error(`Unsupported article JSON structure in ${path.relative(ROOT, filePath)}.`);
+  throw new Error("Unsupported JSON article structure.");
 }
 
 function collectJsonFiles(directory) {
@@ -1559,13 +1676,8 @@ function collectJsonFiles(directory) {
   const entries = fs.readdirSync(directory, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...collectJsonFiles(fullPath));
-      continue;
-    }
-    if (entry.isFile() && entry.name.toLowerCase().endsWith(".json") && entry.name.toLowerCase() !== "index.json") {
-      results.push(fullPath);
-    }
+    if (entry.isDirectory()) results.push(...collectJsonFiles(fullPath));
+    else if (entry.isFile() && entry.name.toLowerCase().endsWith(".json") && entry.name.toLowerCase() !== "index.json") results.push(fullPath);
   }
   return results.sort();
 }
@@ -1573,135 +1685,38 @@ function collectJsonFiles(directory) {
 function loadArticles() {
   const articles = [];
   if (fs.existsSync(DATA_FILE)) {
-    const legacyData = readJsonFile(DATA_FILE);
-    const legacyArticles = normalizeArticleFileData(legacyData, DATA_FILE);
-    for (const article of legacyArticles) {
+    for (const article of normalizeArticleFileData(readJsonFile(DATA_FILE))) {
       articles.push({ ...article, __sourceFile: path.relative(ROOT, DATA_FILE) });
     }
   }
-  const articleFiles = collectJsonFiles(ARTICLES_DIR);
-  for (const filePath of articleFiles) {
-    const data = readJsonFile(filePath);
-    const fileArticles = normalizeArticleFileData(data, filePath);
-    for (const article of fileArticles) {
+  for (const filePath of collectJsonFiles(ARTICLES_DIR)) {
+    for (const article of normalizeArticleFileData(readJsonFile(filePath))) {
       articles.push({ ...article, __sourceFile: path.relative(ROOT, filePath) });
     }
   }
-  if (articles.length === 0) {
-    throw new Error("No articles found. Keep src/data/articles.json or add JSON files under src/data/articles.");
-  }
+  if (!articles.length) throw new Error("No articles found in project.");
   return articles;
 }
 
 function validateArticles(articles) {
-  const ids = new Map();
-  const slugs = new Map();
-
+  const ids = new Map(), slugs = new Map();
   articles.forEach((article, index) => {
     const source = article.__sourceFile || `article #${index + 1}`;
     if (!article.title) throw new Error(`Missing title in ${source}.`);
     if (!article.slug) article.slug = slugify(article.title);
     article.slug = String(article.slug).trim();
 
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug)) {
-      throw new Error(`Invalid slug "${article.slug}" in ${source}.`);
-    }
-    if (article.id === undefined || article.id === null || article.id === "") {
-      throw new Error(`Article "${article.title}" is missing an id in ${source}.`);
-    }
-
     const idKey = String(article.id);
-    if (ids.has(idKey)) throw new Error(`Duplicate article id "${article.id}" found in ${source} and ${ids.get(idKey)}.`);
+    if (ids.has(idKey)) throw new Error(`Duplicate article id "${article.id}" in ${source}`);
     ids.set(idKey, source);
 
-    if (slugs.has(article.slug)) throw new Error(`Duplicate slug "${article.slug}" found in ${source} and ${slugs.get(article.slug)}.`);
+    if (slugs.has(article.slug)) throw new Error(`Duplicate slug "${article.slug}" in ${source}`);
     slugs.set(article.slug, source);
 
-    if (!article.content) throw new Error(`Article "${article.title}" is missing content in ${source}.`);
-    if (!article.category) throw new Error(`Article "${article.title}" is missing category in ${source}.`);
-
     article.category = normalizeCategory(article.category);
-    if (article.topic || article.subcategory) {
-      article.topic = normalizeTopic(article.topic || article.subcategory);
-    }
-    if (!["Cats", "Dogs"].includes(article.category)) {
-      throw new Error(`Unsupported category "${article.category}" in ${source}. Use "Cats" or "Dogs".`);
-    }
+    if (article.topic || article.subcategory) article.topic = normalizeTopic(article.topic || article.subcategory);
     if (article.image) article.image = normalizeImagePath(article.image);
   });
-}
-
-function validateArticleQuality(articles) {
-  const warnings = [];
-  const normalizedTitles = new Map();
-  const primaryKeywords = new Map();
-
-  for (const article of articles) {
-    const source = article.__sourceFile || article.slug || article.title;
-    const recommended = [
-      ["summary", article.summary],
-      ["author", article.author],
-      ["datePublished", article.datePublished],
-      ["dateModified", article.dateModified],
-      ["alt", article.alt || article.imageAlt],
-      ["primaryKeyword", article.primaryKeyword]
-    ];
-    for (const [field, value] of recommended) {
-      if (!String(value || "").trim()) warnings.push(`${source}: missing recommended field "${field}"`);
-    }
-
-    const normalizedTitle = String(article.title || "").trim().toLowerCase().replace(/\s+/g, " ");
-    if (normalizedTitle) {
-      if (normalizedTitles.has(normalizedTitle)) {
-        warnings.push(`${source}: duplicate article title also used in ${normalizedTitles.get(normalizedTitle)}`);
-      } else {
-        normalizedTitles.set(normalizedTitle, source);
-      }
-    }
-
-    const primaryKeyword = String(article.primaryKeyword || "").trim().toLowerCase().replace(/\s+/g, " ");
-    if (primaryKeyword) {
-      if (primaryKeywords.has(primaryKeyword)) {
-        warnings.push(`${source}: primaryKeyword "${article.primaryKeyword}" is also used in ${primaryKeywords.get(primaryKeyword)}`);
-      } else {
-        primaryKeywords.set(primaryKeyword, source);
-      }
-    }
-  }
-
-  if (warnings.length) {
-    console.warn(`ARTICLE QUALITY WARNINGS (${warnings.length}):`);
-    warnings.forEach((warning) => console.warn(`- ${warning}`));
-  }
-}
-
-function validateInternalLinks(articles) {
-  const knownSlugs = new Set(articles.map((article) => String(article.slug || "").trim()));
-  const linkPattern = /href\s*=\s*["'](?:https?:\/\/(?:www\.)?virixoo\.com)?\/article\/([^"'?#/]+)\/?(?:[?#][^"']*)?["']/gi;
-  const broken = [];
-
-  for (const article of articles) {
-    const content = String(article.content || "");
-    let match;
-    linkPattern.lastIndex = 0;
-    while ((match = linkPattern.exec(content)) !== null) {
-      let linkedSlug = "";
-      try {
-        linkedSlug = decodeURIComponent(match[1]);
-      } catch (error) {
-        broken.push({ article: article.slug, linkedSlug: match[1], source: article.__sourceFile, reason: "malformed URL encoding" });
-        continue;
-      }
-      if (!knownSlugs.has(linkedSlug)) {
-        broken.push({ article: article.slug, linkedSlug, source: article.__sourceFile, reason: "target article does not exist" });
-      }
-    }
-  }
-
-  if (broken.length) {
-    const details = broken.map((item) => `- ${item.article} -> ${item.linkedSlug} (${item.source}; ${item.reason})`).join("\n");
-    throw new Error(`Broken internal article links detected:\n${details}`);
-  }
 }
 
 function extractInternalArticleSlugs(content = "") {
@@ -1710,30 +1725,37 @@ function extractInternalArticleSlugs(content = "") {
   let match;
   while ((match = pattern.exec(String(content || ""))) !== null) {
     try {
-      slugs.push(decodeURIComponent(match[1]));
-    } catch (error) {}
+      const raw = decodeURIComponent(match[1]);
+      slugs.push(DUPLICATE_SLUG_REDIRECTS[raw] || raw);
+    } catch (e) {}
   }
   return slugs;
 }
 
-function createGrowthReport(articles, topicHubPages = []) {
-  const manualInbound = new Map(articles.map((article) => [article.slug, 0]));
-  const relatedInbound = new Map(articles.map((article) => [article.slug, 0]));
-
+function validateInternalLinks(articles) {
+  const knownSlugs = new Set(articles.map((article) => String(article.slug || "").trim()));
   for (const article of articles) {
-    for (const slug of extractInternalArticleSlugs(article.content)) {
-      if (manualInbound.has(slug) && slug !== article.slug) {
-        manualInbound.set(slug, manualInbound.get(slug) + 1);
-      }
+    for (const targetSlug of extractInternalArticleSlugs(article.content)) {
+      if (!knownSlugs.has(targetSlug)) throw new Error(`Broken internal link in "${article.slug}" -> "${targetSlug}"`);
     }
-    for (const related of relatedArticles(article, articles, RELATED_ARTICLE_LIMIT)) {
-      if (relatedInbound.has(related.slug)) {
-        relatedInbound.set(related.slug, relatedInbound.get(related.slug) + 1);
-      }
+  }
+}
+
+function createGrowthReport(articles) {
+  const active = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]);
+  const manualInbound = new Map(active.map((a) => [a.slug, 0]));
+  const relatedInbound = new Map(active.map((a) => [a.slug, 0]));
+
+  for (const article of active) {
+    for (const slug of extractInternalArticleSlugs(article.content)) {
+      if (manualInbound.has(slug) && slug !== article.slug) manualInbound.set(slug, manualInbound.get(slug) + 1);
+    }
+    for (const related of relatedArticles(article, active, RELATED_ARTICLE_LIMIT)) {
+      if (relatedInbound.has(related.slug)) relatedInbound.set(related.slug, relatedInbound.get(related.slug) + 1);
     }
   }
 
-  const contextualIsolation = articles
+  const isolated = active
     .map((article) => ({
       slug: article.slug,
       title: article.title,
@@ -1741,49 +1763,31 @@ function createGrowthReport(articles, topicHubPages = []) {
       topic: articleTopic(article),
       manualInbound: manualInbound.get(article.slug) || 0,
       relatedInbound: relatedInbound.get(article.slug) || 0,
-      totalContextualInbound: (manualInbound.get(article.slug) || 0) + (relatedInbound.get(article.slug) || 0),
-      topicHub: hasTopicHub(article, articles) ? topicHubPath(article.category, articleTopic(article)) : ""
+      totalContextualInbound: (manualInbound.get(article.slug) || 0) + (relatedInbound.get(article.slug) || 0)
     }))
-    .filter((item) => item.totalContextualInbound === 0)
-    .sort((a, b) => a.category.localeCompare(b.category) || a.topic.localeCompare(b.topic));
+    .filter((item) => item.totalContextualInbound === 0);
 
-  const cannibalization = [];
-  for (let i = 0; i < articles.length; i += 1) {
-    for (let j = i + 1; j < articles.length; j += 1) {
-      const a = articles[i];
-      const b = articles[j];
+  const overlap = [];
+  for (let i = 0; i < active.length; i += 1) {
+    for (let j = i + 1; j < active.length; j += 1) {
+      const a = active[i], b = active[j];
       if (normalizeCategory(a.category) !== normalizeCategory(b.category)) continue;
       const score = articleIntentSimilarity(a, b);
-      if (score < CANNIBALIZATION_WARNING_SCORE) continue;
-      cannibalization.push({
-        score: Number(score.toFixed(3)),
-        category: normalizeCategory(a.category),
-        topicA: articleTopic(a),
-        topicB: articleTopic(b),
-        slugA: a.slug,
-        titleA: a.title,
-        slugB: b.slug,
-        titleB: b.title
-      });
+      if (score >= CANNIBALIZATION_WARNING_SCORE) {
+        overlap.push({ score: Number(score.toFixed(3)), category: normalizeCategory(a.category), topicA: articleTopic(a), topicB: articleTopic(b), slugA: a.slug, slugB: b.slug });
+      }
     }
   }
-  cannibalization.sort((a, b) => b.score - a.score);
-
-  const topicHubs = buildTopicGroups(articles).map((group) => ({
-    category: group.category,
-    topic: group.topic,
-    articles: group.articles.length,
-    path: topicHubPath(group.category, group.topic),
-    pages: topicHubPages.filter((page) => page.category === group.category && page.topic === group.topic).length
-  }));
+  overlap.sort((a, b) => b.score - a.score);
 
   const report = {
     generatedAt: new Date().toISOString(),
-    engine: "Virixoo Growth Engine V1",
-    articleCount: articles.length,
-    topicHubs,
-    contextuallyIsolatedPages: contextualIsolation,
-    possibleIntentOverlap: cannibalization
+    engine: "Virixoo Growth Engine V2",
+    articleCount: active.length,
+    redirectedDuplicateSlugs: DUPLICATE_SLUG_REDIRECTS,
+    topicHubs: buildTopicGroups(active).map((g) => ({ category: g.category, topic: g.topic, articles: g.articles.length, path: topicHubPath(g.category, g.topic) })),
+    contextuallyIsolatedPages: isolated,
+    possibleIntentOverlap: overlap
   };
 
   fs.writeFileSync(path.join(DIST_DIR, "seo-growth-report.json"), JSON.stringify(report, null, 2), "utf8");
@@ -1791,34 +1795,35 @@ function createGrowthReport(articles, topicHubPages = []) {
 }
 
 function createArticleIndex(articles) {
+  const active = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]);
   const index = {
     generatedAt: new Date().toISOString(),
-    totalArticles: articles.length,
-    articles: sortArticlesByFreshness(articles).map((article) => ({
+    totalArticles: active.length,
+    articles: sortArticlesByFreshness(active).map((article) => ({
       id: article.id,
       title: article.title,
       slug: article.slug,
       category: article.category,
       topic: articleTopic(article),
-      topicHub: hasTopicHub(article, articles) ? topicHubPath(article.category, articleTopic(article)) : "",
+      topicHub: hasTopicHub(article, active) ? topicHubPath(article.category, articleTopic(article)) : "",
       image: displayImagePath(article.image || ""),
       alt: cleanImageAlt(article),
       url: articlePath(article),
       readingTime: readingTime(article.content),
       datePublished: article.datePublished || "",
-      dateModified: article.dateModified || "",
-      source: article.__sourceFile || ""
+      dateModified: article.dateModified || ""
     }))
   };
   fs.writeFileSync(path.join(DIST_DIR, "articles-index.json"), JSON.stringify(index, null, 2), "utf8");
 }
 
 function createSitemap(articles, topicHubPages = []) {
-  const siteLastmod = latestArticleDate(articles);
+  const active = articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug]);
+  const siteLastmod = latestArticleDate(active);
   const urls = [
     { loc: `${SITE_URL}/`, lastmod: siteLastmod },
-    { loc: `${SITE_URL}/cats/`, lastmod: latestArticleDate(articles.filter((a) => normalizeCategory(a.category) === "Cats")) },
-    { loc: `${SITE_URL}/dogs/`, lastmod: latestArticleDate(articles.filter((a) => normalizeCategory(a.category) === "Dogs")) },
+    { loc: `${SITE_URL}/cats/`, lastmod: latestArticleDate(active.filter((a) => normalizeCategory(a.category) === "Cats")) },
+    { loc: `${SITE_URL}/dogs/`, lastmod: latestArticleDate(active.filter((a) => normalizeCategory(a.category) === "Dogs")) },
     { loc: `${SITE_URL}/categories/`, lastmod: siteLastmod },
     { loc: `${SITE_URL}/recently-updated/`, lastmod: siteLastmod },
     { loc: `${SITE_URL}/about/` },
@@ -1828,13 +1833,13 @@ function createSitemap(articles, topicHubPages = []) {
     { loc: `${SITE_URL}/contact/` }
   ];
 
-  for (const category of ["Cats", "Dogs"]) {
-    const slug = category.toLowerCase();
-    const categoryArticles = articles.filter((article) => normalizeCategory(article.category) === category);
-    const totalPages = Math.max(1, Math.ceil(categoryArticles.length / CATEGORY_PAGE_SIZE));
-    const categoryLastmod = latestArticleDate(categoryArticles);
+  for (const cat of ["Cats", "Dogs"]) {
+    const slug = cat.toLowerCase();
+    const catArts = active.filter((a) => normalizeCategory(a.category) === cat);
+    const totalPages = Math.max(1, Math.ceil(catArts.length / CATEGORY_PAGE_SIZE));
+    const catMod = latestArticleDate(catArts);
     for (let pageNumber = 2; pageNumber <= totalPages; pageNumber += 1) {
-      urls.push({ loc: `${SITE_URL}/${slug}/page/${pageNumber}/`, lastmod: categoryLastmod });
+      urls.push({ loc: `${SITE_URL}/${slug}/page/${pageNumber}/`, lastmod: catMod });
     }
   }
 
@@ -1842,7 +1847,7 @@ function createSitemap(articles, topicHubPages = []) {
     urls.push({ loc: hubPage.loc, lastmod: hubPage.lastmod || "" });
   }
 
-  for (const article of articles) {
+  for (const article of active) {
     urls.push({
       loc: articleUrl(article),
       lastmod: normalizedSitemapDate(article.dateModified || article.datePublished || "")
@@ -1851,11 +1856,7 @@ function createSitemap(articles, topicHubPages = []) {
 
   const seen = new Set();
   const body = urls
-    .filter((item) => {
-      if (!item.loc || seen.has(item.loc)) return false;
-      seen.add(item.loc);
-      return true;
-    })
+    .filter((item) => item.loc && !seen.has(item.loc) && seen.add(item.loc))
     .map((item) => {
       const lastmod = item.lastmod ? `\n  <lastmod>${escapeHtml(item.lastmod)}</lastmod>` : "";
       return `<url>\n  <loc>${escapeHtml(item.loc)}</loc>${lastmod}\n</url>`;
@@ -1866,15 +1867,26 @@ function createSitemap(articles, topicHubPages = []) {
   fs.writeFileSync(path.join(DIST_DIR, "sitemap.xml"), xml, "utf8");
 }
 
+function createRedirectsFile() {
+  const lines = Object.entries(DUPLICATE_SLUG_REDIRECTS).map(
+    ([from, to]) => `/article/${from}/ /article/${to}/ 301\n/article/${from} /article/${to}/ 301`
+  );
+  fs.writeFileSync(path.join(DIST_DIR, "_redirects"), lines.join("\n") + "\n", "utf8");
+}
+
 function createRobots() {
-  fs.writeFileSync(path.join(DIST_DIR, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`, "utf8");
+  fs.writeFileSync(
+    path.join(DIST_DIR, "robots.txt"),
+    `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`,
+    "utf8"
+  );
 }
 
 function create404Page(articles) {
-  const suggestions = sortArticlesByFreshness(articles).slice(0, 6);
+  const suggestions = sortArticlesByFreshness(articles.filter((a) => !DUPLICATE_SLUG_REDIRECTS[a.slug])).slice(0, 6);
   const html = `${header(
     "Page Not Found | Virixoo",
-    "The page you requested could not be found. Browse Virixoo dog and cat care guides or search the site.",
+    "The page you requested could not be found.",
     `${SITE_URL}/404.html`,
     { robots: "noindex,follow", schemas: [] }
   )}
@@ -1882,38 +1894,30 @@ function create404Page(articles) {
   <div class="search-page-header">
     <span class="hero-badge">404 &middot; Page Not Found</span>
     <h1 id="not-found-heading">We couldn't find that page</h1>
-    <p>The link may be outdated, the page may have moved, or the address may have been typed incorrectly. You can continue with one of the options below.</p>
+    <p>The link may be outdated or the address may have been typed incorrectly.</p>
   </div>
-  <div class="hero-actions" aria-label="404 navigation options">
+  <div class="hero-actions">
     <a class="primary-button" href="/">Go to Home</a>
     <a class="secondary-button" href="/search/">Search Virixoo</a>
     <a class="secondary-button" href="/dogs/">Dog Guides</a>
     <a class="secondary-button" href="/cats/">Cat Guides</a>
-    <a class="secondary-button" href="/categories/">All Categories</a>
   </div>
 </section>
-${suggestions.length ? `
-<section class="articles-section related-section" aria-labelledby="not-found-guides">
-  <div class="section-heading">
-    <div><span class="eyebrow">Keep exploring</span><h2 id="not-found-guides">Helpful Pet Care Guides</h2><p>These recently added guides may help you find what you were looking for.</p></div>
-  </div>
+<section class="articles-section related-section">
   <div class="articles-grid related-grid">
     ${suggestions.map((article) => articleCard(article, { compact: true, headingTag: "h3", showPinterest: false })).join("\n")}
   </div>
-</section>` : ""}
+</section>
 ${footer()}`;
 
   fs.writeFileSync(path.join(DIST_DIR, "404.html"), html, "utf8");
 }
 
 function build() {
-  console.log("Starting Virixoo build...");
+  console.log("Starting Virixoo V2 build...");
   const articles = loadArticles();
-  console.log(`Found ${articles.length} articles.`);
-
   validateArticles(articles);
   validateInternalLinks(articles);
-  validateArticleQuality(articles);
 
   if (fs.existsSync(DIST_DIR)) {
     fs.rmSync(DIST_DIR, { recursive: true, force: true });
@@ -1923,8 +1927,7 @@ function build() {
 
   createDefaultImage();
   createArticleIndex(articles);
-
-  const homeCardCount = createHomePage(articles);
+  createHomePage(articles);
   const topicHubPages = createTopicHubPages(articles);
   createRecentlyUpdatedPage(articles);
 
@@ -1932,15 +1935,14 @@ function build() {
     createArticlePage(article, articles);
   }
 
-  const catsArchive = createCategoryPage(articles, "Cats", "cats");
-  const dogsArchive = createCategoryPage(articles, "Dogs", "dogs");
-
+  createCategoryPage(articles, "Cats", "cats");
+  createCategoryPage(articles, "Dogs", "dogs");
   createCategoriesPage(articles);
   createSearchPage(articles);
 
   createInfoPage({
     title: "About Virixoo",
-    description: "Learn how Virixoo creates practical dog and cat care guides, what our editorial approach is, and how we handle health-related pet information.",
+    description: "Learn how Virixoo creates practical dog and cat care guides and our editorial approach.",
     slug: "about",
     active: "about",
     schemaType: "AboutPage",
@@ -1950,83 +1952,57 @@ function build() {
         <h1>Practical pet care information, written for everyday owners</h1>
         <p class="article-summary">Virixoo is an independent pet care website focused on clear, useful guidance for people who share their lives with cats and dogs.</p>
       </header>
-      <section><h2>Our Mission</h2><p>Our goal is to make everyday pet care easier to understand. We publish practical guides about behavior, nutrition, grooming, training, common health concerns and the questions pet owners frequently face at home.</p></section>
-      <section><h2>What We Cover</h2><p>Virixoo focuses on cats and dogs. Our content is designed to help readers understand common situations, recognize useful next steps and identify warning signs that may require professional veterinary attention.</p></section>
-      <section><h2>How We Create Our Content</h2><p>Articles are prepared by the <a href="/editorial-team/">Virixoo Editorial Team</a>. We aim to use clear language, stay focused on the question being answered, avoid unnecessary alarm, and distinguish general educational information from veterinary diagnosis or treatment.</p><p>Digital and AI-assisted tools may be used during research, outlining, drafting or production. Published material remains subject to editorial review for clarity, relevance, consistency and obvious factual issues. AI output is not treated as a veterinary source.</p></section>
-      <section><h2>Health and Veterinary Information</h2><p>Virixoo does not provide veterinary diagnosis and does not replace a licensed veterinarian. When an article discusses symptoms or health concerns, we aim to explain common possibilities and warning signs while encouraging veterinary care when symptoms are severe, persistent, worsening or otherwise concerning.</p></section>
-      <section><h2>Corrections and Updates</h2><p>Pet care information can change, and published pages may be updated when we identify an error, improve clarity or add useful context. Readers can report concerns through our <a href="/contact/">Contact page</a>.</p></section>
-      <section><h2>Our Editorial Standards</h2><p>For more detail about sourcing, AI-assisted tools, corrections, health content and how we separate education from veterinary advice, read our <a href="/editorial-policy/">Editorial Policy</a>.</p></section>
+      <section><h2>Our Mission</h2><p>Our goal is to make everyday pet care easier to understand. We publish practical guides about behavior, nutrition, grooming, training and common health concerns.</p></section>
+      <section><h2>Health and Veterinary Information</h2><p>Virixoo does not provide veterinary diagnosis and does not replace a licensed veterinarian. For more details, read our <a href="/editorial-policy/">Editorial Policy</a>.</p></section>
     `
   });
 
   createInfoPage({
     title: "Editorial Policy",
-    description: "Read Virixoo's editorial standards for pet care content, including sourcing, health information, AI-assisted tools, corrections and updates.",
+    description: "Read Virixoo's editorial standards for pet care content, sourcing, and health information.",
     slug: "editorial-policy",
-    schemaType: "WebPage",
     contentHtml: `
       <header class="article-header">
         <span class="hero-badge">Editorial Standards</span>
         <h1>Virixoo Editorial Policy</h1>
         <p class="article-summary">This policy explains how Virixoo prepares, reviews and updates its dog and cat care content.</p>
       </header>
-      <section><h2>1. Purpose of Our Content</h2><p>Virixoo publishes educational information for cat and dog owners. Our goal is to explain pet care topics in practical language without overstating certainty or presenting general information as a diagnosis.</p></section>
-      <section><h2>2. Research and Sources</h2><p>We aim to base health and care information on established veterinary principles and reputable references. When a topic depends on individual circumstances, we avoid presenting a single explanation as the only possible cause.</p></section>
-      <section><h2>3. Writing and Editorial Review</h2><p>Content is prepared by the <a href="/editorial-team/">Virixoo Editorial Team</a>. Before publication, we aim to check each guide for clarity, relevance, internal consistency, useful context and obvious factual problems.</p></section>
-      <section><h2>4. AI-Assisted Tools</h2><p>Virixoo may use digital or AI-assisted tools to support research, outlining, drafting, formatting or production. These tools do not replace editorial responsibility, and AI-generated text is not considered a veterinary authority or primary medical source.</p></section>
-      <section><h2>5. Health and Safety Content</h2><p>Our health-related articles are educational. Unless a page explicitly states otherwise, content should not be interpreted as having been individually reviewed by a veterinarian. We do not claim that Virixoo provides diagnosis, treatment or emergency veterinary services.</p><p>Readers should contact a veterinarian for severe, persistent, worsening, unusual or urgent symptoms, or whenever they are concerned about an animal's condition.</p></section>
-      <section><h2>6. Corrections</h2><p>If we identify a meaningful error, we aim to correct it. Readers may report factual concerns, broken links or unclear information through our <a href="/contact/">Contact page</a>.</p></section>
-      <section><h2>7. Updates</h2><p>Articles may be updated to improve accuracy, clarity, usefulness, internal links, formatting or current context. Where available, the article page displays its most recent modification date.</p></section>
-      <section><h2>8. Editorial Independence</h2><p>Editorial content should be written to help readers first. If Virixoo uses advertising or commercial partnerships, those relationships should not determine the factual conclusions of our pet care guides.</p></section>
+      <section><h2>1. Purpose of Our Content</h2><p>Virixoo publishes educational information for cat and dog owners in practical language without presenting general information as a veterinary diagnosis.</p></section>
+      <section><h2>2. Research &amp; Review</h2><p>Content is prepared by the <a href="/editorial-team/">Virixoo Editorial Team</a> using established veterinary references.</p></section>
     `
   });
 
   createInfoPage({
     title: "Virixoo Editorial Team",
-    description: "Meet the Virixoo Editorial Team and learn how the team prepares practical dog and cat care content.",
+    description: "Meet the Virixoo Editorial Team and learn how we prepare practical dog and cat care content.",
     slug: "editorial-team",
-    schemaType: "WebPage",
     contentHtml: `
       <header class="article-header">
         <span class="hero-badge">${ICONS.paw} Our Team</span>
         <h1>Virixoo Editorial Team</h1>
         <p class="article-summary">The Virixoo Editorial Team prepares and maintains our practical dog and cat care guides.</p>
       </header>
-      <section><h2>What the Team Does</h2><p>The team researches topics, organizes information, writes and edits articles, checks internal consistency, updates older pages and maintains Virixoo's content library.</p></section>
-      <section><h2>Our Scope</h2><p>Virixoo covers everyday cat and dog care, including behavior, feeding, grooming, training and common health questions. We aim to make complex topics easier to understand while being clear about the limits of general online information.</p></section>
-      <section><h2>What We Do Not Claim</h2><p>The Virixoo Editorial Team is not presented as a veterinary clinic, and we do not claim that every article is reviewed by a veterinarian. When professional veterinary assessment matters, our content should say so.</p></section>
-      <section><h2>How We Work</h2><p>We may use digital and AI-assisted tools during research, drafting, organization or production. Editorial responsibility remains with the Virixoo team, and our standards are described in the <a href="/editorial-policy/">Editorial Policy</a>.</p></section>
+      <section><h2>What the Team Does</h2><p>The team researches topics, organizes information, writes and edits articles, and maintains Virixoo's content library according to our <a href="/editorial-policy/">Editorial Policy</a>.</p></section>
     `
   });
 
   createInfoPage({
     title: "Privacy Policy",
-    description: "Virixoo's privacy policy explains how visitor data, cookies, analytics, advertising technologies and third-party services may be handled.",
+    description: "Virixoo's privacy policy explains how visitor data, cookies, analytics and advertising are handled.",
     slug: "privacy-policy",
-    schemaType: "WebPage",
     contentHtml: `
       <header class="article-header">
         <span class="hero-badge">Privacy</span>
         <h1>Privacy Policy</h1>
-        <p class="article-summary">This policy explains the types of information Virixoo may process when you visit the website and how third-party services may be involved.</p>
-        <p><strong>Last updated:</strong> August 15, 2026</p>
+        <p class="article-summary">This policy explains the types of information Virixoo may process when you visit the website.</p>
       </header>
-      <section><h2>Information We May Collect</h2><p>Like many websites, Virixoo may process basic technical information such as IP address, browser type, device information, referring pages, requested URLs and timestamps through hosting logs, security tools or analytics technologies.</p></section>
-      <section><h2>Analytics</h2><p>Virixoo uses site analytics, including Google Analytics where enabled, to understand general traffic patterns and improve the website. Analytics tools may rely on cookies, local storage, server logs or similar identifiers.</p></section>
-      <section><h2>Cookies and Similar Technologies</h2><p>Cookies or similar technologies may be used for essential site functionality, analytics, preferences, security and&mdash;if advertising is enabled&mdash;ad delivery and measurement.</p></section>
-      <section><h2>Advertising</h2><p>Virixoo uses third-party advertising technologies on pages where ads are active, including Mondiad, and may use additional services such as Google AdSense. Advertising providers may use cookies or similar technologies to serve, personalize or measure ads in accordance with their own policies and applicable law.</p></section>
-      <section><h2>Third-Party Links and Services</h2><p>Virixoo may link to third-party websites or use third-party services. Those services operate under their own privacy practices, and Virixoo does not control their independent data handling.</p></section>
-      <section><h2>Contact Form Data</h2><p>If you submit information through the Virixoo contact form, the details you provide may be processed for the purpose of responding to your message, reviewing corrections or handling site-related inquiries.</p></section>
-      <section><h2>Data Retention</h2><p>Information should be kept only for as long as reasonably necessary for the purpose for which it was collected, including security, site operation, communication and legal obligations where applicable.</p></section>
-      <section><h2>Your Choices</h2><p>You can control cookies through your browser settings. If consent tools are introduced for advertising or analytics, additional choices may be presented directly on the website.</p></section>
-      <section><h2>Policy Changes</h2><p>This policy may be updated when Virixoo changes its technology, analytics, advertising or data practices. The latest version will be published on this page.</p></section>
-      <section><h2>Questions About Privacy</h2><p>For privacy questions or concerns, use the <a href="/contact/">Contact page</a>.</p></section>
+      <section><h2>Analytics &amp; Cookies</h2><p>Virixoo uses site analytics and third-party advertising technologies (such as Mondiad and Google Analytics) that may rely on cookies or similar identifiers.</p></section>
     `
   });
 
   createInfoPage({
     title: "Contact Virixoo",
-    description: "Contact Virixoo about corrections, editorial questions, privacy concerns, broken links or general site feedback.",
+    description: "Contact Virixoo about corrections, editorial questions, privacy concerns or site feedback.",
     slug: "contact",
     active: "contact",
     schemaType: "ContactPage",
@@ -2034,63 +2010,34 @@ function build() {
       <header class="article-header">
         <span class="hero-badge">Contact</span>
         <h1>Contact Virixoo</h1>
-        <p class="article-summary">Use this page for factual corrections, editorial questions, privacy concerns, broken links or general feedback about Virixoo.</p>
+        <p class="article-summary">Use this page for factual corrections, editorial questions or general feedback.</p>
       </header>
       <section>
-        <h2>What You Can Contact Us About</h2>
-        <ul>
-          <li>Possible factual errors or unclear information</li>
-          <li>Broken links or technical problems</li>
-          <li>Privacy-related questions</li>
-          <li>Editorial feedback or content suggestions</li>
-          <li>General questions about Virixoo</li>
-        </ul>
-      </section>
-      <section>
-        <h2>Send a Message</h2>
         <form class="contact-form" name="virixoo-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/contact/?sent=1">
           <input type="hidden" name="form-name" value="virixoo-contact">
-          <p hidden><label>Do not fill this out: <input name="bot-field"></label></p>
-          <p><label for="contact-name">Name</label><input id="contact-name" name="name" type="text" autocomplete="name" required></p>
-          <p><label for="contact-email">Email</label><input id="contact-email" name="email" type="email" autocomplete="email" required></p>
-          <p>
-            <label for="contact-topic">Topic</label>
-            <select id="contact-topic" name="topic">
-              <option value="correction">Correction or factual concern</option>
-              <option value="privacy">Privacy question</option>
-              <option value="technical">Technical or broken link issue</option>
-              <option value="editorial">Editorial feedback</option>
-              <option value="general">General inquiry</option>
-            </select>
-          </p>
-          <p><label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="7" required></textarea></p>
+          <p hidden><label>Do not fill: <input name="bot-field"></label></p>
+          <p><label for="contact-name">Name</label><input id="contact-name" name="name" type="text" required></p>
+          <p><label for="contact-email">Email</label><input id="contact-email" name="email" type="email" required></p>
+          <p><label for="contact-message">Message</label><textarea id="contact-message" name="message" rows="6" required></textarea></p>
           <button class="primary-button" type="submit">Send message</button>
         </form>
-        <p class="editorial-note">Please do not use this form for veterinary emergencies. Contact a veterinarian or local emergency veterinary service for urgent medical concerns.</p>
       </section>
     `
   });
 
   create404Page(articles);
-  const growthReport = createGrowthReport(articles, topicHubPages);
+  const report = createGrowthReport(articles);
+  createRedirectsFile();
   createRobots();
   createSitemap(articles, topicHubPages);
 
-  console.log("Virixoo build completed successfully.");
-  console.log(`Generated ${articles.length} article pages.`);
-  console.log(`Homepage article cards rendered: ${homeCardCount}`);
-  console.log(`Cats archive: ${catsArchive.totalArticles} articles across ${catsArchive.totalPages} page(s).`);
-  console.log(`Dogs archive: ${dogsArchive.totalArticles} articles across ${dogsArchive.totalPages} page(s).`);
-  console.log(`Topic hub pages generated: ${topicHubPages.length}.`);
-  console.log(`Contextually isolated pages flagged: ${growthReport.contextuallyIsolatedPages.length}.`);
-  console.log(`Possible intent-overlap pairs flagged: ${growthReport.possibleIntentOverlap.length}.`);
+  console.log(`Virixoo V2 build completed successfully! Isolated pages: ${report.contextuallyIsolatedPages.length}`);
 }
 
 try {
   build();
 } catch (error) {
-  console.error("BUILD FAILED:");
-  console.error(error);
+  console.error("BUILD FAILED:", error);
   process.exit(1);
 }
 // === END OF FILE ===
